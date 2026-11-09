@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SADAFA - Panel de Administración ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root { 
+            --sadafa-accent: #0b3c36; 
+            --bg-principal: #f4f6f9; 
+            --bg-sidebar: #ffffff; 
+            --texto-principal: #222533; 
+            --texto-muted: #6c757d; 
+            --borde-tarjeta: #d8dde6; 
+            --bg-casilla: #ffffff; 
+            --hover-casilla: #eef3f2; 
+        }
+        [data-bs-theme="dark"] { 
+            --sadafa-accent: #2dd4bf; 
+            --bg-principal: #0f172a; 
+            --bg-sidebar: #1e293b; 
+            --texto-principal: #f8fafc; 
+            --texto-muted: #cbd5e1; 
+            --borde-tarjeta: #334155; 
+            --bg-casilla: #1e293b; 
+            --hover-casilla: #334155; 
+        }
+        
+        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
+        .wrapper { display: flex; width: 100%; min-height: 100vh; overflow-x: hidden; }
+        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1030; position: relative; white-space: nowrap; }
+        .sidebar.collapsed { width: 75px; }
+        .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
+        .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
+        .sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; padding: 12px 20px; border-radius: 6px; margin-bottom: 4px; font-weight: 500; overflow: hidden; }
+        .sidebar a i { font-size: 1.2rem; margin-right: 12px; color: var(--sadafa-accent); min-width: 25px; text-align: center; }
+        .sidebar a:hover, .sidebar a.active { background-color: rgba(45, 212, 191, 0.15); color: var(--sadafa-accent); font-weight: 600; }
+        .sidebar.collapsed a { justify-content: center; padding: 12px 0; }
+        .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
+        .sidebar.collapsed .nav-text { display: none !important; }
+        .sidebar.collapsed .form-check-label { display: none !important; }
+        .sidebar.collapsed .form-check { display: flex; justify-content: center; padding-left: 0; margin-left: 0; }
+        .sidebar.collapsed .form-check-input { margin-left: 0; margin-top: 0; float: none; cursor: pointer; }
+        .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
+        .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
+        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
+        .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
+        .erp-color-rojo { color: #e63946 !important; }
+        .erp-border-rojo { border-left-color: #e63946 !important; }
+        .erp-color-azul { color: #0284c7 !important; }
+        .erp-border-azul { border-left-color: #0284c7 !important; }
+        .erp-color-naranja { color: #ea580c !important; }
+        .erp-border-naranja { border-left-color: #ea580c !important; }
+        .erp-color-amarillo { color: #ffb703 !important; }
+        .erp-border-amarillo { border-left-color: #ffb703 !important; }
+        .erp-color-morado { color: #8b5cf6 !important; }
+        .erp-border-morado { border-left-color: #8b5cf6 !important; }
+        .table-scrollable { max-height: 480px; overflow-y: auto; }
+        .table-scrollable::-webkit-scrollbar { width: 6px; }
+        .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
+        [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
+        .text-muted { color: var(--texto-muted) !important; }
+        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; }
+        .nav-pills .nav-link.active { background-color: var(--sadafa-accent); color: #ffffff; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .metric-card { border-left: 4px solid var(--sadafa-accent); border-radius: 8px; }
+        .dropdown-menu { z-index: 1055 !important; }
+        .sticky-top { z-index: 10 !important; }
+        .modal { z-index: 1080 !important; }
+        body[data-rol="Supervisor"] .admin-only { display: none !important; }
+    </style>
+</head>
+<body spellcheck="true" data-rol="">
+
+    <datalist id="listaCedulasGlobal"></datalist>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="notificacionToast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex"><div class="toast-body fw-semibold text-white" id="notificacionMensaje"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <nav class="sidebar" id="sidebar">
+            <button class="btn-toggle-sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed')" title="Expandir/Contraer Menú">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="position-sticky">
+                <h4 class="brand">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
+                <i class="bi bi-building brand-icon" style="display:none;"></i>
+                
+                <ul class="nav flex-column px-2">
+                    <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
+                    <li class="nav-item admin-only"><a href="#" onclick="cambiarSeccion('usuario', event)" title="Control de Usuarios"><i class="bi bi-shield-lock"></i> <span class="nav-text">Control de Usuarios</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('inventario', event)" title="Inventario y Dotación"><i class="bi bi-box-seam"></i> <span class="nav-text">Inventario y Dotación</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('auditoria', event)" title="Auditorías en Sede"><i class="bi bi-clipboard-check"></i> <span class="nav-text">Auditorías en Sede</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
+                    
+                    <li class="nav-item px-3 mt-4 mb-2">
+                        <div class="form-check form-switch m-0 d-flex align-items-center" title="Cambiar Tema">
+                            <input class="form-check-input" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer;">
+                            <label class="form-check-label small fw-semibold ms-2 nav-text" for="modoOscuroSwitch" id="labelModo" style="cursor: pointer;">Modo Oscuro</label>
+                        </div>
+                    </li>
+                    <li class="nav-item mt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            
+            <div class="d-flex justify-content-end align-items-center mb-4 border-bottom pb-2">
+                <span class="badge bg-secondary fs-6 shadow-sm"><i class="bi bi-person-circle me-1"></i> Rol: <span id="rolUsuarioActivo">Cargando...</span></span>
+            </div>
+
+            <!-- 0. PANEL DE CONTROL -->
+            <div id="sec-dashboard" class="seccion-contenido">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-12">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-speedometer2 me-2 text-success"></i> Panel de Control Administrativo</h4>
+                        <p class="text-muted small mb-0">Alertas legales, contratos e inventario (Actualización en tiempo real con Firebase).</p>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 metric-card shadow-sm erp-border-rojo">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="erp-color-rojo fw-bold small mb-1" style="letter-spacing: 0.5px;">CONTRATOS A VENCER</div>
+                                    <div class="fs-2 fw-bold erp-color-rojo" id="dashVenceContratos">0</div>
+                                </div>
+                                <i class="bi bi-exclamation-triangle erp-color-rojo fs-1 opacity-50"></i>
+                            </div>
+                            <div class="small mt-2 text-muted">Plazo de 30 días calendario</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 metric-card shadow-sm erp-border-azul">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="erp-color-azul fw-bold small mb-1" style="letter-spacing: 0.5px;">DOTACIÓN BAJA EN STOCK</div>
+                                    <div class="fs-2 fw-bold erp-color-azul" id="dashStockCritico">0</div>
+                                </div>
+                                <i class="bi bi-box-seam erp-color-azul fs-1 opacity-50"></i>
+                            </div>
+                            <div class="small mt-2 text-muted">Inventario menor o igual a 3 und</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
+                            <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 erp-color-rojo"><i class="bi bi-clock-history me-2"></i> Vencimientos (30 d)</h6>
+                                <span class="badge border bg-transparent erp-color-rojo erp-border-rojo" id="badgeVenceCount">0</span>
+                            </div>
+                            <div class="table-scrollable" style="max-height: 250px;">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
+                                    <tbody id="tbodyDashVencimientos"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
+                            <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
+                                <span class="badge border border-warning erp-color-amarillo bg-transparent" id="badgeStockCount">0</span>
+                            </div>
+                            <div class="table-scrollable" style="max-height: 250px;">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light"><tr><th class="ps-3">Prenda</th><th>Talla</th><th class="text-center pe-3">Und</th></tr></thead>
+                                    <tbody id="tbodyDashStock"><tr><td colspan="3" class="text-center text-muted py-3">Stock seguro.</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
+                            <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Alerta Legal Dotación</h6>
+                                <span class="badge border border-secondary erp-color-morado bg-transparent" id="badgeLegalCount">0</span>
+                            </div>
+                            <div class="table-scrollable" style="max-height: 250px;">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
+                                    <tbody id="tbodyDashLegal"><tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. PERSONAL OPERATIVO Y CONTRATOS -->
+            <div id="sec-empleado" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-4">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-person-badge me-2 text-success"></i> Personal y Contratos</h4>
+                        <p class="text-muted small mb-0">Base de datos de contratos y cuadrilla activa.</p>
+                    </div>
+                    <div class="col-md-8 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;">
+                            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
+                        </div>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
+                    </div>
+                </div>
+                
+                <div class="card card-custom shadow-sm p-0 mb-4">
+                    <div class="p-4 border-bottom d-flex justify-content-between align-items-center bg-body-tertiary flex-wrap gap-2 position-relative" style="z-index: 1020;">
+                        <h5 class="fw-bold mb-0 text-body" style="font-size: 1.1rem;"><i class="bi bi-people-fill me-2 opacity-50"></i> Personal Registrado</h5>
+                        
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown"><i class="bi bi-file-earmark-pdf"></i> Generar Documento</button>
+                            <ul class="dropdown-menu shadow-sm">
+                                <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCarta" onclick="prepararDocumentosPDF('carta')"><i class="bi bi-file-text text-primary me-2"></i> Carta Presentación</button></li>
+                                <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCertificado" onclick="prepararDocumentosPDF('cert')"><i class="bi bi-award text-success me-2"></i> Certificado Laboral</button></li>
+                                <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalExamen" onclick="prepararDocumentosPDF('exam')"><i class="bi bi-heart-pulse text-danger me-2"></i> Orden Examen</button></li>
+                                <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCesantias" onclick="prepararDocumentosPDF('cesan')"><i class="bi bi-piggy-bank text-warning me-2"></i> Retiro Cesantías</button></li>
+                                <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCuenta" onclick="prepararDocumentosPDF('cta')"><i class="bi bi-bank text-info me-2"></i> Apertura Cuenta</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-body-tertiary border-bottom">
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#contratos-activos">Base de Datos (Activos)</button></li>
+                            <li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#contratos-inactivos">Historial (Retirados)</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="contratos-activos">
+                            <div class="table-responsive table-scrollable" style="max-height: 500px;">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th class="ps-4 text-nowrap">Acciones</th>
+                                            <th class="text-nowrap">Ciudad</th>
+                                            <th class="text-nowrap">Cliente Asignado</th>
+                                            <th class="text-wrap" style="min-width: 220px;">Nombres Completos</th>
+                                            <th class="text-nowrap">Identificación</th>
+                                            <th class="text-nowrap">Tipo de Contrato</th>
+                                            <th class="text-nowrap">Cargo</th>
+                                            <th class="text-nowrap">Fecha Inicio</th>
+                                            <th class="text-nowrap">Fecha Fin</th>
+                                            <th class="text-nowrap">Sueldo</th>
+                                            <th class="text-nowrap">Celular</th>
+                                            <th class="pe-4 text-nowrap">Correo Electrónico</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaContratosBody">
+                                        <tr><td colspan="12" class="text-center text-muted py-3">Cargando base de datos con Firebase...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="contratos-inactivos">
+                            <div class="table-responsive table-scrollable" style="max-height: 500px;">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th class="ps-4 text-nowrap">Acciones</th>
+                                            <th class="text-nowrap">Ciudad</th>
+                                            <th class="text-nowrap">Cliente</th>
+                                            <th class="text-wrap" style="min-width: 220px;">Nombres Completos</th>
+                                            <th class="text-nowrap">Identificación</th>
+                                            <th class="text-nowrap">Tipo Contrato</th>
+                                            <th class="text-nowrap">Cargo</th>
+                                            <th class="text-nowrap">Celular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaOperariosInactivosBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. GESTIÓN DE CLIENTES -->
+            <div id="sec-cliente" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-5">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-building me-2 text-success"></i> Gestión de Clientes</h4>
+                        <p class="text-muted small mb-0">Directorio y ubicaciones de los servicios.</p>
+                    </div>
+                    <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
+                    </div>
+                </div>
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#clientes-activos">Clientes Activos</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#clientes-inactivos">Historial (Inactivos)</button></li></ul></div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="clientes-activos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>NIT</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade" id="clientes-inactivos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>NIT</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesInactivosBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CONTROL DE USUARIOS -->
+            <div id="sec-usuario" class="seccion-contenido admin-only" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-shield-lock me-2 text-success"></i> Control de Usuarios</h4>
+                        <p class="text-muted small mb-0">Gestión de credenciales para Administradores y Supervisores.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuarioAdmin" onclick="prepararNuevoUsuario()"><i class="bi bi-person-plus-fill"></i> Crear Usuario</button>
+                    </div>
+                </div>
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Documento</th><th>Nombre Completo</th><th>Correo</th><th>Rol Asignado</th><th>Estado</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaUsuariosBody"><tr><td colspan="6" class="text-center text-muted py-3">Cargando usuarios...</td></tr></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- 4. INVENTARIO Y DOTACIÓN -->
+            <div id="sec-inventario" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-box-seam me-2 text-success"></i> Inventario y Dotación</h4>
+                        <p class="text-muted small mb-0">Control de insumos, herramientas y stock de prendas.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="prepararNuevoUnificado()"><i class="bi bi-plus-circle"></i> Nuevo Elemento</button>
+                    </div>
+                </div>
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#dotacion-pane">Dotación</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#activos-pane">Activos Fijos</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#insumos-pane">Insumos</button></li></ul></div>
+                    <div class="tab-content border-top">
+                        <div class="tab-pane fade show active" id="dotacion-pane"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Prenda / Elemento</th><th>Talla</th><th>Condición</th><th class="text-center">Cant.</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tbodyDotacionAdmin"><tr><td colspan="5" class="text-center text-muted py-3">Cargando dotación...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade" id="activos-pane"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Activo</th><th>Serial / Placa</th><th>Responsable / Sede</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tbodyActivos"><tr><td colspan="4" class="text-center text-muted py-3">Cargando activos...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade" id="insumos-pane"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Insumo</th><th>Cantidad en Stock</th><th>Sede Destino</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tbodyInsumos"><tr><td colspan="4" class="text-center text-muted py-3">Cargando insumos...</td></tr></tbody></table></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. AUDITORÍAS EN SEDE -->
+            <div id="sec-auditoria" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-clipboard-check me-2 text-success"></i> Auditorías de Calidad</h4>
+                        <p class="text-muted small mb-0">Inspecciones en puestos con reporte automático.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalAuditoria" onclick="prepararNuevaAuditoria()"><i class="bi bi-plus-circle"></i> Nueva Auditoría</button>
+                    </div>
+                </div>
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Fecha</th><th>Cliente / Sede</th><th>Evaluador</th><th class="text-center">Uniforme</th><th class="text-center">Herramientas</th><th class="text-center">Limpieza</th></tr></thead><tbody id="tbodyAuditorias"><tr><td colspan="6" class="text-center text-muted py-3">Cargando auditorías...</td></tr></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- 6. BITÁCORA DE NOVEDADES -->
+            <div id="sec-bitacora" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-journal-text me-2 text-success"></i> Bitácora de Novedades</h4>
+                        <p class="text-muted small mb-0">Registro operativo (Fotos suben a Firebase Storage).</p>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
+                    </div>
+                </div>
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Fecha</th><th>Operario</th><th>Tipo de Novedad</th><th>Descripción</th><th>Reporta</th></tr></thead><tbody id="tbodyNovedades"><tr><td colspan="5" class="text-center text-muted py-3">Cargando novedades...</td></tr></tbody></table></div>
+                </div>
+            </div>
+
+            <!-- 7. CAJA MENOR Y GASTOS -->
+            <div id="sec-caja" class="seccion-contenido" style="display: none;">
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-5">
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-wallet2 me-2 text-success"></i> Caja Menor y Gastos</h4>
+                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos (Cloud Storage).</p>
+                    </div>
+                    <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="prepararNuevoGasto()"><i class="bi bi-plus-circle"></i> Reportar Gasto</button>
+                    </div>
+                </div>
+
+                <div id="contenedorResumenGastos" class="row g-3 mb-4 admin-only" style="display: none;"></div>
+
+                <div class="card card-custom p-0 overflow-hidden shadow-sm">
+                    <div class="table-scrollable">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th class="ps-4">Fecha</th>
+                                    <th>Concepto</th>
+                                    <th>Reportado por</th>
+                                    <th class="text-end">Valor</th>
+                                    <th class="text-center">Soporte</th>
+                                    <th class="text-center">Estado</th>
+                                    <th class="pe-4 text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyGastos">
+                                <tr><td colspan="7" class="text-center text-muted py-3">Cargando gastos con Firebase...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+ <!-- ==================== TODOS LOS MODALES ==================== -->
+    
+    <!-- MODAL: CAJA MENOR Y GASTOS -->
+    <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-receipt me-2"></i> Reportar Gasto / Viático</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarGasto(event)">
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Fecha del Gasto</label>
+                            <input type="date" id="gast_fecha" class="form-control bg-body-tertiary" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Concepto / Descripción</label>
+                            <input type="text" id="gast_concepto" class="form-control bg-body-tertiary" placeholder="Ej: Gasolina Moto, Insumos ferretería..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Valor Total ($)</label>
+                            <input type="number" id="gast_valor" class="form-control bg-body-tertiary" placeholder="Ej: 50000" min="50" required>
+                        </div>
+                        <div class="mb-4 border p-3 rounded bg-body-tertiary">
+                            <label class="form-label small fw-semibold"><i class="bi bi-camera"></i> Foto del Recibo / Factura</label>
+                            <input type="file" id="gast_soporte" class="form-control form-control-sm" accept="image/*,application/pdf" required>
+                            <small class="text-muted" style="font-size: 0.75rem;">Obligatorio adjuntar el soporte visual (Máx. 3MB).</small>
+                        </div>
+                        <button type="submit" id="btnGuardarGasto" class="btn btn-success w-100 fw-bold py-2">Reportar Gasto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VER FOTO DE FACTURA -->
+    <div class="modal fade" id="modalVerSoporte" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content card-custom">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-image"></i> Soporte de Gasto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-0 bg-dark rounded-bottom overflow-hidden">
+                    <img id="imgSoporte" src="" alt="Soporte Cargando..." style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AUDITORÍAS -->
+    <div class="modal fade" id="modalAuditoria" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-clipboard-check me-2"></i> Registrar Auditoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarAuditoria(event)">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Fecha</label>
+                                <input type="date" id="audi_fecha" class="form-control bg-body-tertiary" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Sede / Cliente</label>
+                                <select id="audi_cliente" class="form-select bg-body-tertiary" onchange="cargarOperariosPorSedeAuditoria()" required></select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Evaluador</label>
+                                <select id="audi_evaluador" class="form-select bg-body-tertiary" required></select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Evaluación de Operarios (Seleccione para evaluar)</label>
+                            <div id="audi_lista_operarios" class="border p-2 bg-body-tertiary rounded" style="max-height: 280px; overflow-y: auto;">
+                                <small class="text-muted">Seleccione una sede para ver los operarios...</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Observaciones Generales</label>
+                            <textarea id="audi_obs" class="form-control bg-body-tertiary" rows="2" placeholder="Detalles de la auditoría..."></textarea>
+                        </div>
+                        <div class="mb-3 border p-3 rounded bg-body-tertiary">
+                            <label class="form-label small fw-semibold"><i class="bi bi-camera"></i> Adjuntar Foto / Evidencia (Opcional, Máx. 3MB)</label>
+                            <input type="file" id="audi_foto" class="form-control form-control-sm" accept="image/*">
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="audi_enviar_correo" checked>
+                            <label class="form-check-label small fw-bold text-muted" for="audi_enviar_correo">Enviar copia del reporte a talentohumano@sadafa.com.co</label>
+                        </div>
+                        <button type="submit" id="btnGuardarAuditoria" class="btn btn-success w-100 fw-bold py-2">Guardar Auditoría</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: NOVEDADES -->
+    <div class="modal fade" id="modalNovedad" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-journal-text me-2"></i> Registrar Novedad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarNovedad(event)">
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Operario</label>
+                            <select id="nov_operario" class="form-select bg-body-tertiary" onchange="cargarSedeNovedad()" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Sede Actual</label>
+                            <input type="text" id="nov_sede_actual" class="form-control bg-body-tertiary fw-bold" readonly placeholder="Sede actual del operario...">
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted">Fecha Novedad</label>
+                                <input type="date" id="nov_fecha" class="form-control bg-body-tertiary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted">Tipo</label>
+                                <select id="nov_tipo" class="form-select bg-body-tertiary" required>
+                                    <option value="Llegada Tarde">Llegada Tarde</option>
+                                    <option value="Falta Injustificada">Falta Injustificada</option>
+                                    <option value="Incapacidad">Incapacidad</option>
+                                    <option value="Permiso">Permiso</option>
+                                    <option value="Daño en Sede">Daño en Sede</option>
+                                    <option value="Felicitacion">Felicitación</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small fw-bold text-muted">Descripción</label>
+                            <textarea id="nov_desc" class="form-control bg-body-tertiary" rows="3" required placeholder="Detalles..."></textarea>
+                        </div>
+                        <div class="mb-3 border p-3 rounded bg-body-tertiary">
+                            <label class="form-label small fw-semibold"><i class="bi bi-paperclip"></i> Adjuntar Evidencia (Opcional, Máx. 3MB)</label>
+                            <input type="file" id="nov_foto" class="form-control form-control-sm" accept="image/*,application/pdf">
+                        </div>
+                        
+                        <div class="border rounded p-3 mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="nov_enviar_correo" checked>
+                                <label class="form-check-label small fw-bold text-muted" for="nov_enviar_correo">Enviar notificación a talentohumano@sadafa.com.co</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="nov_notificar_cliente">
+                                <label class="form-check-label small fw-bold text-primary" for="nov_notificar_cliente">Enviar copia al Cliente de la sede (info@sadafa.com.co)</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="small fw-bold text-muted">Reportado por (Supervisor)</label>
+                            <select id="nov_reporta" class="form-select bg-body-tertiary" required></select>
+                        </div>
+                        <div class="form-check form-switch mb-3 border p-2 rounded bg-body-tertiary">
+                            <input class="form-check-input ms-0 me-2" type="checkbox" id="chk_traslado" onchange="toggleTrasladoSede()">
+                            <label class="form-check-label small fw-bold text-danger" for="chk_traslado">¿Trasladar a otra Sede tras esta novedad?</label>
+                        </div>
+                        <div class="mb-3" id="div_nueva_sede" style="display: none;">
+                            <label class="small fw-bold text-muted">Nueva Sede de Asignación</label>
+                            <select id="nov_nueva_sede" class="form-select bg-body-tertiary border-danger"></select>
+                        </div>
+                        <button type="submit" id="btnGuardarNovedad" class="btn btn-primary w-100 fw-bold py-2">Guardar Novedad</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CLIENTE -->
+    <div class="modal fade" id="modalCliente" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success">Gestionar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarClienteAdmin(event)">
+                        <input type="hidden" id="cli_id">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6"><input type="text" id="cli_rs" class="form-control bg-body-tertiary" placeholder="Razón Social" required></div>
+                            <div class="col-md-6"><input type="text" id="cli_nit" class="form-control bg-body-tertiary" placeholder="NIT" required></div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6"><input type="text" id="cli_dir" class="form-control bg-body-tertiary" placeholder="Dirección" required></div>
+                            <div class="col-md-3"><input type="tel" id="cli_cel" class="form-control bg-body-tertiary" placeholder="Celular Cliente"></div>
+                            <div class="col-md-3"><input type="email" id="cli_cor" class="form-control bg-body-tertiary" placeholder="Correo Cliente"></div>
+                        </div>
+                        <hr>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4"><input type="text" id="cli_adm" class="form-control bg-body-tertiary" placeholder="Nombre Admin" required></div>
+                            <div class="col-md-4"><input type="tel" id="cli_adm_cel" class="form-control bg-body-tertiary" placeholder="Celular Admin" required></div>
+                            <div class="col-md-4"><input type="email" id="cli_adm_cor" class="form-control bg-body-tertiary" placeholder="Correo Admin" required></div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2">Guardar Cliente</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: OPERARIO -->
+    <div class="modal fade" id="modalOperario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success">Ficha de Empleado y Contrato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarOperarioAdmin(event)">
+                        <input type="hidden" id="op_id">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Ciudad Sede</label>
+                                <select id="op_ciudad" class="form-select bg-body-tertiary" required>
+                                    <option value="Manizales">Manizales</option>
+                                    <option value="Pereira">Pereira</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Cédula</label>
+                                <input type="number" id="op_doc" class="form-control bg-body-tertiary" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Ciudad de Expedición</label>
+                                <input type="text" id="op_ciudad_expedicion" class="form-control bg-body-tertiary" required placeholder="Ej: Neira">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Nombres Completos</label>
+                                <input type="text" id="op_nom" class="form-control bg-body-tertiary" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Cliente Asignado</label>
+                                <select id="op_cliente" class="form-select bg-body-tertiary">
+                                    <option value="">-- Sin Cliente --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Cargo</label>
+                                <select id="op_esp" class="form-select bg-body-tertiary" required>
+                                    <option value="">Seleccione cargo...</option>
+                                    <option>Operario (a) de aseo</option>
+                                    <option>Conserje</option>
+                                    <option>Guadañador</option>
+                                    <option>Todero</option>
+                                    <option>Supernumerario</option>
+                                    <option>Administrativo</option>
+                                    <option>Supervisor</option>
+                                    <option>Salvavidas</option>
+                                    <option>Jardinero</option>
+                                    <option>Community Manager</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small fw-bold text-muted">Sueldo Básico Mensual</label>
+                                <select id="op_sueldo" class="form-select bg-body-tertiary" required>
+                                    <option value="">Seleccione sueldo...</option>
+                                    <option value="220000">$ 220.000</option>
+                                    <option value="875452">$ 875.452</option>
+                                    <option value="1750905">$ 1.750.905</option>
+                                    <option value="1950905">$ 1.950.905</option>
+                                    <option value="2184500">$ 2.184.500</option>
+                                    <option value="2260000">$ 2.260.000</option>
+                                    <option value="3282800">$ 3.282.800</option>
+                                    <option value="5191200">$ 5.191.200</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3 border-top pt-3">
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Tipo Contrato</label>
+                                <select id="op_tipocontrato" class="form-select bg-body-tertiary" required>
+                                    <option value="Fijo">Término Fijo</option>
+                                    <option value="Indefinido">Término Indefinido</option>
+                                    <option value="Obra o Labor">Obra o Labor</option>
+                                    <option value="Prestación de Servicios">Prestación de Servicios</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Término de Contrato</label>
+                                <select id="op_termino" class="form-select bg-body-tertiary">
+                                    <option value="">Seleccione término...</option>
+                                    <option value="15 Días">15 Días</option>
+                                    <option value="20 Días">20 Días</option>
+                                    <option value="1 Mes">1 Mes</option>
+                                    <option value="2 Meses">2 Meses</option>
+                                    <option value="3 Meses">3 Meses</option>
+                                    <option value="4 Meses">4 Meses</option>
+                                    <option value="5 Meses">5 Meses</option>
+                                    <option value="6 Meses">6 Meses</option>
+                                    <option value="11 Meses">11 Meses</option>
+                                    <option value="12 Meses">12 Meses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Fecha Inicio</label>
+                                <input type="date" id="op_inicio" class="form-control bg-body-tertiary">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small fw-bold text-muted">Fecha Fin</label>
+                                <input type="date" id="op_fin" class="form-control bg-body-tertiary">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3 border-top pt-3">
+                            <div class="col-md-3"><input type="tel" id="op_cel" class="form-control bg-body-tertiary" placeholder="Celular" required></div>
+                            <div class="col-md-3"><input type="email" id="op_correo" class="form-control bg-body-tertiary" placeholder="Correo Electrónico"></div>
+                            <div class="col-md-4"><input type="text" id="op_direccion" class="form-control bg-body-tertiary" placeholder="Dirección Residencia"></div>
+                            <div class="col-md-2"><input type="text" id="op_cumpleanos" class="form-control bg-body-tertiary" placeholder="Cumple (Ej: 15/08)" maxlength="5"></div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-2"><input id="op_eps" type="text" class="form-control bg-body-tertiary" placeholder="EPS" required></div>
+                            <div class="col-md-2"><input id="op_arl" type="text" class="form-control bg-body-tertiary" placeholder="ARL" required></div>
+                            <div class="col-md-2"><input id="op_rh" type="text" class="form-control bg-body-tertiary" placeholder="RH" required></div>
+                            <div class="col-md-3"><input type="text" id="op_contacto" class="form-control bg-body-tertiary" placeholder="Contacto Emergencia"></div>
+                            <div class="col-md-3"><input type="tel" id="op_num_emergencia" class="form-control bg-body-tertiary" placeholder="Cel. Emergencia"></div>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6"><textarea id="op_obs" class="form-control bg-body-tertiary" rows="2" placeholder="Observaciones"></textarea></div>
+                            <div class="col-md-6"><textarea id="op_anot" class="form-control bg-body-tertiary" rows="2" placeholder="Anotaciones"></textarea></div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2">Guardar Ficha Completa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ENTREGAR DOTACIÓN -->
+    <div class="modal fade" id="modalEntregarDotacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-box-seam me-2"></i> Entregar Dotación a Operario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="guardarEntregaDotacion(event)">
+                        <input type="hidden" id="ent_id_operario">
+                        <div class="alert alert-info py-2 small mb-3">Asignando dotación a: <strong id="ent_nom_operario">...</strong></div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Seleccionar Prenda / Elemento en Stock</label>
+                            <select id="ent_id_dotacion" class="form-select bg-body-tertiary" required>
+                                <option value="">Cargando stock de dotación...</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="small text-muted fw-bold">Cantidad</label>
+                                <input type="number" id="ent_cantidad" class="form-control bg-body-tertiary" min="1" value="1" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted fw-bold">Fecha de Entrega</label>
+                                <input type="date" id="ent_fecha" class="form-control bg-body-tertiary" required>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small text-muted fw-bold">Notas / Novedades</label>
+                            <input type="text" id="ent_notas" class="form-control bg-body-tertiary" placeholder="Ej: Entrega dotación periodo 2">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2">Confirmar Entrega y Descontar Stock</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: HISTORIAL DOTACIÓN -->
+    <div class="modal fade" id="modalHistorialDotacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-clock-history me-2"></i> Historial de Dotación Entregada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-secondary py-2 small mb-3">Historial de: <strong id="hist_nom_operario">...</strong></div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Fecha</th>
+                                    <th>Prenda</th>
+                                    <th>Talla</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th>Notas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyHistorialDotacion">
+                                <tr><td colspan="5" class="text-center text-muted py-3">Cargando historial...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CREAR USUARIO -->
+    <div class="modal fade" id="modalCrearUsuarioAdmin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success">Crear Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info small py-2 mb-3 border-0">Los usuarios creados aquí nacen automáticamente <strong>Aprobados</strong>.</div>
+                    <form onsubmit="crearUsuarioAdmin(event)">
+                        <input type="number" id="cu_doc" class="form-control mb-3 bg-body-tertiary" placeholder="Documento de Identidad" required>
+                        <input type="text" id="cu_nombre" class="form-control mb-3 bg-body-tertiary" placeholder="Nombre Completo" required>
+                        <input type="email" id="cu_correo" class="form-control mb-3 bg-body-tertiary" placeholder="Correo Electrónico" required>
+                        <select id="cu_rol" class="form-select mb-3 bg-body-tertiary" required>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                        <input type="password" id="cu_pass" class="form-control mb-4 bg-body-tertiary" placeholder="Contraseña Segura" required minlength="6">
+                        <button type="submit" id="btnCrearUser" class="btn btn-success w-100 fw-bold py-2">Crear y Aprobar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR USUARIO -->
+    <div class="modal fade" id="modalEditarUsuarioAdmin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-pencil-square me-2"></i>Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="editarUsuarioAdmin(event)">
+                        <input type="hidden" id="eu_id">
+                        <label class="small fw-bold text-muted">Documento de Identidad</label>
+                        <input type="number" id="eu_doc" class="form-control mb-3 bg-body-tertiary" required>
+                        <label class="small fw-bold text-muted">Nombre Completo</label>
+                        <input type="text" id="eu_nombre" class="form-control mb-3 bg-body-tertiary" required>
+                        <label class="small fw-bold text-muted">Correo Electrónico (No se puede cambiar)</label>
+                        <input type="email" id="eu_correo" class="form-control mb-3 bg-body-tertiary" required readonly>
+                        <label class="small fw-bold text-muted">Rol Asignado</label>
+                        <select id="eu_rol" class="form-select mb-4 bg-body-tertiary" required>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: INVENTARIO UNIFICADO -->
+    <div class="modal fade" id="modalUnificado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success">Agregar Elemento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="procesarGuardadoUnificado(event)">
+                        <select class="form-select mb-3 bg-body-tertiary text-body fw-bold text-success" id="tipoElemento" onchange="toggleCamposUnificado()">
+                            <option value="dotacion">Dotación</option>
+                            <option value="activo">Activo Fijo</option>
+                            <option value="insumo">Insumo</option>
+                        </select>
+
+                        <div id="camposInventario" style="display: none;">
+                            <input type="hidden" id="invId">
+                            <input type="text" id="invNom" class="form-control mb-3 bg-body-tertiary text-body" placeholder="Nombre (Ej: Computador, Escritorio, Guadaña)">
+                            <input type="text" id="invSer" class="form-control mb-3 bg-body-tertiary text-body" placeholder="Serial / Placa / Cantidad">
+                            <input type="text" id="invRes" class="form-control mb-4 bg-body-tertiary text-body" placeholder="Responsable / Sede">
+                        </div>
+
+                        <div id="camposDotacion" style="display: block;">
+                            <input type="hidden" id="dotId">
+                            <input type="text" class="form-control mb-3 bg-body-tertiary text-body" id="dotTipo" placeholder="Prenda (Ej: Botas, Camisa, Pantalón)">
+                            <div class="row g-2 mb-4">
+                                <div class="col-4"><input type="text" class="form-control bg-body-tertiary text-body" id="dotTalla" placeholder="Talla"></div>
+                                <div class="col-4"><input type="number" class="form-control bg-body-tertiary text-body" id="dotCant" min="1" placeholder="Cant."></div>
+                                <div class="col-4">
+                                    <select class="form-select bg-body-tertiary text-body" id="dotCondicion">
+                                        <option value="Nueva">Nueva</option>
+                                        <option value="De segunda">Usada</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES DE GENERACIÓN DE PDF -->
+    <!-- CARTA PRESENTACIÓN -->
+    <div class="modal fade" id="modalCarta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-file-earmark-text me-2"></i> Carta de Presentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCarta" onsubmit="generarPDF(event, 'carta')">
+                        <input type="hidden" id="carta_ciudad_exp">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
+                            <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-primary" id="carta_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'carta')" oninput="buscarOperarioPDF(this.value, 'carta')" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Nombres Completos</label>
+                            <input type="text" id="carta_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Sede / Cliente Destino</label>
+                                <select id="carta_cliente" class="form-select bg-body-tertiary border-primary" required>
+                                    <option value="">Cargando clientes...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Cargo a Desempeñar</label>
+                                <input type="text" id="carta_cargo" class="form-control bg-body-tertiary" placeholder="..." readonly required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4"><label class="small text-muted fw-bold">RH</label><input type="text" id="carta_rh" class="form-control bg-body-tertiary" readonly required></div>
+                            <div class="col-md-4"><label class="small text-muted fw-bold">EPS</label><input type="text" id="carta_eps" class="form-control bg-body-tertiary" readonly required></div>
+                            <div class="col-md-4"><label class="small text-muted fw-bold">ARL</label><input type="text" id="carta_arl" class="form-control bg-body-tertiary" readonly required></div>
+                        </div>
+                        <div class="mb-3 border p-3 rounded bg-body-tertiary">
+                            <label class="form-label small fw-semibold"><i class="bi bi-image"></i> Adjuntar Foto Local (Opcional, Máx 3MB)</label>
+                            <input type="file" id="carta_foto" class="form-control form-control-sm" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-2">Generar e Imprimir Carta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CERTIFICADO LABORAL -->
+    <div class="modal fade" id="modalCertificado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-award me-2"></i> Certificado Laboral</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCertificado" onsubmit="generarPDF(event, 'cert')">
+                        <input type="hidden" id="cert_ciudad">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
+                            <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-success" id="cert_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'cert')" oninput="buscarOperarioPDF(this.value, 'cert')" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Nombres Completos</label>
+                            <input type="text" id="cert_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
+                        </div>
+                        <div class="alert alert-secondary py-2 small mb-3 border-0"><i class="bi bi-info-circle me-1"></i> Puede modificar las fechas si necesita certificar un periodo de contratación anterior.</div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="small text-muted fw-bold">Fecha de Ingreso</label>
+                                <input type="date" id="cert_ingreso" class="form-control bg-body-tertiary" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small text-muted fw-bold">Fecha Fin / Egreso</label>
+                                <input type="date" id="cert_egreso" class="form-control bg-body-tertiary">
+                                <small class="text-muted d-block" style="font-size:0.75rem;">Dejar en blanco si el empleado sigue activo</small>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small text-muted fw-bold">Tipo de Contrato</label>
+                                <select id="cert_contrato" class="form-select bg-body-tertiary" required>
+                                    <option value="Fijo">Término Fijo</option>
+                                    <option value="Indefinido">Término Indefinido</option>
+                                    <option value="Obra o Labor">Obra o Labor</option>
+                                    <option value="Prestación de Servicios">Prestación de Servicios</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small text-muted fw-bold">Salario Básico Mensual</label>
+                            <input type="number" id="cert_salario" class="form-control bg-body-tertiary" placeholder="Ej: 1750905" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2">Emitir Certificado Laboral</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ORDEN DE EXAMEN MÉDICO -->
+    <div class="modal fade" id="modalExamen" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-heart-pulse me-2"></i> Orden Examen Médico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formExamen" onsubmit="generarPDF(event, 'exam')">
+                        <input type="hidden" id="exam_ciudad_exp">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
+                            <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-danger" id="exam_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'exam')" oninput="buscarOperarioPDF(this.value, 'exam')" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Nombres Completos</label>
+                            <input type="text" id="exam_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Tipo de Examen</label>
+                                <select id="exam_tipo" class="form-select bg-body-tertiary border-danger" required>
+                                    <option value="Ingreso">Examen de Ingreso</option>
+                                    <option value="Egreso">Examen de Egreso</option>
+                                    <option value="Periódico">Examen Periódico</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Sede Médica Aliada</label>
+                                <select id="exam_lab" class="form-select bg-body-tertiary border-danger" required>
+                                    <option value="IPS SISOMED MANIZALES - CALLE 49 # 26-09">IPS SISOMED (Manizales)</option>
+                                    <option value="IPS SISOMED PEREIRA - CALLE 15 # 4-33 CENTRO">IPS SISOMED (Pereira)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold py-2 mt-2">Generar Orden Médica</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RETIRO DE CESANTÍAS -->
+    <div class="modal fade" id="modalCesantias" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-warning"><i class="bi bi-piggy-bank me-2"></i> Retiro de Cesantías</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCesantias" onsubmit="generarPDF(event, 'cesan')">
+                        <input type="hidden" id="cesan_ciudad">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
+                            <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-warning" id="cesan_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'cesan')" oninput="buscarOperarioPDF(this.value, 'cesan')" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Nombres Completos</label>
+                            <input type="text" id="cesan_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
+                        </div>
+                        <div class="alert alert-secondary py-2 small mb-3 border-0"><i class="bi bi-info-circle me-1"></i> Verifique o modifique las fechas que requiere certificar al fondo de cesantías.</div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Inicio Labores</label>
+                                <input type="date" id="cesan_inicio" class="form-control bg-body-tertiary" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Fin Labores</label>
+                                <input type="date" id="cesan_fin" class="form-control bg-body-tertiary" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold py-2 text-dark mt-2">Generar Autorización de Retiro</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APERTURA DE CUENTA -->
+    <div class="modal fade" id="modalCuenta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content card-custom p-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <h5 class="modal-title fw-bold text-info"><i class="bi bi-bank me-2"></i> Apertura Cuenta Davivienda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCuenta" onsubmit="generarPDF(event, 'cta')">
+                        <input type="hidden" id="cta_ciudad">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
+                            <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-info" id="cta_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'cta')" oninput="buscarOperarioPDF(this.value, 'cta')" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-bold">Nombres Completos</label>
+                            <input type="text" id="cta_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small text-muted fw-bold">Sucursal Destino (Banco)</label>
+                            <select id="cta_sede_op" class="form-select bg-body-tertiary border-info" required>
+                                <option value="Manizales">Sede Operativa Manizales</option>
+                                <option value="Pereira">Sede Operativa Pereira</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-info w-100 fw-bold py-2 text-dark mt-2">Generar Solicitud de Apertura</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- LÓGICA MODULAR DE FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC81HOxo4CAcIe1jFeZB63sc7MTGAfngOY",
+            authDomain: "sadafa-erp.firebaseapp.com",
+            projectId: "sadafa-erp",
+            storageBucket: "sadafa-erp.firebasestorage.app",
+            messagingSenderId: "874852761234",
+            appId: "1:874852761234:web:2604386d38e9d84233b04b",
+            measurementId: "G-WNLC4WQVN0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        
+        // 🛡️ QA: Segunda app para crear usuarios sin sacar al Admin de sesión
+        const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+        const secondaryAuth = getAuth(secondaryApp);
+
+        // Variables Globales
+        let inventarioGlobal = []; let dotacionGlobal = []; let cacheOperariosPDF = []; let cacheClientesPDF = []; let cacheUsuariosPDF = []; let gastosGlobales = [];
+        
+        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
+        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
+
+        // ==========================================
+        // 🛡️ QA: SANITIZACIÓN XSS Y UTILIDADES
+        // ==========================================
+        window.sanitizar = function(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/[&<>"'`=\/]/g, function(s) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' }[s]; });
+        };
+        const eStr = (s) => window.sanitizar(String(s||'').replace(/'/g, "\\'"));
+        window.eStr = eStr;
+
+        window.limpiarFormulario = function(modalId) {
+            const form = document.querySelector('#' + modalId + ' form');
+            if (form) form.reset();
+        };
+
+        window.cerrarModalJS = function(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) { const modal = bootstrap.Modal.getInstance(el); if (modal) modal.hide(); }
+            setTimeout(() => { document.querySelectorAll('.modal-backdrop').forEach(b => b.remove()); document.body.classList.remove('modal-open'); document.body.style.overflow = ''; document.body.style.paddingRight = ''; }, 300);
+        };
+
+        window.mostrarAlerta = function(mensaje, esError = false) {
+            const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
+            toastEl.classList.remove('text-bg-success', 'text-bg-danger'); toastEl.classList.add(esError ? 'text-bg-danger' : 'text-bg-success');
+            toastMsg.innerText = mensaje; new bootstrap.Toast(toastEl, { delay: 4500 }).show();
+        };
+
+        async function subirImagenStorage(file, carpeta) {
+            if (!file) return null;
+            if (file.size > 3 * 1024 * 1024) throw new Error("La foto excede los 3MB.");
+            const fileRef = ref(storage, `${carpeta}/${Date.now()}_${file.name}`);
+            await uploadBytes(fileRef, file);
+            return await getDownloadURL(fileRef);
+        }
+
+        // ==========================================
+        // UX Y SESIÓN
+        // ==========================================
+        document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        const tema = localStorage.getItem('sadafa_theme') || 'dark';
+        document.documentElement.setAttribute('data-bs-theme', tema);
+        document.getElementById('modoOscuroSwitch').checked = (tema === 'light');
+        document.getElementById('labelModo').innerText = (tema === 'light') ? 'Modo Oscuro' : 'Modo Día';
+
+        document.getElementById('modoOscuroSwitch').addEventListener('change', () => {
+            const temaActual = document.documentElement.getAttribute('data-bs-theme');
+            const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', nuevoTema);
+            localStorage.setItem('sadafa_theme', nuevoTema);
+            document.getElementById('labelModo').innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
+        });
+
+        document.addEventListener('input', function (e) {
+            if (e.target.matches('input[type="text"], textarea')) {
+                if (e.target.type !== 'password' && e.target.type !== 'email') {
+                    const start = e.target.selectionStart; const end = e.target.selectionEnd;
+                    e.target.value = e.target.value.toUpperCase(); e.target.setSelectionRange(start, end);
+                }
+            }
+        });
+
+        // ==========================================
+        // NAVEGACIÓN Y CARGA DE MÓDULOS
+        // ==========================================
+        window.cambiarSeccion = function(seccionId, event) {
+            event.preventDefault(); 
+            document.querySelectorAll('.seccion-contenido').forEach(el => el.style.display = 'none'); 
+            document.getElementById(`sec-${seccionId}`).style.display = 'block'; 
+            document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active')); 
+            event.currentTarget.classList.add('active');
+            
+            if (seccionId === 'dashboard') { cargarDashboardResumen(); }
+            if (seccionId === 'empleado') { document.getElementById('tablaContratosBody').innerHTML = '<tr><td colspan="12" class="text-center text-muted py-3">Cargando base de datos...</td></tr>'; window.cargarOperarioTabla(); }
+            if (seccionId === 'cliente') { document.getElementById('tablaClientesBody').innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr>'; window.cargarClientesTabla(); }
+            if (seccionId === 'usuario') { document.getElementById('tablaUsuariosBody').innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Cargando usuarios...</td></tr>'; window.cargarUsuariosTabla(); }
+            if (seccionId === 'inventario') { 
+                document.getElementById('tbodyActivos').innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Cargando...</td></tr>'; 
+                document.getElementById('tbodyInsumos').innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Cargando...</td></tr>';
+                document.getElementById('tbodyDotacionAdmin').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Cargando...</td></tr>';
+                window.cargarTablasInventario(); 
+            }
+            if (seccionId === 'auditoria') { document.getElementById('tbodyAuditorias').innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Cargando auditorías...</td></tr>'; window.cargarAuditorias(); }
+            if (seccionId === 'bitacora') { document.getElementById('tbodyNovedades').innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Cargando novedades...</td></tr>'; window.cargarNovedades(); }
+            if (seccionId === 'caja') { 
+                document.querySelector('#sec-caja th:last-child').classList.remove('admin-only');
+                document.getElementById('tbodyGastos').innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Cargando gastos con Firebase...</td></tr>'; 
+                window.cargarGastos(); 
+            }
+        };
+
+        window.filtrarTabla = function(inputId, tablaBodyId) { 
+            const f = window.sanitizar(document.getElementById(inputId).value.toLowerCase()); 
+            const tr = document.getElementById(tablaBodyId).getElementsByTagName('tr'); 
+            for(let i = 0; i < tr.length; i++) { tr[i].style.display = tr[i].innerText.toLowerCase().indexOf(f) > -1 ? '' : 'none'; }
+        };
+
+        // ==========================================
+        // CACHÉS PRINCIPALES (FIREBASE)
+        // ==========================================
+        async function cargarClientesCache() {
+            const querySnapshot = await getDocs(collection(db, "clientes"));
+            cacheClientesPDF = []; querySnapshot.forEach(doc => cacheClientesPDF.push({ id: doc.id, ...doc.data() }));
+        }
+        async function cargarOperariosCache() {
+            const querySnapshot = await getDocs(collection(db, "operarios"));
+            cacheOperariosPDF = [];
+            querySnapshot.forEach(docSnap => {
+                let op = { id: docSnap.id, ...docSnap.data() };
+                const cliente = cacheClientesPDF.find(c => c.id === op.id_cliente_asignado);
+                op.cliente_nombre = cliente ? cliente.razon_social : 'No asignado';
+                cacheOperariosPDF.push(op);
+            });
+        }
+        async function cargarUsuariosCache() {
+            const querySnapshot = await getDocs(collection(db, "usuarios"));
+            cacheUsuariosPDF = []; querySnapshot.forEach(doc => cacheUsuariosPDF.push({ id: doc.id, ...doc.data() }));
+        }
+        async function cargarDotacionCache() {
+            const querySnapshot = await getDocs(collection(db, "dotacion"));
+            dotacionGlobal = []; querySnapshot.forEach(doc => dotacionGlobal.push({ id: doc.id, ...doc.data() }));
+        }
+
+        async function cargarDashboardResumen() {
+            await cargarOperariosCache(); await cargarDotacionCache();
+            const vencimientos = cacheOperariosPDF.filter(o => {
+                if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
+                const diffTime = new Date(o.fecha_fin) - new Date();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                o.dias_restantes = diffDays; return diffDays >= 0 && diffDays <= 30;
+            });
+            const stockBajo = dotacionGlobal.filter(d => d.cantidad <= 3);
+            
+            const alertasLegal = cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.fecha_inicio).map(o => {
+                const diff = Math.ceil((new Date() - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24));
+                return { ...o, dias_sin_dotacion: diff };
+            }).filter(o => o.dias_sin_dotacion >= 120);
+
+            document.getElementById('dashVenceContratos').innerText = vencimientos.length;
+            document.getElementById('badgeVenceCount').innerText = `${vencimientos.length}`;
+            document.getElementById('dashStockCritico').innerText = stockBajo.length;
+            document.getElementById('badgeStockCount').innerText = `${stockBajo.length}`;
+            document.getElementById('badgeLegalCount').innerText = `${alertasLegal.length}`;
+
+            document.getElementById('tbodyDashVencimientos').innerHTML = vencimientos.length ? vencimientos.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.nombres_completos)} <br><small class="text-muted fw-normal">${v.fecha_fin}</small></td><td class="text-end pe-3"><span class="badge bg-danger">${v.dias_restantes} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr>';
+            document.getElementById('tbodyDashStock').innerHTML = stockBajo.length ? stockBajo.map(s => `<tr><td class="ps-3 fw-bold">${window.sanitizar(s.tipo_prenda)}</td><td><span class="badge bg-secondary text-white">${window.sanitizar(s.talla)}</span></td><td class="text-center pe-3"><span class="badge erp-bg-azul">${s.cantidad} und</span></td></tr>`).join('') : '<tr><td colspan="3" class="text-center text-muted py-3">Stock seguro.</td></tr>';
+            document.getElementById('tbodyDashLegal').innerHTML = alertasLegal.length ? alertasLegal.map(a => `<tr><td class="ps-3 fw-bold">${window.sanitizar(a.nombres_completos)}</td><td class="text-end pe-3"><span class="badge" style="background-color:#8b5cf6;">${a.dias_sin_dotacion} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr>';
+        }
+
+        // ==========================================
+        // MÓDULO: CLIENTES (FIREBASE)
+        // ==========================================
+        window.prepararNuevoCliente = function() { window.limpiarFormulario('modalCliente'); document.getElementById('cli_id').value = ''; };
+
+        window.cargarClientesTabla = async function() {
+            await cargarClientesCache();
+            const activos = cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo'); const inactivos = cacheClientesPDF.filter(c => c.estado_cliente === 'Inactivo');
+            
+            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.nit_cedula)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.correo_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-warning btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Enviar al Historial"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
+            document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.nit_cedula)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.correo_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Reactivar"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
+        };
+
+        window.abrirModalClienteId = function(id) {
+            window.limpiarFormulario('modalCliente');
+            setTimeout(() => {
+                const c = cacheClientesPDF.find(x => x.id === id);
+                if(c) { document.getElementById('cli_id').value = c.id; document.getElementById('cli_rs').value = c.razon_social || ''; document.getElementById('cli_nit').value = c.nit_cedula || ''; document.getElementById('cli_dir').value = c.direccion || ''; document.getElementById('cli_cel').value = c.celular_cliente || ''; document.getElementById('cli_cor').value = c.correo_cliente || ''; document.getElementById('cli_adm').value = c.nombre_contacto_admin || ''; document.getElementById('cli_adm_cel').value = c.celular_admin || ''; document.getElementById('cli_adm_cor').value = c.correo_admin || ''; }
+            }, 50);
+        };
+
+        window.guardarClienteAdmin = async function(e) { 
+            e.preventDefault(); const id = document.getElementById('cli_id').value; 
+            const data = { razon_social: document.getElementById('cli_rs').value, nit_cedula: document.getElementById('cli_nit').value, direccion: document.getElementById('cli_dir').value, celular_cliente: document.getElementById('cli_cel').value, correo_cliente: document.getElementById('cli_cor').value, nombre_contacto_admin: document.getElementById('cli_adm').value, celular_admin: document.getElementById('cli_adm_cel').value, correo_admin: document.getElementById('cli_adm_cor').value, estado_cliente: 'Activo', fecha_registro: new Date().toISOString() };
+            try { if (id) { await updateDoc(doc(db, "clientes", id), data); } else { await addDoc(collection(db, "clientes"), data); } window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalCliente'); window.cargarClientesTabla(); } catch(err) { window.mostrarAlerta("Error al guardar cliente.", true); }
+        };
+
+        window.desactivarCliente = async function(id, nombre) { if (confirm(`¿Seguro que desea enviar al cliente ${nombre} al historial de inactivos?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Inactivo' }); window.cargarClientesTabla(); } };
+        window.reactivarCliente = async function(id, nombre) { if (confirm(`¿Seguro que desea reactivar al cliente ${nombre}?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Activo' }); window.cargarClientesTabla(); } };
+
+        // ==========================================
+        // MÓDULO: OPERARIOS (FIREBASE)
+        // ==========================================
+        window.prepararNuevoOperario = function() { window.limpiarFormulario('modalOperario'); document.getElementById('op_id').value = ''; document.getElementById('op_ciudad_expedicion').value = ''; };
+
+        window.cargarOperarioTabla = async function() {
+            await window.cargarOperariosCache();
+            const opCliSel = document.getElementById('op_cliente');
+            if (opCliSel && cacheClientesPDF.length > 0) { opCliSel.innerHTML = '<option value="">-- Sin Cliente --</option>' + cacheClientesPDF.map(c => `<option value="${c.id}" data-admin="${window.sanitizar(c.nombre_contacto_admin) || ''}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
+            
+            const activos = cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo'); const inactivos = cacheOperariosPDF.filter(o => o.estado_operario === 'Inactivo');
+            document.getElementById('tablaContratosBody').innerHTML = activos.length ? activos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="abrirEdicionOperarioId('${op.id}')" title="Editar"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-success btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEntregarDotacion" onclick="abrirModalEntregarDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-box-seam"></i></button><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalHistorialDotacion" onclick="abrirHistorialDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-clock-history"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-person-x"></i></button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap"><strong>${window.sanitizar(op.cliente_nombre)}</strong></td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap"><span class="badge bg-info-subtle text-info border">${window.sanitizar(op.especialidad)}</span></td><td class="text-nowrap">${op.fecha_inicio || ''}</td><td class="text-nowrap">${op.fecha_fin || ''}</td><td class="text-nowrap">${op.sueldo ? '$' + new Intl.NumberFormat('es-CO').format(op.sueldo) : ''}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td><td class="pe-4 text-nowrap">${window.sanitizar(op.correo_electronico)}</td></tr>`).join('') : `<tr><td colspan="12" class="text-center text-muted py-3">No hay contratos registrados.</td></tr>`;
+            document.getElementById('tablaOperariosInactivosBody').innerHTML = inactivos.length ? inactivos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-arrow-counterclockwise"></i> Reactivar</button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap">${window.sanitizar(op.cliente_nombre)}</td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap">${window.sanitizar(op.especialidad)}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td></tr>`).join('') : `<tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
+        };
+
+        window.abrirEdicionOperarioId = function(id) {
+            window.limpiarFormulario('modalOperario');
+            setTimeout(() => {
+                const op = cacheOperariosPDF.find(o => o.id === id);
+                if(op) {
+                    document.getElementById('op_id').value = op.id; document.getElementById('op_ciudad').value = op.ciudad || 'Manizales'; document.getElementById('op_doc').value = op.cedula || ''; document.getElementById('op_ciudad_expedicion').value = op.ciudad_expedicion || ''; document.getElementById('op_nom').value = op.nombres_completos || ''; document.getElementById('op_cliente').value = op.id_cliente_asignado || ''; document.getElementById('op_esp').value = op.especialidad || ''; document.getElementById('op_sueldo').value = op.sueldo || ''; document.getElementById('op_tipocontrato').value = op.tipo_contrato || 'Fijo'; document.getElementById('op_termino').value = op.termino_contrato || ''; document.getElementById('op_inicio').value = op.fecha_inicio || ''; document.getElementById('op_fin').value = op.fecha_fin || ''; document.getElementById('op_cel').value = op.celular || ''; document.getElementById('op_correo').value = op.correo_electronico || ''; document.getElementById('op_direccion').value = op.direccion_residencia || ''; document.getElementById('op_eps').value = op.eps || ''; document.getElementById('op_arl').value = op.arl || ''; document.getElementById('op_rh').value = op.rh || ''; document.getElementById('op_contacto').value = op.contacto_emergencia || ''; document.getElementById('op_num_emergencia').value = op.numero_emergencia || ''; document.getElementById('op_obs').value = op.observaciones || ''; document.getElementById('op_anot').value = op.anotaciones || ''; document.getElementById('op_cumpleanos').value = op.cumpleanos || '';
+                }
+            }, 50);
+        };
+
+        window.guardarOperarioAdmin = async function(e) { 
+            e.preventDefault(); const id = document.getElementById('op_id').value; 
+            const data = { cedula: document.getElementById('op_doc').value, nombres_completos: document.getElementById('op_nom').value, ciudad: document.getElementById('op_ciudad').value, ciudad_expedicion: document.getElementById('op_ciudad_expedicion').value, eps: document.getElementById('op_eps').value, arl: document.getElementById('op_arl').value, rh: document.getElementById('op_rh').value, celular: document.getElementById('op_cel').value, especialidad: document.getElementById('op_esp').value, id_cliente_asignado: document.getElementById('op_cliente').value, tipo_contrato: document.getElementById('op_tipocontrato').value, fecha_inicio: document.getElementById('op_inicio').value, fecha_fin: document.getElementById('op_fin').value, sueldo: document.getElementById('op_sueldo').value, termino_contrato: document.getElementById('op_termino').value, correo_electronico: document.getElementById('op_correo').value, direccion_residencia: document.getElementById('op_direccion').value, cumpleanos: document.getElementById('op_cumpleanos').value, contacto_emergencia: document.getElementById('op_contacto').value, numero_emergencia: document.getElementById('op_num_emergencia').value, observaciones: document.getElementById('op_obs').value, anotaciones: document.getElementById('op_anot').value, estado_operario: 'Activo' };
+            try { if (id) { await updateDoc(doc(db, "operarios", id), data); } else { await addDoc(collection(db, "operarios"), data); } window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalOperario'); window.cargarOperarioTabla(); cargarDashboardResumen(); } catch(err) { window.mostrarAlerta("Error al guardar.", true); }
+        };
+
+        window.desactivarOperario = async function(id, nombre) { if (confirm(`¿Seguro que desea RETIRAR al operario ${nombre}?`)) { await updateDoc(doc(db, "operarios", id), { estado_operario: 'Inactivo' }); window.cargarOperarioTabla(); cargarDashboardResumen(); } };
+        window.reactivarOperario = async function(id, nombre) { if (confirm(`¿Seguro que desea REACTIVAR al operario ${nombre}?`)) { await updateDoc(doc(db, "operarios", id), { estado_operario: 'Activo' }); window.cargarOperarioTabla(); cargarDashboardResumen(); } };
+
+        document.getElementById('btnExportarOperarios').addEventListener('click', () => {
+            if (!cacheOperariosPDF.length) return window.mostrarAlerta("No hay datos para exportar", true);
+            let csvContent = "\uFEFFCiudad;Cliente;Nombres;Cédula;Tipo Contrato;Cargo;Fecha Inicio;Sueldo;Celular;Estado\r\n";
+            cacheOperariosPDF.forEach(op => { csvContent += `"${op.ciudad||''}";"${op.cliente_nombre||''}";"${op.nombres_completos||''}";"${op.cedula||''}";"${op.tipo_contrato||''}";"${op.especialidad||''}";"${op.fecha_inicio||''}";"${op.sueldo||''}";"${op.celular||''}";"${op.estado_operario||''}"\r\n`; });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `SADAFA_Personal_${new Date().toISOString().split('T')[0]}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        });
+
+        // ==========================================
+        // MÓDULO: USUARIOS (FIREBASE)
+        // ==========================================
+        window.prepararNuevoUsuario = function() { window.limpiarFormulario('modalCrearUsuarioAdmin'); };
+
+        window.cargarUsuariosTabla = async function() { 
+            await cargarUsuariosCache();
+            const validUsers = cacheUsuariosPDF.filter(u => u.estado !== 'Inactivo');
+            document.getElementById('tablaUsuariosBody').innerHTML = validUsers.length ? validUsers.map(u => `<tr><td class="ps-4">${window.sanitizar(u.documento)}</td><td><strong>${window.sanitizar(u.nombre_completo) || 'Usuario'}</strong></td><td>${window.sanitizar(u.correo)}</td><td><span class="badge bg-secondary-subtle text-secondary border">${window.sanitizar(u.rol)}</span></td><td><span class="badge ${u.estado === 'Aprobado' ? 'bg-success-subtle text-success' : (u.estado === 'Rechazado' ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger')} border px-2 py-1">${u.estado}</span></td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 me-1" title="Editar Usuario" onclick="abrirEditarUsuario('${u.id}')"><i class="bi bi-pencil"></i></button>${u.estado !== 'Aprobado' ? `<button type="button" class="btn btn-success btn-sm py-0 px-2 fw-semibold" onclick="cambiarEstadoUsuario('${u.id}', 'Aprobado')"><i class="bi bi-check-lg"></i></button>` : ''}${u.estado !== 'Rechazado' ? `<button type="button" class="btn btn-outline-warning btn-sm py-0 px-2 ms-1" onclick="cambiarEstadoUsuario('${u.id}', 'Rechazado')"><i class="bi bi-x-lg"></i></button>` : ''}<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 ms-1" title="Desactivar Usuario" onclick="eliminarUsuario('${u.id}', '${window.eStr(u.correo)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="6" class="text-center text-danger py-3">Error al cargar datos.</td></tr>`; 
+        };
+
+        window.abrirEditarUsuario = function(id) {
+            window.limpiarFormulario('modalEditarUsuarioAdmin');
+            setTimeout(() => {
+                const u = cacheUsuariosPDF.find(x => x.id === id);
+                if(u) { document.getElementById('eu_id').value = u.id; document.getElementById('eu_doc').value = u.documento || ''; document.getElementById('eu_nombre').value = u.nombre_completo || ''; document.getElementById('eu_correo').value = u.correo || ''; document.getElementById('eu_rol').value = u.rol || 'Supervisor'; new bootstrap.Modal(document.getElementById('modalEditarUsuarioAdmin')).show(); }
+            }, 50);
+        };
+
+        window.editarUsuarioAdmin = async function(e) {
+            e.preventDefault(); const id = document.getElementById('eu_id').value;
+            try { await updateDoc(doc(db, "usuarios", id), { documento: document.getElementById('eu_doc').value, nombre_completo: document.getElementById('eu_nombre').value, rol: document.getElementById('eu_rol').value }); window.mostrarAlerta("Usuario actualizado."); window.cerrarModalJS('modalEditarUsuarioAdmin'); window.cargarUsuariosTabla(); } catch(err) { window.mostrarAlerta("Error al editar", true); }
+        };
+
+        window.crearUsuarioAdmin = async function(e) { 
+            e.preventDefault(); const btn = document.getElementById('btnCrearUser'); btn.disabled = true; btn.innerHTML = 'Creando...';
+            const email = document.getElementById('cu_correo').value; const pwd = document.getElementById('cu_pass').value;
+            try { 
+                const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, pwd); 
+                await addDoc(collection(db, "usuarios"), { uid: userCred.user.uid, documento: document.getElementById('cu_doc').value, nombre_completo: document.getElementById('cu_nombre').value, correo: email, rol: document.getElementById('cu_rol').value, estado: 'Aprobado', fecha_registro: new Date().toISOString() }); 
+                await secondaryAuth.signOut(); window.mostrarAlerta("Usuario creado."); window.cerrarModalJS('modalCrearUsuarioAdmin'); window.cargarUsuariosTabla(); 
+            } catch(err) { window.mostrarAlerta("Error: " + err.message, true); } btn.disabled = false; btn.innerHTML = 'Crear y Aprobar';
+        };
+
+        window.cambiarEstadoUsuario = async function(id, est) { await updateDoc(doc(db, "usuarios", id), { estado: est }); window.cargarUsuariosTabla(); };
+        window.eliminarUsuario = async function(id, correo) { if (confirm(`¿Seguro que desea desactivar permanentemente al usuario ${correo}? Perderá el acceso.`)) { await updateDoc(doc(db, "usuarios", id), { estado: 'Inactivo' }); window.mostrarAlerta("Usuario desactivado."); window.cargarUsuariosTabla(); } };
+
+        // ==========================================
+        // MÓDULO: INVENTARIO UNIFICADO (FIREBASE)
+        // ==========================================
+        window.toggleCamposUnificado = function() {
+            const tipo = document.getElementById('tipoElemento').value; const cInv = document.getElementById('camposInventario'); const cDot = document.getElementById('camposDotacion');
+            document.getElementById('dotTipo').required = false; document.getElementById('invNom').required = false; document.getElementById('invSer').required = false; document.getElementById('invRes').required = false; 
+            if (tipo === 'dotacion') { cDot.style.display = 'block'; cInv.style.display = 'none'; document.getElementById('dotTipo').required = true; } else { cDot.style.display = 'none'; cInv.style.display = 'block'; document.getElementById('invNom').required = true; document.getElementById('invSer').required = true; document.getElementById('invRes').required = true; }
+        };
+        window.prepararNuevoUnificado = function() { window.limpiarFormulario('modalUnificado'); document.getElementById('invId').value = ""; document.getElementById('dotId').value = ""; document.getElementById('tipoElemento').value = 'dotacion'; document.getElementById('tipoElemento').disabled = false; window.toggleCamposUnificado(); };
+        window.cargarTablasInventario = async function() {
+            const invSnap = await getDocs(collection(db, "inventario")); inventarioGlobal = []; invSnap.forEach(d => inventarioGlobal.push({ id: d.id, ...d.data() }));
+            await cargarDotacionCache(); window.aplicarFiltrosInventario();
+        };
+        window.aplicarFiltrosInventario = function() {
+            const fTexto = window.sanitizar(document.getElementById('filtroTextoInventario').value.toUpperCase());
+            const activos = inventarioGlobal.filter(i => i.categoria === 'Herramienta' && (!fTexto || String(i.nombre_elemento).toUpperCase().includes(fTexto) || String(i.serial_cantidad).toUpperCase().includes(fTexto) || String(i.responsable_sede).toUpperCase().includes(fTexto)));
+            const insu = inventarioGlobal.filter(i => i.categoria === 'Insumo' && (!fTexto || String(i.nombre_elemento).toUpperCase().includes(fTexto) || String(i.serial_cantidad).toUpperCase().includes(fTexto) || String(i.responsable_sede).toUpperCase().includes(fTexto)));
+            const dot = dotacionGlobal.filter(d => (!fTexto || String(d.tipo_prenda).toUpperCase().includes(fTexto) || String(d.talla).toUpperCase().includes(fTexto) || String(d.condicion).toUpperCase().includes(fTexto)));
+
+            document.getElementById('tbodyActivos').innerHTML = activos.length ? activos.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
+            document.getElementById('tbodyInsumos').innerHTML = insu.length ? insu.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
+            document.getElementById('tbodyDotacionAdmin').innerHTML = dot.length ? dot.map(d => `<tr><td class="ps-4"><strong>${window.sanitizar(d.tipo_prenda)}</strong></td><td>${window.sanitizar(d.talla)}</td><td><span class="badge ${d.condicion === 'Nueva' ? 'bg-success' : 'bg-warning text-dark'}">${window.sanitizar(d.condicion)}</span></td><td class="text-center fw-bold">${d.cantidad}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarDotacionId('${d.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarDotacion('${d.id}', '${window.eStr(d.tipo_prenda)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="5" class="text-center text-muted">No hay coincidencias</td></tr>`;
+        };
+
+        window.abrirEditarInventarioId = function(id) { window.limpiarFormulario('modalUnificado'); setTimeout(() => { const i = inventarioGlobal.find(x => x.id === id); if(i) { document.getElementById('tipoElemento').value = i.categoria === 'Herramienta' ? 'activo' : 'insumo'; document.getElementById('tipoElemento').disabled = true; window.toggleCamposUnificado(); document.getElementById('invId').value = i.id; document.getElementById('invNom').value = i.nombre_elemento; document.getElementById('invSer').value = i.serial_cantidad; document.getElementById('invRes').value = i.responsable_sede; } }, 50); };
+        window.abrirEditarDotacionId = function(id) { window.limpiarFormulario('modalUnificado'); setTimeout(() => { const d = dotacionGlobal.find(x => x.id === id); if(d) { document.getElementById('tipoElemento').value = 'dotacion'; document.getElementById('tipoElemento').disabled = true; window.toggleCamposUnificado(); document.getElementById('dotId').value = d.id; document.getElementById('dotTipo').value = d.tipo_prenda; document.getElementById('dotTalla').value = d.talla; document.getElementById('dotCondicion').value = d.condicion; document.getElementById('dotCant').value = d.cantidad; } }, 50); };
+
+        window.procesarGuardadoUnificado = async function(e) { 
+            e.preventDefault(); const tipo = document.getElementById('tipoElemento').value; const idDot = document.getElementById('dotId').value; const idInv = document.getElementById('invId').value; 
+            try {
+                if (tipo === 'dotacion') { 
+                    const data = { tipo_prenda: document.getElementById('dotTipo').value.trim(), talla: document.getElementById('dotTalla').value, condicion: document.getElementById('dotCondicion').value, cantidad: parseInt(document.getElementById('dotCant').value || 1) };
+                    if (idDot) await updateDoc(doc(db, "dotacion", idDot), data); else await addDoc(collection(db, "dotacion"), data);
+                } else { 
+                    const data = { categoria: (tipo === 'activo' ? 'Herramienta' : 'Insumo'), nombre_elemento: document.getElementById('invNom').value.trim(), serial_cantidad: document.getElementById('invSer').value, responsable_sede: document.getElementById('invRes').value, fecha_registro: new Date().toISOString() };
+                    if (idInv) await updateDoc(doc(db, "inventario", idInv), data); else await addDoc(collection(db, "inventario"), data);
+                }
+                window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalUnificado'); window.cargarTablasInventario(); cargarDashboardResumen();
+            } catch(err) { window.mostrarAlerta("Error al guardar", true); }
+        };
+
+        window.eliminarInventario = async function(id, nombre) { if (confirm(`¿Seguro que desea eliminar: ${nombre}?`)) { await deleteDoc(doc(db, "inventario", id)); window.cargarTablasInventario(); } };
+        window.eliminarDotacion = async function(id, nombre) { if (confirm(`¿Seguro que desea eliminar: ${nombre}?`)) { await deleteDoc(doc(db, "dotacion", id)); window.cargarTablasInventario(); cargarDashboardResumen(); } };
+
+        window.abrirModalEntregarDotacion = function(id, nombre) { window.limpiarFormulario('modalEntregarDotacion'); document.getElementById('ent_id_operario').value = id; document.getElementById('ent_nom_operario').innerText = window.sanitizar(nombre); document.getElementById('ent_fecha').value = new Date().toISOString().split('T')[0]; document.getElementById('ent_id_dotacion').innerHTML = '<option value="">Seleccione prenda...</option>' + dotacionGlobal.filter(d => d.cantidad > 0).map(d => `<option value="${d.id}" data-cant="${d.cantidad}">${window.sanitizar(d.tipo_prenda)} (Talla: ${window.sanitizar(d.talla)} - Stock: ${d.cantidad})</option>`).join(''); };
+        window.guardarEntregaDotacion = async function(e) {
+            e.preventDefault(); const idDot = document.getElementById('ent_id_dotacion').value; const cantReq = parseInt(document.getElementById('ent_cantidad').value);
+            const dotSel = dotacionGlobal.find(d => d.id === idDot);
+            if (!dotSel || dotSel.cantidad < cantReq) return window.mostrarAlerta("Stock insuficiente.", true);
+            try {
+                await addDoc(collection(db, "historial_dotacion"), { id_operario: document.getElementById('ent_id_operario').value, id_dotacion: idDot, cantidad: cantReq, fecha_entrega: document.getElementById('ent_fecha').value, notas: document.getElementById('ent_notas').value });
+                await updateDoc(doc(db, "dotacion", idDot), { cantidad: dotSel.cantidad - cantReq });
+                window.mostrarAlerta("Dotación entregada."); window.cerrarModalJS('modalEntregarDotacion'); window.cargarTablasInventario(); cargarDashboardResumen();
+            } catch(err) { window.mostrarAlerta("Error al registrar entrega.", true); }
+        };
+        window.abrirHistorialDotacion = async function(idOp, nombreOp) {
+            document.getElementById('hist_nom_operario').innerText = window.sanitizar(nombreOp);
+            const tbody = document.getElementById('tbodyHistorialDotacion'); tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Consultando historial...</td></tr>';
+            const q = query(collection(db, "historial_dotacion"), where("id_operario", "==", idOp)); const qs = await getDocs(q); let hist = [];
+            qs.forEach(d => { let data = d.data(); const dot = dotacionGlobal.find(x => x.id === data.id_dotacion); data.tipo_prenda = dot ? dot.tipo_prenda : 'Prenda eliminada'; data.talla = dot ? dot.talla : '-'; hist.push(data); });
+            hist.sort((a,b) => new Date(b.fecha_entrega) - new Date(a.fecha_entrega));
+            tbody.innerHTML = hist.length ? hist.map(h => `<tr><td class="ps-3"><strong>${window.sanitizar(h.fecha_entrega)}</strong></td><td>${window.sanitizar(h.tipo_prenda)}</td><td><span class="badge bg-secondary-subtle text-secondary border">${window.sanitizar(h.talla)}</span></td><td class="text-center fw-bold text-success">${h.cantidad}</td><td>${window.sanitizar(h.notas) || 'Sin observaciones'}</td></tr>`).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No hay entregas registradas para este empleado.</td></tr>';
+        };
+
+        // ==========================================
+        // AUDITORIAS Y NOVEDADES (FIREBASE CON STORAGE LIMITADO)
+        // ==========================================
+        window.prepararNuevaAuditoria = function() {
+            window.limpiarFormulario('modalAuditoria'); document.getElementById('audi_fecha').value = new Date().toISOString().split('T')[0];
+            const selectSede = document.getElementById('audi_cliente'); if (selectSede) { selectSede.innerHTML = '<option value="">Seleccione sede...</option>' + cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo').map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
+            document.getElementById('audi_lista_operarios').innerHTML = '<small class="text-muted">Seleccione una sede para ver los operarios...</small>';
+            const selEv = document.getElementById('audi_evaluador'); if (selEv) { selEv.innerHTML = '<option value="">Seleccione supervisor...</option>' + cacheUsuariosPDF.filter(u => u.rol === 'Supervisor' || u.rol === 'Administrador').map(u => `<option value="${window.sanitizar(u.correo)}">${window.sanitizar(u.documento)} - ${window.sanitizar(u.nombre_completo || u.correo)}</option>`).join(''); }
+        };
+        
+        window.cargarOperariosPorSedeAuditoria = function() {
+            const idSede = document.getElementById('audi_cliente').value; const container = document.getElementById('audi_lista_operarios');
+            if(!idSede) return container.innerHTML = '<small class="text-muted">Seleccione una sede para ver los operarios...</small>';
+            const operariosSede = cacheOperariosPDF.filter(o => o.id_cliente_asignado === idSede && o.estado_operario !== 'Inactivo');
+            if(operariosSede.length === 0) return container.innerHTML = '<small class="text-danger fw-bold">No hay operarios activos en esta sede.</small>';
+            container.innerHTML = operariosSede.map(o => `<div class="border rounded p-2 mb-2 bg-body-tertiary shadow-sm"><div class="form-check mb-2 border-bottom pb-1"><input class="form-check-input chk-operario-audi" type="checkbox" value="${o.id}" data-nombre="${window.eStr(o.nombres_completos)}" id="chk_op_${o.id}"><label class="form-check-label small fw-semibold" for="chk_op_${o.id}">${window.sanitizar(o.nombres_completos)} <span class="text-muted">(${window.sanitizar(o.especialidad) || 'Sin cargo'})</span></label></div><div class="row g-2 mt-1"><div class="col-4"><select class="form-select form-select-sm" id="uni_${o.id}"><option value="Si">Uniforme: Sí</option><option value="No">Uniforme: No</option><option value="N/A">Uniforme: N/A</option></select></div><div class="col-4"><select class="form-select form-select-sm" id="herr_${o.id}"><option value="Si">Herramientas: Sí</option><option value="No">Herramientas: No</option><option value="N/A">Herramientas: N/A</option></select></div><div class="col-4"><select class="form-select form-select-sm" id="limp_${o.id}"><option value="Si">Limpieza: Sí</option><option value="No">Limpieza: No</option><option value="N/A">Limpieza: N/A</option></select></div></div></div>`).join('');
+        };
+
+        window.cargarAuditorias = async function() {
+            const querySnapshot = await getDocs(collection(db, "auditorias_calidad")); let audi = [];
+            querySnapshot.forEach(doc => { let d = doc.data(); const c = cacheClientesPDF.find(x => x.id === d.id_cliente); d.razon_social = c ? c.razon_social : 'Sin Cliente'; audi.push(d); });
+            audi.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+            document.getElementById('tbodyAuditorias').innerHTML = audi.length ? audi.map(a => `<tr><td class="ps-4">${a.fecha}</td><td><strong>${window.sanitizar(a.razon_social)}</strong></td><td>${window.sanitizar(a.evaluador)}</td><td class="text-center"><span class="badge ${a.uniforme_ok === 'Si' ? 'bg-success' : (a.uniforme_ok === 'No' ? 'bg-danger' : 'bg-secondary')}">${a.uniforme_ok}</span></td><td class="text-center"><span class="badge ${a.herramientas_ok === 'Si' ? 'bg-success' : (a.herramientas_ok === 'No' ? 'bg-danger' : 'bg-secondary')}">${a.herramientas_ok}</span></td><td class="text-center"><span class="badge ${a.limpieza_ok === 'Si' ? 'bg-success' : (a.limpieza_ok === 'No' ? 'bg-danger' : 'bg-secondary')}">${a.limpieza_ok}</span></td></tr>`).join('') : `<tr><td colspan="6" class="text-center text-muted py-3">No hay auditorías registradas.</td></tr>`;
+        };
+
+        window.guardarAuditoria = async function(e) {
+            e.preventDefault(); const fileInput = document.getElementById('audi_foto');
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto excede los 3MB.", true);
+            const chks = document.querySelectorAll('.chk-operario-audi:checked');
+            if (chks.length === 0) return window.mostrarAlerta("Debes seleccionar al menos un operario para evaluar.", true);
+            
+            const btn = document.getElementById('btnGuardarAuditoria'); btn.disabled = true;
+            let operariosAuditados = []; let hasNoUni = false, hasNoHerr = false, hasNoLimp = false; let allNaUni = true, allNaHerr = true, allNaLimp = true;
+            
+            chks.forEach(chk => {
+                const id = chk.value; const nombre = chk.getAttribute('data-nombre');
+                const uni = document.getElementById(`uni_${id}`).value; const herr = document.getElementById(`herr_${id}`).value; const limp = document.getElementById(`limp_${id}`).value;
+                operariosAuditados.push(`${nombre} [U:${uni}, H:${herr}, L:${limp}]`);
+                if (uni === 'No') hasNoUni = true; if (uni !== 'N/A') allNaUni = false;
+                if (herr === 'No') hasNoHerr = true; if (herr !== 'N/A') allNaHerr = false;
+                if (limp === 'No') hasNoLimp = true; if (limp !== 'N/A') allNaLimp = false;
+            });
+            const selEv = document.getElementById('audi_evaluador');
+            try {
+                let urlFoto = await subirImagenStorage(fileInput.files[0], 'auditorias');
+                await addDoc(collection(db, "auditorias_calidad"), { id_cliente: document.getElementById('audi_cliente').value, evaluador: selEv.options[selEv.selectedIndex].text, operarios_auditados: operariosAuditados.join(' | '), fecha: document.getElementById('audi_fecha').value, uniforme_ok: hasNoUni ? 'No' : (allNaUni ? 'N/A' : 'Si'), herramientas_ok: hasNoHerr ? 'No' : (allNaHerr ? 'N/A' : 'Si'), limpieza_ok: hasNoLimp ? 'No' : (allNaLimp ? 'N/A' : 'Si'), observaciones: document.getElementById('audi_obs').value, url_evidencia: urlFoto || '', fecha_registro: new Date().toISOString() });
+                window.mostrarAlerta("Auditoría registrada."); window.cerrarModalJS('modalAuditoria'); window.cargarAuditorias();
+            } catch(err) { window.mostrarAlerta("Error al registrar.", true); }
+            btn.disabled = false;
+        };
+
+        window.prepararNuevaNovedad = function() {
+            window.limpiarFormulario('modalNovedad'); document.getElementById('nov_fecha').value = new Date().toISOString().split('T')[0]; document.getElementById('div_nueva_sede').style.display = 'none'; document.getElementById('nov_sede_actual').value = '';
+            const selectOp = document.getElementById('nov_operario'); if (selectOp) { selectOp.innerHTML = '<option value="">Seleccione operario...</option>' + cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo').map(o => `<option value="${o.id}">${window.sanitizar(o.nombres_completos)}</option>`).join(''); }
+            const selectCli = document.getElementById('nov_nueva_sede'); if (selectCli) { selectCli.innerHTML = '<option value="">Seleccione la nueva sede...</option>' + cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo').map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
+            const selRep = document.getElementById('nov_reporta'); if (selRep) { selRep.innerHTML = '<option value="">Seleccione quien reporta...</option>' + cacheUsuariosPDF.filter(u => u.rol === 'Supervisor' || u.rol === 'Administrador').map(u => `<option value="${window.sanitizar(u.correo)}">${window.sanitizar(u.documento)} - ${window.sanitizar(u.nombre_completo || u.correo)}</option>`).join(''); }
+        };
+        window.cargarSedeNovedad = function() {
+            const idOp = document.getElementById('nov_operario').value; if(!idOp) return document.getElementById('nov_sede_actual').value = '';
+            const op = cacheOperariosPDF.find(o => o.id === idOp); document.getElementById('nov_sede_actual').value = op ? (op.cliente_nombre || 'Sin Sede Asignada') : '';
+        };
+        window.toggleTrasladoSede = function() { const chk = document.getElementById('chk_traslado').checked; document.getElementById('div_nueva_sede').style.display = chk ? 'block' : 'none'; if(!chk) document.getElementById('nov_nueva_sede').value = ''; };
+
+        window.cargarNovedades = async function() {
+            const querySnapshot = await getDocs(collection(db, "bitacora_novedades")); let novs = [];
+            querySnapshot.forEach(doc => { let n = doc.data(); const o = cacheOperariosPDF.find(x => x.id === n.id_operario); n.nombres_completos = o ? o.nombres_completos : 'Sin nombre'; novs.push(n); });
+            novs.sort((a,b) => new Date(b.fecha_novedad) - new Date(a.fecha_novedad));
+            document.getElementById('tbodyNovedades').innerHTML = novs.length ? novs.map(n => {
+                let color = 'bg-primary'; if (['Falta Injustificada', 'Llegada Tarde', 'Daño en Sede'].includes(n.tipo_novedad)) color = 'bg-danger'; if (n.tipo_novedad === 'Incapacidad' || n.tipo_novedad === 'Permiso') color = 'bg-warning text-dark'; if (n.tipo_novedad === 'Felicitacion') color = 'bg-success';
+                return `<tr><td class="ps-4">${n.fecha_novedad}</td><td><strong>${window.sanitizar(n.nombres_completos)}</strong></td><td><span class="badge ${color}">${window.sanitizar(n.tipo_novedad)}</span></td><td>${window.sanitizar(n.descripcion)}</td><td>${window.sanitizar(n.reportado_por)}</td></tr>`;
+            }).join('') : `<tr><td colspan="5" class="text-center text-muted py-3">No hay novedades registradas.</td></tr>`;
+        };
+
+        window.guardarNovedad = async function(e) {
+            e.preventDefault(); const fileInput = document.getElementById('nov_foto');
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La evidencia excede los 3MB.", true);
+            const btn = document.getElementById('btnGuardarNovedad'); btn.disabled = true;
+            const trasladar = document.getElementById('chk_traslado').checked; const idNuevaSede = trasladar ? document.getElementById('nov_nueva_sede').value : null; 
+            if (trasladar && !idNuevaSede) { btn.disabled = false; return window.mostrarAlerta("Debes seleccionar la nueva sede.", true); }
+            const selRep = document.getElementById('nov_reporta'); 
+            try {
+                let urlFoto = await subirImagenStorage(fileInput.files[0], 'novedades');
+                await addDoc(collection(db, "bitacora_novedades"), { id_operario: document.getElementById('nov_operario').value, fecha_novedad: document.getElementById('nov_fecha').value, tipo_novedad: document.getElementById('nov_tipo').value, descripcion: document.getElementById('nov_desc').value, reportado_por: selRep.options[selRep.selectedIndex].text, url_evidencia: urlFoto || '', fecha_registro: new Date().toISOString() });
+                if (trasladar) { await updateDoc(doc(db, "operarios", document.getElementById('nov_operario').value), { id_cliente_asignado: idNuevaSede }); await cargarOperariosCache(); }
+                window.mostrarAlerta("Novedad registrada."); window.cerrarModalJS('modalNovedad'); window.cargarNovedades();
+            } catch(err) { window.mostrarAlerta("Error al registrar.", true); }
+            btn.disabled = false;
+        };
+
+        // ==========================================
+        // MÓDULO: CAJA MENOR Y GASTOS (STORAGE)
+        // ==========================================
+        window.prepararNuevoGasto = function() { window.limpiarFormulario('modalGasto'); document.getElementById('gast_fecha').value = new Date().toISOString().split('T')[0]; };
+
+        window.cargarGastos = async function() {
+            let q = collection(db, "gastos_caja_menor");
+            if (rolUsuarioActivo !== 'Administrador') { q = query(q, where("reportado_por", "==", nombreUsuarioActivo)); }
+            const querySnapshot = await getDocs(q);
+            gastosGlobales = []; querySnapshot.forEach(doc => gastosGlobales.push({ id: doc.id, ...doc.data() }));
+            gastosGlobales.sort((a,b) => new Date(b.fecha_registro) - new Date(a.fecha_registro)); // Sort local
+
+            document.getElementById('tbodyGastos').innerHTML = gastosGlobales.length ? gastosGlobales.map(g => {
+                let colorEstado = g.estado === 'Aprobado' ? 'bg-info text-dark' : (g.estado === 'Pagado' ? 'bg-success' : (g.estado === 'Rechazado' ? 'bg-danger' : 'bg-secondary'));
+                let btnSoporte = g.soporte_url ? `<button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="verSoporte('${g.soporte_url}')" title="Ver Recibo"><i class="bi bi-eye"></i> Ver</button>` : `<span class="text-muted small">Sin archivo</span>`;
+                let acciones = '';
+                if (rolUsuarioActivo === 'Administrador') {
+                    if (g.estado !== 'Pagado' && g.estado !== 'Rechazado') acciones += `<button class="btn btn-sm btn-success py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Pagado')" title="Marcar como Pagado"><i class="bi bi-check-all"></i></button> <button class="btn btn-sm btn-outline-warning py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Rechazado')" title="Rechazar Gasto"><i class="bi bi-x-circle"></i></button>`;
+                    acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto"><i class="bi bi-trash"></i></button>`;
+                } else if (g.estado === 'Pendiente') { acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')"><i class="bi bi-trash"></i></button>`; }
+                return `<tr><td class="ps-4 text-nowrap">${g.fecha_gasto}</td><td><strong>${window.sanitizar(g.concepto)}</strong></td><td class="text-muted">${window.sanitizar(g.reportado_por)}</td><td class="text-end fw-bold text-success text-nowrap">$${new Intl.NumberFormat('es-CO').format(g.valor)}</td><td class="text-center">${btnSoporte}</td><td class="text-center"><span class="badge ${colorEstado}">${g.estado}</span></td><td class="pe-4 text-end text-nowrap">${acciones}</td></tr>`;
+            }).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay gastos reportados.</td></tr>`;
+
+            if (rolUsuarioActivo === 'Administrador') {
+                let totales = {};
+                gastosGlobales.forEach(g => {
+                    if (g.estado !== 'Rechazado') {
+                        if (!totales[g.reportado_por]) { totales[g.reportado_por] = { pendiente: 0, pagado: 0, total: 0 }; }
+                        let val = parseFloat(g.valor); totales[g.reportado_por].total += val;
+                        if (g.estado === 'Pagado') totales[g.reportado_por].pagado += val; else totales[g.reportado_por].pendiente += val;
+                    }
+                });
+                let htmlRes = `<div class="col-12"><div class="card card-custom p-3 shadow-sm border-success border-opacity-50"><h6 class="fw-bold text-success mb-3"><i class="bi bi-calculator me-2"></i>Cuadro Resumen de Gastos por Usuario (No rechazados)</h6><div class="row g-3">`;
+                for (let user in totales) { htmlRes += `<div class="col-md-3"><div class="border rounded p-2 bg-body-tertiary shadow-sm"><div class="small fw-bold text-truncate text-secondary mb-1" title="${window.sanitizar(user)}"><i class="bi bi-person-fill me-1"></i>${window.sanitizar(user)}</div><div class="d-flex justify-content-between small"><span class="text-muted">Pendientes:</span><span class="text-warning-emphasis fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pendiente)}</span></div><div class="d-flex justify-content-between small"><span class="text-muted">Pagados:</span><span class="text-success fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pagado)}</span></div><div class="d-flex justify-content-between small mt-1 pt-1 border-top"><span class="fw-bold">Total:</span><span class="fw-bold text-dark">$${new Intl.NumberFormat('es-CO').format(totales[user].total)}</span></div></div></div>`; }
+                htmlRes += `</div></div></div>`; document.getElementById('contenedorResumenGastos').innerHTML = htmlRes; document.getElementById('contenedorResumenGastos').style.display = 'flex';
+            }
+        };
+
+        window.verSoporte = function(url) { document.getElementById('imgSoporte').src = url; new bootstrap.Modal(document.getElementById('modalVerSoporte')).show(); };
+
+        window.guardarGasto = async function(e) {
+            e.preventDefault(); const btn = document.getElementById('btnGuardarGasto'); const fileInput = document.getElementById('gast_soporte'); 
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto excede los 3MB. Comprímela e intenta de nuevo.", true);
+            btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Subiendo...';
+            try {
+                let urlFoto = await subirImagenStorage(fileInput.files[0], 'gastos');
+                await addDoc(collection(db, "gastos_caja_menor"), { fecha_gasto: document.getElementById('gast_fecha').value, concepto: document.getElementById('gast_concepto').value, valor: parseFloat(document.getElementById('gast_valor').value), soporte_url: urlFoto, estado: 'Pendiente', reportado_por: nombreUsuarioActivo, fecha_registro: new Date().toISOString() });
+                window.mostrarAlerta("Gasto reportado exitosamente."); window.cerrarModalJS('modalGasto'); window.cargarGastos();
+            } catch(err) { window.mostrarAlerta("Error al reportar gasto.", true); }
+            btn.disabled = false; btn.innerHTML = 'Reportar Gasto';
+        };
+
+        window.cambiarEstadoGasto = async function(id, estado) { if (confirm(`¿Marcar este gasto como ${estado}?`)) { await updateDoc(doc(db, "gastos_caja_menor", id), { estado: estado }); window.cargarGastos(); } };
+        window.eliminarGasto = async function(id, concepto, reporta) { if (confirm(`¿Está seguro de ELIMINAR el gasto de ${concepto} reportado por ${reporta}?`)) { await deleteDoc(doc(db, "gastos_caja_menor", id)); window.mostrarAlerta("Gasto eliminado."); window.cargarGastos(); } };
+
+        document.getElementById('btnExportarGastos').addEventListener('click', () => {
+            if (!gastosGlobales.length) return window.mostrarAlerta("No hay gastos para exportar.", true);
+            let csvContent = "\uFEFFFecha;Concepto;Valor ($);Estado;Reportado Por\r\n";
+            gastosGlobales.forEach(g => { csvContent += `"${g.fecha_gasto}";"${window.sanitizar(g.concepto)}";"${g.valor}";"${g.estado}";"${window.sanitizar(g.reportado_por)}"\r\n`; });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.setAttribute("href", URL.createObjectURL(blob)); link.setAttribute("download", `SADAFA_Gastos_${new Date().toISOString().split('T')[0]}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        });
+
+        // ==========================================
+        // MOTOR PDF E IMPRESIÓN (SIN CAMBIOS ESTRUCTURALES)
+        // ==========================================
+        window.prepararDocumentosPDF = function(tipo) {
+            const targetId = { 'carta': 'modalCarta', 'cert': 'modalCertificado', 'exam': 'modalExamen', 'cesan': 'modalCesantias', 'cta': 'modalCuenta' }[tipo];
+            if (!targetId) return; window.limpiarFormulario(targetId);
+            if (tipo === 'carta') {
+                const selectCarta = document.getElementById('carta_cliente');
+                if (selectCarta) { selectCarta.innerHTML = '<option value="">Seleccione una sede...</option>' + cacheClientesPDF.map(c => `<option value="${window.sanitizar(c.razon_social)}" data-admin="${window.sanitizar(c.nombre_contacto_admin || '')}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
+            }
+            const datalist = document.getElementById('listaCedulasGlobal');
+            if (datalist && cacheOperariosPDF.length > 0) { datalist.innerHTML = cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo').map(o => `<option value="${window.sanitizar(o.cedula)}">${window.sanitizar(o.nombres_completos)}</option>`).join(''); }
+        };
+
+        window.buscarOperarioPDF = function(cedula, prefijo) {
+            if (!cedula) return; const op = cacheOperariosPDF.find(o => String(o.cedula).trim() === String(cedula).trim());
+            if (op) {
+                if (prefijo === 'carta') { document.getElementById('carta_cedula').value = op.cedula || ''; document.getElementById('carta_nombre').value = op.nombres_completos || ''; document.getElementById('carta_cargo').value = op.especialidad || op.cargo || ''; document.getElementById('carta_rh').value = op.rh || ''; document.getElementById('carta_eps').value = op.eps || ''; document.getElementById('carta_arl').value = op.arl || ''; document.getElementById('carta_ciudad_exp').value = op.ciudad_expedicion || ''; if (op.cliente_nombre) document.getElementById('carta_cliente').value = op.cliente_nombre; }
+                else if (prefijo === 'cert') { document.getElementById('cert_cedula').value = op.cedula || ''; document.getElementById('cert_nombre').value = op.nombres_completos || ''; document.getElementById('cert_ingreso').value = op.fecha_inicio || ''; document.getElementById('cert_egreso').value = op.fecha_fin || ''; document.getElementById('cert_contrato').value = op.tipo_contrato || 'Fijo'; document.getElementById('cert_salario').value = op.sueldo ? Math.floor(Number(op.sueldo)) : ''; document.getElementById('cert_ciudad').value = op.ciudad_expedicion || ''; }
+                else if (prefijo === 'exam') { document.getElementById('exam_cedula').value = op.cedula || ''; document.getElementById('exam_nombre').value = op.nombres_completos || ''; document.getElementById('exam_ciudad_exp').value = op.ciudad_expedicion || ''; }
+                else if (prefijo === 'cesan') { document.getElementById('cesan_cedula').value = op.cedula || ''; document.getElementById('cesan_nombre').value = op.nombres_completos || ''; document.getElementById('cesan_inicio').value = op.fecha_inicio || ''; document.getElementById('cesan_fin').value = op.fecha_fin || ''; document.getElementById('cesan_ciudad').value = op.ciudad_expedicion || ''; }
+                else if (prefijo === 'cta') { document.getElementById('cta_cedula').value = op.cedula || ''; document.getElementById('cta_nombre').value = op.nombres_completos || ''; document.getElementById('cta_ciudad').value = op.ciudad_expedicion || ''; }
+            }
+        };
+
+        window.generarPDF = function(e, tipo) {
+            e.preventDefault(); const nombre = document.getElementById(tipo + '_nombre').value; const cedula = document.getElementById(tipo + '_cedula').value;
+            let params = new URLSearchParams(); let tipoFormato = tipo; 
+            if(tipo === 'cert') tipoFormato = 'certificado'; if(tipo === 'exam') tipoFormato = 'examen'; if(tipo === 'cesan') tipoFormato = 'cesantias'; if(tipo === 'cta') tipoFormato = 'cuenta';
+            params.append('tipo', tipoFormato); params.append('nombre', nombre); params.append('cedula', cedula);
+            
+            if (tipo === 'carta') {
+                params.append('cliente', document.getElementById('carta_cliente').value); params.append('cargo', document.getElementById('carta_cargo').value); params.append('rh', document.getElementById('carta_rh').value); params.append('eps', document.getElementById('carta_eps').value); params.append('arl', document.getElementById('carta_arl').value); params.append('ciudad_cedula', document.getElementById('carta_ciudad_exp').value);
+                const selectCliente = document.getElementById('carta_cliente'); if(selectCliente.selectedIndex > 0) { const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); if(admin) params.append('admin', admin); }
+                const fileInput = document.getElementById('carta_foto');
+                if (fileInput && fileInput.files.length > 0) {
+                    if (fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto es muy pesada. Límite 3MB.", true);
+                    const reader = new FileReader(); reader.onload = function(evt) { sessionStorage.setItem('sadafa_temp_foto_carta', evt.target.result); abrirPlantilla(params, 'modalCarta'); }; reader.readAsDataURL(fileInput.files[0]); return; 
+                }
+                abrirPlantilla(params, 'modalCarta');
+            } 
+            else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); abrirPlantilla(params, 'modalCertificado'); } 
+            else if (tipo === 'exam') { params.append('tipo_examen', document.getElementById('exam_tipo').value); params.append('laboratorio', document.getElementById('exam_lab').value); params.append('ciudad_cedula', document.getElementById('exam_ciudad_exp').value); abrirPlantilla(params, 'modalExamen'); } 
+            else if (tipo === 'cesan') { params.append('fecha_inicio', document.getElementById('cesan_inicio').value); params.append('fecha_fin', document.getElementById('cesan_fin').value); params.append('ciudad_cedula', document.getElementById('cesan_ciudad').value); abrirPlantilla(params, 'modalCesantias'); } 
+            else if (tipo === 'cta') { params.append('sede', document.getElementById('cta_sede_op').value); params.append('ciudad_cedula', document.getElementById('cta_ciudad').value); abrirPlantilla(params, 'modalCuenta'); }
+        };
+
+        function abrirPlantilla(params, modalIdActual) {
+            const urlFinal = 'plantillas.html?' + params.toString();
+            if (modalIdActual) window.cerrarModalJS(modalIdActual);
+            const enlace = document.createElement('a'); enlace.href = urlFinal; enlace.target = '_blank'; document.body.appendChild(enlace); enlace.click(); enlace.remove();
+        }
+
+        // ==========================================
+        // CARGA INICIAL
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => { 
+            const token = localStorage.getItem('sadafa_token');
+            const rol = localStorage.getItem('sadafa_rol');
+            
+            if (!token || !rol || (rol !== 'Supervisor' && rol !== 'Administrador')) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('rolUsuarioActivo').innerText = rol;
+            document.body.setAttribute('data-rol', rol);
+            
+            await cargarDashboardResumen();
+            await cargarOperariosCache();
+            await cargarClientesCache();
+            await cargarDotacionCache();
+            await cargarUsuariosCache();
+            
+            window.cargarOperarioTabla(); 
+            window.verificarMostrarAlertaVencimientos();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SADAFA - Plataforma Corporativa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root { 
+            --sadafa-accent: #2dd4bf; 
+            --sadafa-focus-ring: rgba(45, 212, 191, 0.25); 
+            --sadafa-dark: #0f172a; 
+            --sadafa-card: #1e293b; 
+            --texto-principal: #f8fafc; 
+            --texto-muted: #cbd5e1; 
+        }
+        [data-bs-theme="light"] { 
+            --sadafa-accent: #0b3c36; 
+            --sadafa-focus-ring: rgba(11, 60, 54, 0.25); 
+            --sadafa-dark: #f4f6f9; 
+            --sadafa-card: #ffffff; 
+            --texto-principal: #222533; 
+            --texto-muted: #6c757d; 
+        }
+        body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-navbar { padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar-brand-custom { font-weight: 700; font-size: 1.1rem; color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .navbar-brand-custom i { color: var(--sadafa-accent); }
+        .hero-section { text-align: center; padding: 60px 20px; }
+        .hero-title { font-size: 3.5rem; font-weight: 300; margin-bottom: 5px; letter-spacing: 2px; }
+        .hero-subtitle { font-size: 1.5rem; font-weight: 400; margin-bottom: 15px; }
+        .hero-description { color: var(--texto-muted); font-size: 1rem; margin-bottom: 30px; }
+        .btn-accent { background-color: var(--sadafa-accent); color: #0f172a; font-weight: 600; padding: 10px 30px; border-radius: 50px; border: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-accent:hover { background-color: #25b5a3; color: #0f172a; transform: translateY(-2px); box-shadow: 0 4px 12px var(--sadafa-focus-ring); }
+        [data-bs-theme="light"] .btn-accent { color: #ffffff; }
+        [data-bs-theme="light"] .btn-accent:hover { background-color: #082b27; color: #ffffff; }
+        .form-control:focus { border-color: var(--sadafa-accent); box-shadow: 0 0 0 0.25rem var(--sadafa-focus-ring); background-color: inherit; }
+        .divider { height: 2px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 40px 0; opacity: 0.5; }
+        .services-section { flex: 1; padding: 20px 40px 60px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .services-title { text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 40px; }
+        .services-title span { color: var(--sadafa-accent); position: relative; }
+        .services-title span::after { content: ''; position: absolute; width: 100%; height: 3px; background-color: var(--sadafa-accent); bottom: -8px; left: 0; border-radius: 2px; }
+        .service-card { background-color: var(--sadafa-card); border-radius: 12px; padding: 30px 20px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+        .service-icon { font-size: 2.5rem; color: var(--sadafa-accent); margin-bottom: 15px; }
+        .service-card h5 { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
+        .service-card p { font-size: 0.85rem; color: var(--texto-muted); line-height: 1.5; margin: 0; }
+        .footer { text-align: center; padding: 20px; background-color: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--texto-muted); }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <a href="#" class="navbar-brand-custom"><i class="bi bi-building"></i> SADAFA ERP</a>
+        <div class="form-check form-switch m-0 d-flex align-items-center">
+            <input class="form-check-input me-2" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer;">
+            <label class="form-check-label small fw-semibold" for="modoOscuroSwitch" id="labelModo" style="cursor: pointer;">Modo Día</label>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <h1 class="hero-title">SADAFA</h1>
+        <h2 class="hero-subtitle">Servicios Integrales S.A.S.</h2>
+        <p class="hero-description">Plataforma corporativa de gestión administrativa y supervisión operativa.</p>
+        <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#modalLogin">
+            <i class="bi bi-shield-lock me-2"></i> Iniciar Sesión
+        </button>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="services-section">
+        <h3 class="services-title"><span>Nuestros Servicios Operativos</span></h3>
+        <div class="row g-4">
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-stars service-icon"></i><h5>Operarios de Aseo</h5><p>Mantenimiento y limpieza integral para copropiedades, edificios corporativos y sedes comerciales.</p></div></div>
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-scissors service-icon"></i><h5>Guadañado y Jardinería</h5><p>Cuidado especializado de zonas verdes, corte de césped, poda técnica y embellecimiento paisajístico.</p></div></div>
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-person-badge service-icon"></i><h5>Conserjería y Toderos</h5><p>Personal calificado para control de acceso, mantenimiento locativo menor y atención de instalaciones.</p></div></div>
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-life-preserver service-icon"></i><h5>Salvavidas y Salvamento</h5><p>Personal certificado en rescate acuático y primeros auxilios para áreas de piscinas en conjuntos residenciales.</p></div></div>
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-tools service-icon"></i><h5>Mantenimiento General</h5><p>Reparaciones locativas, gestión de insumos químicos, revisión de equipos e inventarios técnicos.</p></div></div>
+            <div class="col-md-4"><div class="service-card"><i class="bi bi-people service-icon"></i><h5>Supernumerarios</h5><p>Cobertura inmediata y reemplazos temporales para garantizar la continuidad ininterrumpida del servicio.</p></div></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <strong>NIT 901.262.796-6</strong> | Calle 53C # 27-85, Barrio La Arboleda - Manizales, Caldas.
+    </footer>
+
+    <!-- MODAL DE LOGIN -->
+    <div class="modal fade" id="modalLogin" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow" style="background-color: var(--sadafa-card);">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-theme="dark"></button>
+                </div>
+                <div class="modal-body px-4 pb-4 text-center">
+                    <h4 class="fw-bold" style="color: var(--sadafa-accent);">Ingresa tus credenciales</h4>
+                    <p class="small text-secondary mb-4">Acceso exclusivo para personal autorizado.</p>
+                    
+                    <form id="loginForm">
+                        <div id="loginAlert" class="alert alert-danger d-none small py-2 text-center" role="alert"></div>
+                        
+                        <div class="mb-3 text-start">
+                            <label class="form-label small fw-semibold text-secondary">Correo Electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
+                                <input type="email" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_correo" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 text-start">
+                            <label class="form-label small fw-semibold text-secondary">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-lock text-secondary"></i></span>
+                                <input type="password" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_password" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-accent w-100 mb-3" id="btnLogin">Continuar</button>
+                        <a href="#" class="text-decoration-none small" style="color: var(--texto-muted);" data-bs-toggle="modal" data-bs-target="#modalRecuperar">¿Olvidaste tu contraseña?</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE RECUPERACIÓN DE CONTRASEÑA -->
+    <div class="modal fade" id="modalRecuperar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow" style="background-color: var(--sadafa-card);">
+                <div class="modal-header border-bottom-0 pb-0"><button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-theme="dark"></button></div>
+                <div class="modal-body px-4 pb-4 text-center">
+                    <h5 class="fw-bold mb-3" style="color: var(--sadafa-accent);">Recuperar Acceso</h5>
+                    <p class="small text-secondary mb-4">Se enviará un enlace seguro a tu correo institucional.</p>
+                    
+                    <form id="recuperarForm">
+                        <div id="recuperarAlert" class="alert alert-success d-none small py-2 text-center" role="alert"></div>
+                        
+                        <div class="mb-4 text-start">
+                            <label class="form-label small fw-semibold text-secondary">Correo Electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
+                                <input type="email" class="form-control border-start-0 ps-0 bg-body-tertiary" id="rec_correo" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-accent w-100" id="btnRecuperar">Enviar Enlace</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- LÓGICA MODULAR DE FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE (Con tus llaves)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC81HOxo4CAcIe1jFeZB63sc7MTGAfngOY",
+            authDomain: "sadafa-erp.firebaseapp.com",
+            projectId: "sadafa-erp",
+            storageBucket: "sadafa-erp.firebasestorage.app",
+            messagingSenderId: "874852761234",
+            appId: "1:874852761234:web:2604386d38e9d84233b04b",
+            measurementId: "G-WNLC4WQVN0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ==========================================
+        // UX Y TEMAS
+        // ==========================================
+        const tema = localStorage.getItem('sadafa_theme') || 'dark';
+        document.documentElement.setAttribute('data-bs-theme', tema);
+        const switchEl = document.getElementById('modoOscuroSwitch');
+        const labelModo = document.getElementById('labelModo');
+        if(switchEl) { 
+            switchEl.checked = (tema === 'light'); 
+            labelModo.innerText = (tema === 'light') ? 'Modo Oscuro' : 'Modo Día'; 
+        }
+
+        switchEl.addEventListener('change', () => {
+            const temaActual = document.documentElement.getAttribute('data-bs-theme');
+            const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', nuevoTema);
+            localStorage.setItem('sadafa_theme', nuevoTema);
+            labelModo.innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
+        });
+
+        if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
+            window.location.href = 'admin.html';
+        }
+
+        // ==========================================
+        // LOGIN SEGURO CON FIREBASE
+        // ==========================================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const alertBox = document.getElementById('loginAlert');
+            const correo = document.getElementById('login_correo').value;
+            const password = document.getElementById('login_password').value;
+
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Autenticando...';
+            btn.disabled = true;
+            alertBox.classList.add('d-none');
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, correo, password);
+                const user = userCredential.user;
+
+                const q = query(collection(db, "usuarios"), where("correo", "==", correo));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    await auth.signOut();
+                    throw new Error("Usuario no registrado en la base de datos.");
+                }
+
+                let userData = null;
+                querySnapshot.forEach((doc) => { userData = doc.data(); });
+
+                if (userData.estado !== 'Aprobado') {
+                    await auth.signOut();
+                    throw new Error("Acceso denegado: Cuenta suspendida o en revisión.");
+                }
+
+                localStorage.setItem('sadafa_token', user.accessToken);
+                localStorage.setItem('sadafa_rol', userData.rol);
+                localStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
+                
+                window.location.href = 'admin.html';
+
+            } catch (error) {
+                let mensajeError = "Credenciales incorrectas o problema de conexión.";
+                if (error.code === 'auth/invalid-credential') mensajeError = "Correo o contraseña incorrectos.";
+                if (error.code === 'auth/too-many-requests') mensajeError = "Demasiados intentos. Cuenta bloqueada temporalmente.";
+                if (error.message.includes("Acceso denegado") || error.message.includes("no registrado")) mensajeError = error.message;
+                
+                alertBox.innerText = mensajeError;
+                alertBox.classList.remove('d-none');
+                btn.innerHTML = 'Continuar';
+                btn.disabled = false;
+            }
+        });
+
+        // ==========================================
+        // RECUPERAR CONTRASEÑA
+        // ==========================================
+        document.getElementById('recuperarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnRecuperar');
+            const alertBox = document.getElementById('recuperarAlert');
+            const correo = document.getElementById('rec_correo').value;
+            
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Enviando...';
+            btn.disabled = true;
+
+            try {
+                await sendPasswordResetEmail(auth, correo);
+                alertBox.classList.remove('alert-danger');
+                alertBox.classList.add('alert-success');
+                alertBox.innerText = 'Se ha enviado un enlace seguro a tu correo.';
+                alertBox.classList.remove('d-none');
+                btn.innerHTML = 'Enlace Enviado';
+                
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('modalRecuperar')).hide();
+                    document.getElementById('rec_correo').value = '';
+                    alertBox.classList.add('d-none'); 
+                    btn.innerHTML = 'Enviar Enlace'; 
+                    btn.disabled = false;
+                }, 3500);
+
+            } catch (error) {
+                alertBox.classList.remove('alert-success');
+                alertBox.classList.add('alert-danger');
+                alertBox.innerText = "Error: Verifica que el correo esté registrado.";
+                alertBox.classList.remove('d-none');
+                btn.innerHTML = 'Enviar Enlace'; 
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

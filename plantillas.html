@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SADAFA - Documentos Oficiales</title>
+    <style>
+        @page { 
+            size: letter; 
+            margin: 0; 
+        }
+        body { 
+            font-family: Arial, sans-serif; 
+            color: #222533; 
+            margin: 0; 
+            background: #525659; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px; 
+            font-size: 11pt; 
+            line-height: 1.5; 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+        }
+        
+        .hoja-carta {
+            background-color: white; 
+            width: 215.9mm; 
+            height: 279.4mm; 
+            position: relative;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .img-fondo-membrete {
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+            object-fit: fill; 
+            pointer-events: none;
+        }
+        
+        .contenido-documento {
+            position: relative; 
+            z-index: 10; 
+            padding: 42mm 25mm 30mm 25mm; 
+            height: 100%; 
+            box-sizing: border-box;
+            background: transparent !important;
+        }
+
+        .contenedor-simetrico { display: flex; gap: 20px; align-items: stretch; margin-top: 15px; }
+        
+        .photo-box { 
+            width: 3.5cm; height: 4.5cm; flex-shrink: 0; border: 1px solid #ccc; 
+            text-align: center; overflow: hidden; display: flex; align-items: center; 
+            justify-content: center; background-color: #f8f9fa; color: #aaa; font-size: 0.8rem; 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+        }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .columna-tabla { flex: 1; display: flex; flex-direction: column; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 0; height: 100%; background: transparent; }
+        .data-table th, .data-table td { border: 1px solid #b0bec5; padding: 8px 12px; text-align: left; }
+        .data-table th { background-color: #f0f4f3; color: #0b3c36; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+        
+        .sig-block { margin-top: 40px; }
+        .firma-img { height: 70px; display: block; margin-bottom: 5px; }
+
+        .acciones-bar { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background-color: #0b3c36; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            color: white; 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+            z-index: 1000; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+        }
+        .btn-print { 
+            padding: 10px 22px; 
+            background-color: #2dd4bf; 
+            color: #0f172a; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 14px; 
+            transition: transform 0.1s ease;
+        }
+        .btn-print:hover {
+            transform: scale(1.03);
+            background-color: #14b8a6;
+        }
+        
+        .titulo-doc { text-align: center; text-transform: uppercase; font-weight: bold; font-size: 12pt; margin: 25px 0; }
+
+        @media print { 
+            .no-print { display: none !important; } 
+            html, body { width: 215.9mm; height: 279.4mm; padding: 0; margin: 0; background: transparent; display: block; }
+            .hoja-carta { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 215.9mm !important; 
+                height: 279.4mm !important; 
+                max-height: 279.4mm !important;
+                page-break-after: avoid; 
+                page-break-before: avoid;
+            }
+            .img-fondo-membrete { opacity: 1 !important; display: block !important; visibility: visible !important; width: 100% !important; height: 100% !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .plantilla-seccion { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="acciones-bar no-print">
+        <div><strong>SADAFA ERP</strong><br><small>Vista previa de documento</small></div>
+        <button onclick="window.print()" class="btn-print">🖨️ Imprimir / Guardar</button>
+    </div>
+
+    <div class="hoja-carta">
+        <img src="Membrete.png" class="img-fondo-membrete" alt="Fondo Membrete" onerror="this.style.display='none'">
+        
+        <div class="contenido-documento">
+            
+            <!-- 1. CARTA DE PRESENTACIÓN -->
+            <div id="plantilla-carta" class="plantilla-seccion">
+                <p><strong><span class="doc-sede">Manizales</span>, <span class="doc-fecha"></span></strong></p><br>
+                <p>Señor(a):<br>
+                <strong><span id="carta-admin" style="text-transform: uppercase;">...</span></strong><br>
+                Administrador(a) y Señores Residentes <strong><span id="carta-cliente" style="text-transform: uppercase;">...</span></strong><br>
+                <span class="doc-sede">Manizales</span></p><br>
+                
+                <p>Cordial Saludo,</p>
+                <p>Por medio de la presente nos permitimos relacionar los datos del personal asignado para prestar los servicios contratados con nuestra empresa:</p>
+
+                <div class="contenedor-simetrico">
+                    <div class="columna-foto">
+                        <div class="photo-box">
+                            <img id="carta-foto" style="display: none;">
+                            <span id="foto-placeholder">Sin Fotografía</span>
+                        </div>
+                    </div>
+                    <div class="columna-tabla">
+                        <table class="data-table">
+                            <tr><th>NOMBRE</th><td class="doc-nombre" style="font-weight: bold;">...</td></tr>
+                            <tr><th>No. IDENTIFICACIÓN</th><td><span class="doc-cedula">...</span> DE <span class="doc-ciudad-cedula">...</span></td></tr>
+                            <tr><th>CARGO A DESEMPEÑAR</th><td id="carta-cargo">...</td></tr>
+                            <tr><th>RH</th><td id="carta-rh">...</td></tr>
+                            <tr><th>ARL</th><td id="carta-arl">SURA</td></tr>
+                            <tr><th>EPS</th><td id="carta-eps">SALUD TOTAL</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <p style="margin-top: 30px;">Cordialmente,</p>
+                <div class="sig-block">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" class="firma-img" onerror="this.style.display='none'">
+                    <strong>MARIANA HENAO DÍAZ</strong><br>Talento Humano<br>
+                </div>
+            </div>
+
+            <!-- 2. CERTIFICADO LABORAL -->
+            <div id="plantilla-certificado" class="plantilla-seccion">
+                <p><strong><span class="doc-sede">Manizales</span>, <span class="doc-fecha"></span></strong></p><br><br>
+                <div class="titulo-doc">A QUIEN INTERESE</div><br>
+                <p style="text-align: justify;">El Departamento de Talento Humano de <strong>SADAFA SERVICIOS INTEGRALES S.A.S.</strong>, con NIT 901.262.796-6, hace constar que:</p>
+                
+                <p style="text-align: justify;">El(la) señor(a) <strong class="doc-nombre">...</strong>, identificado(a) con Cédula de Ciudadanía No. <strong class="doc-cedula">...</strong> DE <strong class="doc-ciudad-cedula">...</strong>, <span id="texto-vinculo">se encuentra vinculado(a)</span> laboralmente con nuestra compañía mediante un contrato <strong id="cert-contrato">...</strong>.</p>
+                
+                <p style="text-align: justify;"><span id="texto-devenga">Actualmente devenga</span> un salario básico mensual de <strong>$<span id="cert-salario">...</span></strong> (<span id="cert-salario-letras">...</span> PESOS M/CTE), desempeñando sus labores desde el <strong><span id="cert-fecha-inicio">...</span></strong><span id="span-hasta"> a la fecha actual</span>.</p>
+                
+                <p style="text-align: justify; margin-top: 30px;">La presente certificación se expide a solicitud del interesado(a).</p><br>
+                <p>Atentamente,</p>
+                <div class="sig-block">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" class="firma-img" onerror="this.style.display='none'">
+                    <strong>MARIANA HENAO DÍAZ</strong><br>Talento Humano<br>
+                </div>
+            </div>
+
+            <!-- 3. ORDEN EXAMEN MÉDICO -->
+            <div id="plantilla-examen" class="plantilla-seccion">
+                <p><strong><span class="doc-sede">Manizales</span>, <span class="doc-fecha"></span></strong></p><br>
+                <p>Señores:<br><strong id="exam-laboratorio">...</strong></p>
+                <div class="titulo-doc" style="margin: 30px 0;">AUTORIZACIÓN DE EXAMEN MÉDICO OCUPACIONAL</div>
+                <p>De manera atenta, solicitamos realizar examen médico ocupacional de <strong><span id="exam-tipo">...</span></strong> al siguiente trabajador(a):</p>
+                <table class="data-table">
+                    <tr><th>NOMBRES Y APELLIDOS</th><td class="doc-nombre">...</td></tr>
+                    <tr><th>DOCUMENTO DE IDENTIDAD</th><td><span class="doc-cedula">...</span> DE <span class="doc-ciudad-cedula">...</span></td></tr>
+                    <tr><th>TIPO DE EXAMEN</th><td id="exam-tipo-tabla">...</td></tr>
+                    <tr><th>EMPRESA SOLICITANTE</th><td>SADAFA SERVICIOS INTEGRALES S.A.S.</td></tr>
+                </table>
+                <p style="margin-top: 30px; text-align: justify;">Agradecemos enviar el concepto de aptitud laboral al correo <strong>info@sadafa.com.co</strong> adjuntando la respectiva factura para su trámite oportuno.</p><br>
+                <p>Atentamente,</p>
+                <div class="sig-block">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" class="firma-img" onerror="this.style.display='none'">
+                    <strong>MARIANA HENAO DÍAZ</strong><br>Talento Humano<br>
+                </div>
+            </div>
+
+            <!-- 4. RETIRO CESANTÍAS -->
+            <div id="plantilla-cesantias" class="plantilla-seccion">
+                <p><strong><span class="doc-sede">Manizales</span>, <span class="doc-fecha"></span></strong></p><br>
+                <p>Señores:<br><strong>FONDO DE CESANTIAS PROTECCION</strong></p><br>
+                <p><strong>Asunto: Retiro total de cesantías</strong></p>
+                <p style="text-align: justify; margin-top: 30px; line-height: 1.8;">
+                    Mediante la presente carta le solicito respetuosamente la autorización para el retiro total de las cesantías del señor(a) <strong class="doc-nombre">...</strong> identificado(a) con cédula de ciudadanía <strong class="doc-cedula">...</strong> DE <strong class="doc-ciudad-cedula">...</strong>, ya que el señor(a) antes mencionado(a) laboró para la empresa SADAFA SERVICIOS INTEGRALES identificada con NIT 901.262.796-6, del <strong id="cesan-inicio">...</strong> hasta el <strong id="cesan-fin">...</strong>.
+                </p>
+                <p style="margin-top: 30px;">Agradeciendo la atención que da a esta solicitud, me despido cordialmente.</p>
+                <div class="sig-block" style="margin-top: 50px;">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" class="firma-img" onerror="this.style.display='none'">
+                    <strong>MARIANA HENAO DIAZ</strong><br>C.C. 1.010.074.494 MZL<br>Talento Humano<br>
+                </div>
+            </div>
+
+            <!-- 5. APERTURA CUENTA DAVIVIENDA -->
+            <div id="plantilla-cuenta" class="plantilla-seccion">
+                <p><strong><span class="doc-sede">Manizales</span>, <span class="doc-fecha"></span></strong></p><br>
+                <p>Señores<br><strong>BANCO DAVIVIENDA</strong><br><strong>Sede <span class="doc-sede">Manizales</span></strong></p>
+                <p style="text-align: right; margin-right: 50px;"><strong>Ref. Apertura cuenta Nómina</strong></p>
+                <p>Cordial saludo,</p>
+                <p style="text-align: justify; line-height: 1.8;">
+                    Nos permitimos enviar al señor(a) <strong class="doc-nombre">...</strong>, identificado(a) con cédula número <strong class="doc-cedula">...</strong> DE <strong class="doc-ciudad-cedula">...</strong>, trabajador(a) de nuestra empresa para realizar apertura de cuenta de nómina.
+                </p>
+                <p style="margin-top: 30px;">Agradecemos de antemano la atención suministrada a la presente.</p>
+                <p>Cordialmente,</p>
+                <div class="sig-block" style="margin-top: 50px;">
+                    <img src="FIRMA JHON.png" alt="Firma Jhon Fredy" class="firma-img" onerror="this.style.display='none'">
+                    <strong>JHON FREDY LOPEZ REINOSA</strong><br>GERENTE<br>SADAFA SERVICIOS INTEGRALES S.A.S.<br>NIT. 901.262.796-6
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        const Unidades = num => {
+            switch(num) {
+                case 1: return "UN"; case 2: return "DOS"; case 3: return "TRES";
+                case 4: return "CUATRO"; case 5: return "CINCO"; case 6: return "SEIS";
+                case 7: return "SIETE"; case 8: return "OCHO"; case 9: return "NUEVE";
+            }
+            return "";
+        };
+        const Decenas = num => {
+            let decena = Math.floor(num/10);
+            let unidad = num - (decena * 10);
+            switch(decena) {
+                case 1:
+                    switch(unidad) {
+                        case 0: return "DIEZ"; case 1: return "ONCE"; case 2: return "DOCE";
+                        case 3: return "TRECE"; case 4: return "CATORCE"; case 5: return "QUINCE";
+                        default: return "DIECI" + Unidades(unidad);
+                    }
+                case 2:
+                    switch(unidad) {
+                        case 0: return "VEINTE";
+                        default: return "VEINTI" + Unidades(unidad);
+                    }
+                case 3: return DecenasY("TREINTA", unidad);
+                case 4: return DecenasY("CUARENTA", unidad);
+                case 5: return DecenasY("CINCUENTA", unidad);
+                case 6: return DecenasY("SESENTA", unidad);
+                case 7: return DecenasY("SETENTA", unidad);
+                case 8: return DecenasY("OCHENTA", unidad);
+                case 9: return DecenasY("NOVENTA", unidad);
+                case 0: return Unidades(unidad);
+            }
+        };
+        const DecenasY = (strSin, numUnidades) => {
+            if (numUnidades > 0) return strSin + " Y " + Unidades(numUnidades);
+            return strSin;
+        };
+        const Centenas = num => {
+            let centenas = Math.floor(num / 100);
+            let decenas = num - (centenas * 100);
+            switch(centenas) {
+                case 1:
+                    if (decenas > 0) return "CIENTO " + Decenas(decenas);
+                    return "CIEN";
+                case 2: return "DOSCIENTOS " + Decenas(decenas);
+                case 3: return "TRESCIENTOS " + Decenas(decenas);
+                case 4: return "CUATROCIENTOS " + Decenas(decenas);
+                case 5: return "QUINIENTOS " + Decenas(decenas);
+                case 6: return "SEISCIENTOS " + Decenas(decenas);
+                case 7: return "SETECIENTOS " + Decenas(decenas);
+                case 8: return "OCHOCIENTOS " + Decenas(decenas);
+                case 9: return "NOVECIENTOS " + Decenas(decenas);
+            }
+            return Decenas(decenas);
+        };
+        const Seccion = (num, divisor, strSingular, strPlural) => {
+            let cientos = Math.floor(num / divisor);
+            let resto = num - (cientos * divisor);
+            let letras = "";
+            if (cientos > 0) {
+                if (cientos === 1) letras = strSingular;
+                else letras = Centenas(cientos) + " " + strPlural;
+            }
+            return { letras, resto };
+        };
+        const Miles = num => {
+            let divisor = 1000;
+            let cientos = Math.floor(num / divisor);
+            let resto = num - (cientos * divisor);
+            let strMiles = Seccion(num, divisor, "UN MIL", "MIL");
+            let strCentenas = Centenas(resto);
+            if(strMiles.letras === "") return strCentenas;
+            return strMiles.letras + " " + strCentenas;
+        };
+        function numeroALetras(num) {
+            num = parseInt(num, 10);
+            if (isNaN(num) || num === 0) return "CERO";
+            const mill = Seccion(num, 1000000, "UN MILLON", "MILLONES");
+            let resultado = "";
+            if (mill.letras) resultado += mill.letras + " ";
+            const miles = Seccion(mill.resto, 1000, "MIL", "MIL");
+            if (miles.letras) {
+                if (miles.letras === "MIL") resultado += "MIL ";
+                else resultado += Centenas(Math.floor(mill.resto / 1000)) + " MIL ";
+            }
+            const restoFinal = mill.resto % 1000;
+            if (restoFinal > 0) resultado += Centenas(restoFinal);
+            return resultado.trim();
+        }
+
+        function formatearFechaTexto(fechaInput) {
+            if(!fechaInput || fechaInput === 'null' || fechaInput === '' || fechaInput === 'undefined') return '...';
+            const partes = fechaInput.split('-');
+            if(partes.length !== 3) return fechaInput;
+            const d = new Date(partes[0], partes[1] - 1, partes[2]);
+            return d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tipo = urlParams.get('tipo') || 'carta';
+            const seccionActiva = document.getElementById(`plantilla-${tipo}`);
+            if(seccionActiva) seccionActiva.style.display = 'block';
+
+            const fechaStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.querySelectorAll(".doc-fecha").forEach(el => el.innerText = fechaStr);
+            document.querySelectorAll(".doc-nombre").forEach(el => el.innerText = (urlParams.get('nombre') || '').toUpperCase());
+            
+            let formatCedula = urlParams.get('cedula') || '';
+            formatCedula = new Intl.NumberFormat('es-CO').format(formatCedula.replace(/\D/g, ''));
+            document.querySelectorAll(".doc-cedula").forEach(el => el.innerText = formatCedula);
+            
+            const ciudadC = urlParams.get('ciudad_cedula') || '';
+            document.querySelectorAll(".doc-ciudad-cedula").forEach(el => el.innerText = ciudadC.toUpperCase());
+            
+            const sedeOp = urlParams.get('sede') || 'Manizales';
+            document.querySelectorAll(".doc-sede").forEach(el => el.innerText = sedeOp.charAt(0).toUpperCase() + sedeOp.slice(1).toLowerCase());
+
+            if(tipo === 'carta') {
+                if(urlParams.has('cargo')) document.getElementById("carta-cargo").innerText = urlParams.get('cargo').toUpperCase();
+                if(urlParams.has('cliente')) document.getElementById("carta-cliente").innerText = urlParams.get('cliente').toUpperCase();
+                if(urlParams.has('admin')) document.getElementById("carta-admin").innerText = urlParams.get('admin').toUpperCase();
+                if(urlParams.has('eps')) document.getElementById("carta-eps").innerText = urlParams.get('eps').toUpperCase();
+                if(urlParams.has('arl')) document.getElementById("carta-arl").innerText = urlParams.get('arl').toUpperCase();
+                if(urlParams.has('rh')) {
+                    let rhEl = document.getElementById("carta-rh");
+                    if(rhEl) rhEl.innerText = urlParams.get('rh').toUpperCase();
+                }
+
+                const fotoLocal = sessionStorage.getItem('sadafa_temp_foto_carta');
+                if (fotoLocal) { 
+                    document.getElementById('carta-foto').src = fotoLocal; 
+                    document.getElementById('carta-foto').style.display = 'block'; 
+                    document.getElementById('foto-placeholder').style.display = 'none'; 
+                }
+            }
+
+            if(tipo === 'certificado') {
+                document.getElementById("cert-contrato").innerText = (urlParams.get('contrato') || '').toUpperCase();
+                const salario = parseInt(urlParams.get('salario')) || 0;
+                document.getElementById("cert-salario").innerText = new Intl.NumberFormat('es-CO').format(salario);
+                document.getElementById("cert-salario-letras").innerText = numeroALetras(salario);
+                
+                const fechaInicio = urlParams.get('fecha_inicio');
+                document.getElementById("cert-fecha-inicio").innerText = formatearFechaTexto(fechaInicio);
+                
+                const fechaFin = urlParams.get('fecha_fin');
+                if (fechaFin && fechaFin !== 'null' && fechaFin !== '' && fechaFin !== 'undefined' && fechaFin !== fechaInicio) {
+                    document.getElementById("texto-vinculo").innerText = "laboró";
+                    document.getElementById("texto-devenga").innerText = "Devengó";
+                    document.getElementById("span-hasta").innerText = " hasta el " + formatearFechaTexto(fechaFin);
+                } else {
+                    document.getElementById("texto-vinculo").innerText = "se encuentra vinculado(a)";
+                    document.getElementById("texto-devenga").innerText = "Actualmente devenga";
+                    document.getElementById("span-hasta").innerText = " a la fecha actual";
+                }
+            }
+
+            if(tipo === 'examen') {
+                document.getElementById("exam-laboratorio").innerText = (urlParams.get('laboratorio') || '').toUpperCase();
+                document.getElementById("exam-tipo").innerText = (urlParams.get('tipo_examen') || '').toUpperCase();
+                document.getElementById("exam-tipo-tabla").innerText = (urlParams.get('tipo_examen') || '').toUpperCase();
+            }
+
+            if(tipo === 'cesantias') {
+                document.getElementById("cesan-inicio").innerText = formatearFechaTexto(urlParams.get('fecha_inicio'));
+                document.getElementById("cesan-fin").innerText = formatearFechaTexto(urlParams.get('fecha_fin'));
+            }
+        });
+    </script>
+</body>
+</html>
