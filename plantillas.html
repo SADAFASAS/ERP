@@ -23,7 +23,7 @@
             overflow: hidden; 
         }
         
-        /* FIX QA: El membrete es ahora una capa fantasma de fondo absoluto. No empujará nada. */
+        /* Membrete SADAFA (Fondo absoluto, no empuja el texto) */
         .header-bg { 
             position: absolute; 
             top: 0; 
@@ -33,11 +33,11 @@
             z-index: 0; 
         }
         
-        /* FIX QA: Margen protector para que el texto no toque ni el borde superior ni el inferior del membrete */
+        /* Contenedor central (respeta el membrete superior e inferior) */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 3.5cm 2.5cm 3.5cm 2.5cm; 
+            padding: 4cm 2.5cm 3.5cm 2.5cm; 
             min-height: 29.7cm; 
             box-sizing: border-box; 
         }
@@ -49,13 +49,15 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
-        /* Estructura de Tabla para Carta de Presentación */
+        /* Tablas estandarizadas (Carta y Certificado) */
         .tabla-datos { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
         .tabla-datos td { padding: 4px 0; font-size: 11pt; }
         .tabla-datos td.label { font-weight: bold; width: 40%; }
         
-        .signature { margin-top: 40px; }
-        .signature img { max-width: 250px; max-height: 100px; display: block; margin-bottom: -5px; }
+        /* Firmas corporativas adaptadas a modelos reales */
+        .signature-container { margin-top: 50px; display: flex; gap: 40px; }
+        .signature-box { display: inline-block; }
+        .signature-box img { max-width: 200px; max-height: 100px; display: block; margin-bottom: -5px; }
         .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
         
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
@@ -72,26 +74,26 @@
     <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF / Guardar</button>
     
     <div class="page">
-        <!-- CAPA DE FONDO (MEMBRETE SADAFA A4) -->
+        <!-- CAPA DE FONDO (MEMBRETE SADAFA) -->
         <img src="Membrete.png" alt="Membrete SADAFA" class="header-bg" onerror="this.style.display='none'">
         
-        <!-- CAPA DE TEXTO (SOBRE EL FONDO) -->
         <div class="content-wrapper">
             
-            <!-- 1. CARTA DE PRESENTACIÓN (ESTRUCTURA ESTANDARIZADA) -->
+            <!-- ==============================================
+                 1. CARTA DE PRESENTACIÓN (Estructura Modelo)
+                 ============================================== -->
             <div id="doc-carta" class="content" style="display: none;">
                 
-                <!-- FOTO DEL EMPLEADO (Centrada arriba como en el modelo) -->
                 <div class="text-center" style="margin-bottom: 25px;">
-                    <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 130px; border: 1px solid #000; display: none; margin: 0 auto;">
+                    <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border: 1px solid #000; display: none; margin: 0 auto;">
                 </div>
 
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
                 
                 <div class="mb-4">
                     <p>Señores<br>
-                    <span class="bold" id="lbl_cliente"></span><br>
-                    Attn: <span id="lbl_admin">Administración</span></p>
+                    <span class="bold" id="lbl_admin">Administración</span><br>
+                    <span class="bold" id="lbl_cliente"></span></p>
                 </div>
                 
                 <p>Cordial Saludo,</p>
@@ -119,109 +121,179 @@
                         <td class="label">EPS</td>
                         <td id="lbl_eps"></td>
                     </tr>
-                    <tr>
-                        <td class="label">RH</td>
-                        <td id="lbl_rh"></td>
-                    </tr>
                 </table>
                 
                 <p class="mt-4">Cordialmente,</p>
-                <div class="signature" style="margin-top: 30px;">
-                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                <div class="signature-box" style="margin-top: 30px;">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano</div>
                 </div>
             </div>
 
-            <!-- 2. CERTIFICADO LABORAL -->
+            <!-- ==============================================
+                 2. CERTIFICADO LABORAL (Estructura Modelo)
+                 ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
-                <p class="text-right">Manizales, <span id="fecha_actual_cert"></span></p>
-                <p class="bold text-center mt-4 mb-4" style="font-size: 14pt;">EL DEPARTAMENTO DE TALENTO HUMANO DE SADAFA S.A.S.<br>CERTIFICA:</p>
+                <p class="bold text-center mt-4 mb-4">A QUIEN INTERESE</p>
                 
-                <p>Que el(la) señor(a) <span class="bold" id="lbl_nombre_cert"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cert"></span> expedida en <span id="lbl_ciudad_cert"></span>, <span id="txt_laboro">laboró</span> con nuestra compañía mediante un contrato <span class="bold" id="lbl_contrato"></span>.</p>
+                <p>Certificamos que el señor(a) <span class="bold" id="lbl_nombre_cert"></span> identificado(a) con cédula de ciudadanía número <span class="bold" id="lbl_cedula_cert"></span> DE <span class="bold" id="lbl_ciudad_cert"></span>, <span id="txt_laboro">labora</span> en la empresa desde:</p>
                 
-                <p>Fecha de inicio de labores: <span class="bold" id="lbl_inicio_cert"></span>.</p>
-                <p id="p_fin_cert" style="display: none;">Fecha de terminación: <span class="bold" id="lbl_fin_cert"></span>.</p>
-                <p>Último salario básico devengado: <span class="bold" id="lbl_salario"></span> mensuales.</p>
-                <p>El presente certificado se expide a solicitud del interesado(a).</p>
-                <p class="mt-4">Atentamente,</p>
-                <div class="signature">
-                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                <p id="p_rango_fechas" style="display: none;">Desde el <span class="bold" id="lbl_inicio_cert"></span> hasta el <span class="bold" id="lbl_fin_cert"></span>.</p>
+                <p id="p_fecha_unica">Desde el <span class="bold" id="lbl_inicio_unico"></span>.</p>
+
+                <table class="tabla-datos">
+                    <tr>
+                        <td class="label">Ultimo Tipo de Contrato:</td>
+                        <td id="lbl_contrato"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Cargo:</td>
+                        <td id="lbl_cargo_cert"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">Salario:</td>
+                        <td><span id="lbl_salario"></span> MAS AUX. TRANSPORTE</td>
+                    </tr>
+                    <tr id="tr_motivo_retiro" style="display: none;">
+                        <td class="label">Motivo del retiro:</td>
+                        <td>VOLUNTARIO</td>
+                    </tr>
+                </table>
+                
+                <p>Se expide a solicitud del interesado en la ciudad de Manizales a los <span id="fecha_actual_cert"></span>.</p>
+                
+                <p class="mt-4">Cordialmente,</p>
+                <div class="signature-box">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>TALENTO HUMANO<br>SADAFA SERVICIOS INTEGRALES SAS</div>
                 </div>
             </div>
 
-            <!-- 3. EXAMEN MÉDICO -->
+            <!-- ==============================================
+                 3. EXAMEN MÉDICO (Estructura Modelo)
+                 ============================================== -->
             <div id="doc-examen" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
-                <p class="bold text-center mt-4 mb-4">ORDEN DE EXAMEN MÉDICO OCUPACIONAL</p>
-                <p>Señores<br><span class="bold" id="lbl_laboratorio"></span></p>
-                <p>Agradecemos realizar examen médico ocupacional de <span class="bold" id="lbl_tipo_examen"></span> al siguiente trabajador(a):</p>
-                <p><span class="bold">Nombre Completo:</span> <span id="lbl_nombre_exam"></span><br>
-                <span class="bold">Documento de Identidad:</span> <span id="lbl_cedula_exam"></span> de <span id="lbl_ciudad_exam"></span></p>
-                <p>Por favor facturar a nombre de SADAFA S.A.S. NIT 901.262.796-6.</p>
+                
+                <p>Señor (a):<br>
+                <span class="bold" id="lbl_nombre_exam"></span><br>
+                <span id="lbl_cedula_exam"></span> DE <span id="lbl_ciudad_exam"></span></p>
+
+                <p class="bold mb-4">ASUNTO: NOTIFICACIÓN EXÁMEN MÉDICO DE <span id="lbl_tipo_examen"></span></p>
+                
+                <p>SADAFA SERVICIOS INTEGRALES S.A.S, comprometida con el SISTEMA DE GESTION DE SEGURIDAD Y SALUD EN EL TRABAJO SG-SST y dando cumplimiento a los requisitos definidos por el Capítulo 6, titulo 4, Parte 2 del libro 2 del Decreto 1072 de 2015 y la Resolución 0312 de 2019 procede a realizar la siguiente notificación:</p>
+                
+                <p>Solicitamos su colaboración programando la cita del EXÁMEN MÉDICO DE <span id="lbl_tipo_examen_2"></span> dentro de los primeros 05 días hábiles después de recibir este comunicado.</p>
+                
+                <p class="bold">Empresa: <span id="lbl_laboratorio"></span></p>
+                
+                <p>Gracias por su colaboración</p>
                 <p>Cordialmente,</p>
-                <div class="signature">
-                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+
+                <div class="signature-container">
+                    <div class="signature-box">
+                        <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
+                        <div class="signature-line">JOHN FREDY LOPEZ REINOSA<br>Representante Legal</div>
+                    </div>
+                    <div class="signature-box">
+                        <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
+                        <div class="signature-line">MARIANA HENAO DIAZ<br>Responsable SST</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 4. CESANTÍAS -->
+            <!-- ==============================================
+                 4. CESANTÍAS (Estructura Modelo)
+                 ============================================== -->
             <div id="doc-cesantias" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
-                <p class="bold text-center mt-4 mb-4">AUTORIZACIÓN DE RETIRO DE CESANTÍAS</p>
-                <p>A QUIEN INTERESE:</p>
-                <p>Por medio de la presente, SADAFA S.A.S. con NIT 901.262.796-6, autoriza al fondo de cesantías para realizar el pago correspondiente a liquidación definitiva al señor(a) <span class="bold" id="lbl_nombre_cesan"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cesan"></span> de <span id="lbl_ciudad_cesan"></span>.</p>
-                <p>El periodo laborado comprende desde el <span class="bold" id="lbl_inicio_cesan"></span> hasta el <span class="bold" id="lbl_fin_cesan"></span>.</p>
-                <p>Cordialmente,</p>
-                <div class="signature">
-                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                
+                <p>Señores:<br>
+                <span class="bold">FONDO DE CESANTIAS</span></p>
+                
+                <p class="bold mb-4">Asunto: Retiro total de cesantías</p>
+                
+                <p>Mediante la presente carta le solicito respetuosamente la autorización para el retiro total de las cesantías del señor(a) <span class="bold" id="lbl_nombre_cesan"></span> identificado(a) con cedula de ciudadanía <span id="lbl_cedula_cesan"></span> DE <span id="lbl_ciudad_cesan"></span>, ya que el señor(a) antes mencionado(a) laboró para la empresa SADAFA SERVICIOS INTEGRALES identificada con NIT 901.262.796-6, del <span id="lbl_inicio_cesan"></span> hasta <span id="lbl_fin_cesan"></span>.</p>
+                
+                <p>Agradeciendo la atención que da a esta solicitud, me despido cordialmente.</p>
+                
+                <div class="signature-box" style="margin-top: 40px;">
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>C.C. 1.010.074.494 MZL<br>Talento Humano</div>
                 </div>
             </div>
 
-            <!-- 5. CUENTA -->
+            <!-- ==============================================
+                 5. CUENTA (Estructura Modelo)
+                 ============================================== -->
             <div id="doc-cuenta" class="content" style="display: none;">
-                <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
-                <p class="bold text-center mt-4 mb-4">SOLICITUD DE APERTURA DE CUENTA DE NÓMINA</p>
-                <p>Señores<br><span class="bold">BANCO DAVIVIENDA</span><br>Sucursal <span id="lbl_sede_cta"></span></p>
-                <p>Respetados señores:</p>
-                <p>Por medio de la presente, solicitamos amablemente la apertura de una cuenta de ahorros (Nómina) a nombre del señor(a) <span class="bold" id="lbl_nombre_cta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cta"></span> expedida en <span id="lbl_ciudad_cta"></span>.</p>
-                <p>Esta cuenta será utilizada exclusivamente para el pago de sus salarios y prestaciones sociales por parte de nuestra empresa SADAFA S.A.S. NIT 901.262.796-6.</p>
+                <p class="text-right">Sede <span id="lbl_sede_cta"></span>, <span id="fecha_actual_cta"></span></p>
+                
+                <p>Señores<br>
+                <span class="bold">BANCO DAVIVIENDA</span></p>
+                
+                <p class="text-right mb-4">Ref. Apertura cuenta Nómina</p>
+                
+                <p>Cordial saludo,</p>
+                
+                <p>Nos permitimos enviar al señor (a), <span class="bold" id="lbl_nombre_cta"></span>, identificado (a) con cédula número <span id="lbl_cedula_cta"></span> DE <span id="lbl_ciudad_cta"></span>, trabajador (a) de nuestra empresa para realizar apertura de cuenta de nómina.</p>
+                
+                <p>Agradecemos de antemano la atención suministrada a la presente.</p>
                 <p>Cordialmente,</p>
-                <div class="signature">
-                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                
+                <div class="signature-box" style="margin-top: 40px;">
+                    <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
+                    <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES SAS<br>NIT. 901262796-6</div>
                 </div>
             </div>
 
-        </div> <!-- Fin de content-wrapper -->
-    </div> <!-- Fin de page -->
+        </div>
+    </div>
 
+    <!-- LÓGICA DE PROCESAMIENTO DE DATOS -->
     <script>
         function formatearMoneda(valor) { 
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
+
+        // Formatea la fecha de YYYY-MM-DD a un texto largo o DD/MM/YYYY
+        function formatearFechaTexto(fechaIso) {
+            if(!fechaIso) return '';
+            const partes = fechaIso.split('-');
+            const dateObj = new Date(partes[0], partes[1] - 1, partes[2]);
+            return dateObj.toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+        function formatearFechaCorta(fechaIso) {
+            if(!fechaIso) return '';
+            const partes = fechaIso.split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
         
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
-        const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
-        const fechaHoy = new Date().toLocaleDateString('es-CO', opcionesFecha);
+        
+        // Fecha actual en español
+        const dateObj = new Date();
+        const dia = String(dateObj.getDate()).padStart(2, '0');
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const mesText = meses[dateObj.getMonth()];
+        const anio = dateObj.getFullYear();
+        const fechaHoyLarga = `${dia} de ${mesText} del ${anio}`;
+        const fechaHoyCorta = `(${dia}) días del mes de ${mesText} del ${anio}`;
         
         if(tipo) {
             document.getElementById('doc-' + tipo).style.display = 'block';
             
             if(tipo === 'carta') {
-                document.getElementById('fecha_actual_carta').innerText = fechaHoy;
+                document.getElementById('fecha_actual_carta').innerText = fechaHoyLarga;
                 document.getElementById('lbl_nombre_carta').innerText = String(params.get('nombre') || '').toUpperCase();
-                document.getElementById('lbl_cedula_carta').innerText = params.get('cedula');
+                document.getElementById('lbl_cedula_carta').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
                 document.getElementById('lbl_cliente').innerText = String(params.get('cliente') || '').toUpperCase();
-                document.getElementById('lbl_admin').innerText = params.get('admin') || 'Administración';
+                document.getElementById('lbl_admin').innerText = String(params.get('admin') || 'Administrador').toUpperCase();
                 document.getElementById('lbl_cargo').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_eps').innerText = String(params.get('eps') || '').toUpperCase();
                 document.getElementById('lbl_arl').innerText = String(params.get('arl') || '').toUpperCase();
-                document.getElementById('lbl_rh').innerText = String(params.get('rh') || '').toUpperCase();
                 
+                // MÁGIA DE FOTO
                 const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
                 if (fotoTemp && imgEl) {
@@ -231,45 +303,52 @@
                 }
             }
             else if(tipo === 'certificado') {
-                document.getElementById('fecha_actual_cert').innerText = fechaHoy;
-                document.getElementById('lbl_nombre_cert').innerText = params.get('nombre');
-                document.getElementById('lbl_cedula_cert').innerText = params.get('cedula');
-                document.getElementById('lbl_ciudad_cert').innerText = params.get('ciudad_cedula');
+                document.getElementById('fecha_actual_cert').innerText = fechaHoyCorta;
+                document.getElementById('lbl_nombre_cert').innerText = String(params.get('nombre') || '').toUpperCase();
+                document.getElementById('lbl_cedula_cert').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
+                document.getElementById('lbl_ciudad_cert').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
                 document.getElementById('lbl_contrato').innerText = String(params.get('contrato') || '').toUpperCase();
-                document.getElementById('lbl_inicio_cert').innerText = params.get('fecha_inicio');
+                document.getElementById('lbl_cargo_cert').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_salario').innerText = formatearMoneda(params.get('salario'));
+                
+                const inicioText = formatearFechaTexto(params.get('fecha_inicio'));
+                document.getElementById('lbl_inicio_unico').innerText = inicioText;
                 
                 const fin = params.get('fecha_fin');
                 if(fin && fin.trim() !== '') {
                     document.getElementById('txt_laboro').innerText = 'laboró';
-                    document.getElementById('lbl_fin_cert').innerText = fin;
-                    document.getElementById('p_fin_cert').style.display = 'block';
-                } else {
-                    document.getElementById('txt_laboro').innerText = 'labora actualmente';
+                    document.getElementById('p_fecha_unica').style.display = 'none';
+                    document.getElementById('p_rango_fechas').style.display = 'block';
+                    document.getElementById('tr_motivo_retiro').style.display = 'table-row';
+                    
+                    document.getElementById('lbl_inicio_cert').innerText = inicioText;
+                    document.getElementById('lbl_fin_cert').innerText = formatearFechaTexto(fin);
                 }
             }
             else if(tipo === 'examen') {
-                document.getElementById('fecha_actual_exam').innerText = fechaHoy;
+                document.getElementById('fecha_actual_exam').innerText = fechaHoyLarga;
                 document.getElementById('lbl_laboratorio').innerText = params.get('laboratorio');
-                document.getElementById('lbl_tipo_examen').innerText = params.get('tipo_examen');
-                document.getElementById('lbl_nombre_exam').innerText = params.get('nombre');
-                document.getElementById('lbl_cedula_exam').innerText = params.get('cedula');
-                document.getElementById('lbl_ciudad_exam').innerText = params.get('ciudad_cedula');
+                const tEx = String(params.get('tipo_examen') || '').toUpperCase();
+                document.getElementById('lbl_tipo_examen').innerText = tEx;
+                document.getElementById('lbl_tipo_examen_2').innerText = tEx;
+                document.getElementById('lbl_nombre_exam').innerText = String(params.get('nombre') || '').toUpperCase();
+                document.getElementById('lbl_cedula_exam').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
+                document.getElementById('lbl_ciudad_exam').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
             }
             else if(tipo === 'cesantias') {
-                document.getElementById('fecha_actual_cesan').innerText = fechaHoy;
-                document.getElementById('lbl_nombre_cesan').innerText = params.get('nombre');
-                document.getElementById('lbl_cedula_cesan').innerText = params.get('cedula');
-                document.getElementById('lbl_ciudad_cesan').innerText = params.get('ciudad_cedula');
-                document.getElementById('lbl_inicio_cesan').innerText = params.get('fecha_inicio');
-                document.getElementById('lbl_fin_cesan').innerText = params.get('fecha_fin');
+                document.getElementById('fecha_actual_cesan').innerText = fechaHoyLarga;
+                document.getElementById('lbl_nombre_cesan').innerText = String(params.get('nombre') || '').toUpperCase();
+                document.getElementById('lbl_cedula_cesan').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
+                document.getElementById('lbl_ciudad_cesan').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
+                document.getElementById('lbl_inicio_cesan').innerText = formatearFechaCorta(params.get('fecha_inicio'));
+                document.getElementById('lbl_fin_cesan').innerText = formatearFechaCorta(params.get('fecha_fin'));
             }
             else if(tipo === 'cuenta') {
-                document.getElementById('fecha_actual_cta').innerText = fechaHoy;
+                document.getElementById('fecha_actual_cta').innerText = fechaHoyLarga;
                 document.getElementById('lbl_sede_cta').innerText = params.get('sede');
-                document.getElementById('lbl_nombre_cta').innerText = params.get('nombre');
-                document.getElementById('lbl_cedula_cta').innerText = params.get('cedula');
-                document.getElementById('lbl_ciudad_cta').innerText = params.get('ciudad_cedula');
+                document.getElementById('lbl_nombre_cta').innerText = String(params.get('nombre') || '').toUpperCase();
+                document.getElementById('lbl_cedula_cta').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
+                document.getElementById('lbl_ciudad_cta').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
             }
         } else {
             document.body.innerHTML = '<h2>Error: Faltan datos para generar el documento.</h2>';
