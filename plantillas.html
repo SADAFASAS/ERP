@@ -6,16 +6,22 @@
     <style>
         body { font-family: Arial, sans-serif; background: #525659; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .page { background: white; width: 21cm; min-height: 29.7cm; padding: 2.5cm; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); position: relative; }
-        .header-img { width: 100%; max-height: 120px; object-fit: contain; margin-bottom: 20px; }
+        
+        /* CORRECCIÓN: El membrete ahora ocupa todo el ancho sin aplastarse */
+        .header-img { width: 100%; height: auto; display: block; margin-bottom: 20px; }
+        
         .content { line-height: 1.6; font-size: 11pt; text-align: justify; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .bold { font-weight: bold; }
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
+        
+        /* CORRECCIÓN: Alineación perfecta de la firma */
         .signature { margin-top: 50px; }
-        .signature img { max-width: 200px; max-height: 100px; display: block; }
-        .signature-line { border-top: 1px solid #000; width: 250px; margin-top: 5px; padding-top: 5px; font-weight: bold; }
+        .signature img { max-width: 250px; max-height: 100px; display: block; margin-bottom: -5px; }
+        .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
+        
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .print-btn:hover { background: #166c62; }
         @media print {
@@ -43,7 +49,7 @@
             <p>Respetados señores:</p>
             <p>Por medio de la presente, nos permitimos presentar al señor(a) <span class="bold" id="lbl_nombre_carta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_carta"></span> expedida en <span id="lbl_ciudad_carta"></span>, quien a partir de la fecha se desempeñará en el cargo de <span class="bold" id="lbl_cargo"></span> en sus instalaciones.</p>
             
-            <!-- FOTO DEL EMPLEADO (Corrección Aplicada) -->
+            <!-- FOTO DEL EMPLEADO (Centrada y adaptada) -->
             <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border-radius: 8px; border: 1px solid #ccc; display: none; margin: 20px auto;">
             
             <p>Para su conocimiento y fines pertinentes, informamos su afiliación al Sistema de Seguridad Social:</p>
@@ -60,12 +66,11 @@
             </div>
         </div>
 
-        <!-- 2. CERTIFICADO LABORAL (Corrección ortográfica aplicada) -->
+        <!-- 2. CERTIFICADO LABORAL -->
         <div id="doc-certificado" class="content" style="display: none;">
             <p class="text-right">Manizales, <span id="fecha_actual_cert"></span></p>
             <p class="bold text-center mt-4 mb-4" style="font-size: 14pt;">EL DEPARTAMENTO DE TALENTO HUMANO DE SADAFA S.A.S.<br>CERTIFICA:</p>
             
-            <!-- Aquí corregimos "laboró laboralmente" por "laboró" -->
             <p>Que el(la) señor(a) <span class="bold" id="lbl_nombre_cert"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cert"></span> expedida en <span id="lbl_ciudad_cert"></span>, <span id="txt_laboro">laboró</span> con nuestra compañía mediante un contrato <span class="bold" id="lbl_contrato"></span>.</p>
             
             <p>Fecha de inicio de labores: <span class="bold" id="lbl_inicio_cert"></span>.</p>
@@ -153,14 +158,13 @@
                 document.getElementById('lbl_arl').innerText = params.get('arl');
                 document.getElementById('lbl_rh').innerText = params.get('rh');
                 
-                // MÁGIA DE FOTO: Leemos la foto almacenada en memoria y la pintamos (Corrección)
-                const fotoTemp = sessionStorage.getItem('sadafa_temp_foto_carta');
+                // MÁGIA DE FOTO FIX: Leemos desde localStorage para que sobreviva al salto de pestaña
+                const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
                 if (fotoTemp && imgEl) {
                     imgEl.src = fotoTemp;
                     imgEl.style.display = 'block';
-                    // Borramos la foto de la memoria para no pesar el navegador
-                    setTimeout(() => { sessionStorage.removeItem('sadafa_temp_foto_carta'); }, 1500);
+                    setTimeout(() => { localStorage.removeItem('sadafa_temp_foto_carta'); }, 1500);
                 }
             }
             else if(tipo === 'certificado') {
@@ -168,7 +172,8 @@
                 document.getElementById('lbl_nombre_cert').innerText = params.get('nombre');
                 document.getElementById('lbl_cedula_cert').innerText = params.get('cedula');
                 document.getElementById('lbl_ciudad_cert').innerText = params.get('ciudad_cedula');
-                document.getElementById('lbl_contrato').innerText = params.get('contrato');
+                // FIX: El contrato se inyecta siempre en mayúsculas
+                document.getElementById('lbl_contrato').innerText = String(params.get('contrato') || '').toUpperCase();
                 document.getElementById('lbl_inicio_cert').innerText = params.get('fecha_inicio');
                 document.getElementById('lbl_salario').innerText = formatearMoneda(params.get('salario'));
                 
