@@ -140,7 +140,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-12">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-speedometer2 me-2 text-success"></i> Panel de Control Administrativo</h4>
-                        <p class="text-muted small mb-0">Alertas legales, contratos e inventario (Actualización en tiempo real con Firebase).</p>
+                        <p class="text-muted small mb-0">Alertas vencimientos, contratos e inventario.</p>
                     </div>
                 </div>
 
@@ -222,14 +222,14 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-4">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-person-badge me-2 text-success"></i> Personal y Contratos</h4>
-                        <p class="text-muted small mb-0">Base de datos de contratos y cuadrilla activa.</p>
+                        <p class="text-muted small mb-0">Base de datos de contratos y operarios activos.</p>
                     </div>
                     <div class="col-md-8 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;">
                             <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                             <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
                         </div>
-                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar</button>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
                     </div>
                 </div>
@@ -349,7 +349,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-box-seam me-2 text-success"></i> Inventario y Dotación</h4>
-                        <p class="text-muted small mb-0">Control de insumos, herramientas y stock de prendas.</p>
+                        <p class="text-muted small mb-0">Control de insumos, herramientas y dotación.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
@@ -387,7 +387,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-journal-text me-2 text-success"></i> Bitácora de Novedades</h4>
-                        <p class="text-muted small mb-0">Registro operativo (Fotos suben a Firebase Storage).</p>
+                        <p class="text-muted small mb-0">Registro operativo.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
@@ -403,7 +403,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-5">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-wallet2 me-2 text-success"></i> Caja Menor y Gastos</h4>
-                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos (Cloud Storage).</p>
+                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos.</p>
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
                         <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
@@ -704,11 +704,13 @@
                                 <label class="small fw-bold text-muted">Sueldo Básico Mensual</label>
                                 <select id="op_sueldo" class="form-select bg-body-tertiary" required>
                                     <option value="">Seleccione sueldo...</option>
-                                    <option value="220000">$ 220.000</option>
                                     <option value="875452">$ 875.452</option>
                                     <option value="1750905">$ 1.750.905</option>
+                                    <option value="1850905">$ 1.850.905</option>
                                     <option value="1950905">$ 1.950.905</option>
+                                    <option value="2100000">$ 2.100.000</option>
                                     <option value="2184500">$ 2.184.500</option>
+                                    <option value="2200000">$ 2.200.000</option>
                                     <option value="2260000">$ 2.260.000</option>
                                     <option value="3282800">$ 3.282.800</option>
                                     <option value="5191200">$ 5.191.200</option>
