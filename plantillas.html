@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Generador de Documentos SADAFA</title>
+    <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -23,7 +24,6 @@
             overflow: hidden; 
         }
         
-        /* Membrete SADAFA como marca de agua absoluta en el fondo */
         .header-bg { 
             position: absolute; 
             top: 0; 
@@ -33,7 +33,6 @@
             z-index: 0; 
         }
         
-        /* Margen protector aumentado a 5cm para que el texto nunca toque el membrete superior */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
@@ -49,9 +48,6 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
-        /* =========================================
-           NUEVA CAJA DE PERFIL CORPORATIVO
-           ========================================= */
         .perfil-box {
             display: flex;
             align-items: stretch;
@@ -59,9 +55,9 @@
             border-radius: 8px;
             padding: 15px;
             margin: 25px 0;
-            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco sutil */
+            background-color: rgba(255, 255, 255, 0.9);
             gap: 20px;
-            page-break-inside: avoid; /* Evita que la caja se parta en dos hojas */
+            page-break-inside: avoid;
         }
         .perfil-foto {
             flex: 0 0 130px;
@@ -83,27 +79,20 @@
             flex-direction: column;
             justify-content: center;
         }
-        .perfil-datos table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .perfil-datos td {
-            padding: 6px 0;
-            font-size: 11pt;
-            border-bottom: 1px dashed #ccc;
-        }
+        .perfil-datos table { width: 100%; border-collapse: collapse; }
+        .perfil-datos td { padding: 6px 0; font-size: 11pt; border-bottom: 1px dashed #ccc; }
         .perfil-datos tr:last-child td { border-bottom: none; }
         .perfil-datos td.label { font-weight: bold; color: #0b3c36; width: 40%; }
         
-        /* Tablas estandarizadas (Para el certificado laboral) */
         .tabla-datos-sencilla { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
         .tabla-datos-sencilla td { padding: 4px 0; font-size: 11pt; }
         .tabla-datos-sencilla td.label { font-weight: bold; width: 40%; }
 
-        /* Firmas corporativas */
-        .signature-container { margin-top: 50px; display: flex; gap: 40px; }
-        .signature-box { display: inline-block; margin-top: 30px; }
-        .signature-box img { max-width: 200px; max-height: 100px; display: block; margin-bottom: -5px; }
+        /* Contenedor flexible para alinear las firmas en el Examen Médico (Quedan idénticas en la base) */
+        .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+        
+        .signature-box { display: inline-block; margin-top: 15px; text-align: left; }
+        .signature-box img { max-width: 200px; max-height: 85px; display: block; margin-bottom: -5px; }
         .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
         
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
@@ -126,22 +115,22 @@
         <div class="content-wrapper">
             
             <!-- ==============================================
-                 1. CARTA DE PRESENTACIÓN (NUEVO DISEÑO EN CAJA)
+                 1. CARTA DE PRESENTACIÓN
                  ============================================== -->
             <div id="doc-carta" class="content" style="display: none;">
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
                 
                 <div class="mb-4">
-                    <p>Señores<br>
+                    <p>Señora:<br>
                     <span class="bold" id="lbl_admin">Administración</span><br>
-                    <span class="bold" id="lbl_cliente"></span></p>
+                    Señores Residentes<br>
+                    <span id="lbl_cliente"></span><br>
+                    Manizales</p>
                 </div>
                 
                 <p>Cordial Saludo,</p>
-                
                 <p>Por medio de la presente nos permitimos relacionar los datos del personal asignado para prestar los servicios contratados con nuestra empresa:</p>
                 
-                <!-- CAJA DE PERFIL (FOTO + DATOS ORGANIZADOS) -->
                 <div class="perfil-box">
                     <div class="perfil-foto" id="contenedor_foto_empleado" style="display: none;">
                         <img id="foto_empleado" src="" alt="Foto Empleado">
@@ -149,7 +138,7 @@
                     <div class="perfil-datos">
                         <table>
                             <tr><td class="label">NOMBRE:</td><td class="bold" id="lbl_nombre_carta"></td></tr>
-                            <tr><td class="label">No. IDENTIFICACIÓN:</td><td>CC. <span class="bold" id="lbl_cedula_carta"></span> DE <span id="lbl_ciudad_carta"></span></td></tr>
+                            <tr><td class="label">No. IDENTIFICACIÓN:</td><td>CC. No. <span class="bold" id="lbl_cedula_carta"></span> DE <span id="lbl_ciudad_carta"></span></td></tr>
                             <tr><td class="label">CARGO:</td><td class="bold" id="lbl_cargo"></td></tr>
                             <tr><td class="label">ARL:</td><td id="lbl_arl"></td></tr>
                             <tr><td class="label">EPS:</td><td id="lbl_eps"></td></tr>
@@ -158,11 +147,11 @@
                     </div>
                 </div>
                 
-                <p class="mt-4">Agradecemos la atención prestada.</p>
-                <p>Cordialmente,</p>
+                <p class="mt-4">Cordialmente,</p>
+                <!-- La firma se subió ajustando el margin-top a 15px en la clase CSS superior -->
                 <div class="signature-box">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano</div>
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                 </div>
             </div>
 
@@ -170,12 +159,11 @@
                  2. CERTIFICADO LABORAL
                  ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
-                <p class="bold text-center mt-4 mb-4">A QUIEN INTERESE</p>
+                <p class="bold mt-4 mb-4">A QUIEN INTERESE</p>
                 
-                <p>Certificamos que el señor(a) <span class="bold" id="lbl_nombre_cert"></span> identificado(a) con cédula de ciudadanía número <span class="bold" id="lbl_cedula_cert"></span> DE <span class="bold" id="lbl_ciudad_cert"></span>, <span id="txt_laboro">labora</span> en la empresa desde:</p>
+                <p>Certificamos que el señor(a) <span class="bold" id="lbl_nombre_cert"></span> identificado(a) con cédula de ciudadanía número <span class="bold" id="lbl_cedula_cert"></span> DE <span class="bold" id="lbl_ciudad_cert"></span>, labora en la empresa desde:</p>
                 
-                <p id="p_rango_fechas" style="display: none;">Desde el <span class="bold" id="lbl_inicio_cert"></span> hasta el <span class="bold" id="lbl_fin_cert"></span>.</p>
-                <p id="p_fecha_unica">Desde el <span class="bold" id="lbl_inicio_unico"></span>.</p>
+                <p>Desde el <span class="bold" id="lbl_inicio_cert"></span> hasta el <span class="bold" id="lbl_fin_cert"></span>.</p>
 
                 <table class="tabla-datos-sencilla">
                     <tr>
@@ -201,7 +189,7 @@
                 <p class="mt-4">Cordialmente,</p>
                 <div class="signature-box">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA HENAO DIAZ<br>TALENTO HUMANO<br>SADAFA SERVICIOS INTEGRALES SAS</div>
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>TALENTO HUMANO<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                 </div>
             </div>
 
@@ -221,7 +209,7 @@
                 
                 <p>Solicitamos su colaboración programando la cita del EXÁMEN MÉDICO DE <span id="lbl_tipo_examen_2"></span> dentro de los primeros 05 días hábiles después de recibir este comunicado.</p>
                 
-                <p class="bold">Empresa: <span id="lbl_laboratorio"></span></p>
+                <p>Empresa: <span class="bold" id="lbl_laboratorio"></span></p>
                 
                 <p>Gracias por su colaboración</p>
                 <p>Cordialmente,</p>
@@ -233,7 +221,7 @@
                     </div>
                     <div class="signature-box">
                         <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                        <div class="signature-line">MARIANA HENAO DIAZ<br>Responsable SST</div>
+                        <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano</div>
                     </div>
                 </div>
             </div>
@@ -249,11 +237,12 @@
                 
                 <p class="bold mb-4">Asunto: Retiro total de cesantías</p>
                 
-                <p>Mediante la presente carta le solicito respetuosamente la autorización para el retiro total de las cesantías del señor(a) <span class="bold" id="lbl_nombre_cesan"></span> identificado(a) con cedula de ciudadanía <span id="lbl_cedula_cesan"></span> DE <span id="lbl_ciudad_cesan"></span>, ya que el señor(a) antes mencionado(a) laboró para la empresa SADAFA SERVICIOS INTEGRALES identificada con NIT 901.262.796-6, del <span id="lbl_inicio_cesan"></span> hasta <span id="lbl_fin_cesan"></span>.</p>
+                <p>Mediante la presente carta le solicito respetuosamente la autorización para el retiro total de las cesantías del señor(a) <span class="bold" id="lbl_nombre_cesan"></span> identificado(a) con cedula de ciudadanía <span id="lbl_cedula_cesan"></span> DE <span id="lbl_ciudad_cesan"></span>, ya que el señor(a) antes mencionado(a) laboró para la empresa SADAFA SERVICIOS INTEGRALES identificada con NIT 901.262.796-6, del <span id="lbl_inicio_cesan"></span> hasta el <span id="lbl_fin_cesan"></span>.</p>
                 
                 <p>Agradeciendo la atención que da a esta solicitud, me despido cordialmente.</p>
                 
                 <div class="signature-box">
+                    <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
                     <div class="signature-line">MARIANA HENAO DIAZ<br>C.C. 1.010.074.494 MZL<br>Talento Humano</div>
                 </div>
             </div>
@@ -278,7 +267,7 @@
                 
                 <div class="signature-box">
                     <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
-                    <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES SAS<br>NIT. 901262796-6</div>
+                    <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES S.A.S.<br>NIT. 901262796-6</div>
                 </div>
             </div>
 
@@ -291,29 +280,25 @@
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
 
-        // Formatea la fecha de YYYY-MM-DD a un texto largo o DD/MM/YYYY
-        function formatearFechaTexto(fechaIso) {
-            if(!fechaIso) return '';
+        // FUNCIÓN: Convierte la fecha del sistema (YYYY-MM-DD) al formato escrito natural (28 de Septiembre del 2026)
+        function formatearFechaTextoExacta(fechaIso) {
+            if(!fechaIso) return '...';
             const partes = fechaIso.split('-');
-            const dateObj = new Date(partes[0], partes[1] - 1, partes[2]);
-            return dateObj.toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' });
-        }
-        function formatearFechaCorta(fechaIso) {
-            if(!fechaIso) return '';
-            const partes = fechaIso.split('-');
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            if (partes.length !== 3) return fechaIso;
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            return `${partes[2]} de ${meses[parseInt(partes[1])-1]} del ${partes[0]}`;
         }
         
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
         
-        // Fecha actual en español
+        // Fecha actual en español (Para membretes)
         const dateObj = new Date();
         const dia = String(dateObj.getDate()).padStart(2, '0');
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         const mesText = meses[dateObj.getMonth()];
         const anio = dateObj.getFullYear();
-        const fechaHoyLarga = `${dia} de ${mesText} del ${anio}`;
+        const fechaHoyLarga = `${dia} de ${mesText} de ${anio}`;
         const fechaHoyCorta = `(${dia}) días del mes de ${mesText} del ${anio}`;
         
         if(tipo) {
@@ -325,13 +310,13 @@
                 document.getElementById('lbl_cedula_carta').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
                 document.getElementById('lbl_ciudad_carta').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
                 document.getElementById('lbl_cliente').innerText = String(params.get('cliente') || '').toUpperCase();
-                document.getElementById('lbl_admin').innerText = String(params.get('admin') || 'Administrador').toUpperCase();
+                document.getElementById('lbl_admin').innerText = String(params.get('admin') || 'Administradora').toUpperCase();
                 document.getElementById('lbl_cargo').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_eps').innerText = String(params.get('eps') || '').toUpperCase();
                 document.getElementById('lbl_arl').innerText = String(params.get('arl') || '').toUpperCase();
                 document.getElementById('lbl_rh').innerText = String(params.get('rh') || '').toUpperCase();
                 
-                // MÁGIA DE FOTO: Activa el contenedor completo y carga la imagen
+                // MÁGIA DE FOTO: Activa la caja corporativa
                 const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
                 const contFoto = document.getElementById('contenedor_foto_empleado');
@@ -350,18 +335,13 @@
                 document.getElementById('lbl_cargo_cert').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_salario').innerText = formatearMoneda(params.get('salario'));
                 
-                const inicioText = formatearFechaTexto(params.get('fecha_inicio'));
-                document.getElementById('lbl_inicio_unico').innerText = inicioText;
-                
+                document.getElementById('lbl_inicio_cert').innerText = formatearFechaTextoExacta(params.get('fecha_inicio'));
                 const fin = params.get('fecha_fin');
                 if(fin && fin.trim() !== '') {
-                    document.getElementById('txt_laboro').innerText = 'laboró';
-                    document.getElementById('p_fecha_unica').style.display = 'none';
-                    document.getElementById('p_rango_fechas').style.display = 'block';
+                    document.getElementById('lbl_fin_cert').innerText = formatearFechaTextoExacta(fin);
                     document.getElementById('tr_motivo_retiro').style.display = 'table-row';
-                    
-                    document.getElementById('lbl_inicio_cert').innerText = inicioText;
-                    document.getElementById('lbl_fin_cert').innerText = formatearFechaTexto(fin);
+                } else {
+                    document.getElementById('lbl_fin_cert').innerText = "la fecha";
                 }
             }
             else if(tipo === 'examen') {
@@ -379,8 +359,8 @@
                 document.getElementById('lbl_nombre_cesan').innerText = String(params.get('nombre') || '').toUpperCase();
                 document.getElementById('lbl_cedula_cesan').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
                 document.getElementById('lbl_ciudad_cesan').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
-                document.getElementById('lbl_inicio_cesan').innerText = formatearFechaCorta(params.get('fecha_inicio'));
-                document.getElementById('lbl_fin_cesan').innerText = formatearFechaCorta(params.get('fecha_fin'));
+                document.getElementById('lbl_inicio_cesan').innerText = formatearFechaTextoExacta(params.get('fecha_inicio'));
+                document.getElementById('lbl_fin_cesan').innerText = formatearFechaTextoExacta(params.get('fecha_fin'));
             }
             else if(tipo === 'cuenta') {
                 document.getElementById('fecha_actual_cta').innerText = fechaHoyLarga;
