@@ -24,6 +24,7 @@
             overflow: hidden; 
         }
         
+        /* Membrete SADAFA como marca de agua absoluta */
         .header-bg { 
             position: absolute; 
             top: 0; 
@@ -33,6 +34,7 @@
             z-index: 0; 
         }
         
+        /* Margen protector */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
@@ -48,6 +50,7 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
+        /* Caja de Perfil (Carta de presentación) */
         .perfil-box {
             display: flex;
             align-items: stretch;
@@ -84,16 +87,20 @@
         .perfil-datos tr:last-child td { border-bottom: none; }
         .perfil-datos td.label { font-weight: bold; color: #0b3c36; width: 40%; }
         
+        /* Tablas estandarizadas */
         .tabla-datos-sencilla { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
         .tabla-datos-sencilla td { padding: 4px 0; font-size: 11pt; }
         .tabla-datos-sencilla td.label { font-weight: bold; width: 40%; }
 
-        /* Contenedor flexible para alinear las firmas en el Examen Médico (Quedan idénticas en la base) */
-        .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
-        
+        /* Lista de Periodos en Certificado */
+        .lista-periodos { margin-top: 10px; margin-bottom: 15px; padding-left: 20px; }
+        .lista-periodos li { margin-bottom: 5px; }
+
+        /* Firmas corporativas FIX: Ancho ampliado para que la razón social quede en un renglón */
+        .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
         .signature-box { display: inline-block; margin-top: 15px; text-align: left; }
         .signature-box img { max-width: 200px; max-height: 85px; display: block; margin-bottom: -5px; }
-        .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
+        .signature-line { border-top: 1px solid #000; width: 320px; padding-top: 5px; font-weight: bold; font-size: 10pt; }
         
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
         .print-btn:hover { background: #166c62; }
@@ -121,11 +128,11 @@
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
                 
                 <div class="mb-4">
-                    <p>Señor (a):<br>
+                    <p>Señora:<br>
                     <span class="bold" id="lbl_admin">Administración</span><br>
                     Señores Residentes<br>
                     <span class="bold" id="lbl_cliente"></span><br>
-                    Manizales</p>
+                    <span id="lbl_cliente_ciudad"></span></p>
                 </div>
                 
                 <p>Cordial Saludo,</p>
@@ -148,10 +155,9 @@
                 </div>
                 
                 <p class="mt-4">Cordialmente,</p>
-                <!-- La firma se subió ajustando el margin-top a 15px en la clase CSS superior -->
                 <div class="signature-box">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano<br>SADAFA SERVICIOS INTEGRALES</div>
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                 </div>
             </div>
 
@@ -159,15 +165,17 @@
                  2. CERTIFICADO LABORAL
                  ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
-                <p class="bold mt-4 mb-4">A QUIEN INTERESE</p>
+                <p class="bold mt-4 mb-4 text-center">A QUIEN INTERESE</p>
                 
-                <p>Certificamos que el señor(a) <span class="bold" id="lbl_nombre_cert"></span> identificado(a) con cédula de ciudadanía número <span class="bold" id="lbl_cedula_cert"></span> DE <span class="bold" id="lbl_ciudad_cert"></span>, labora en la empresa desde:</p>
+                <p>Certificamos que el señor(a) <span class="bold" id="lbl_nombre_cert"></span> identificado(a) con cédula de ciudadanía número <span class="bold" id="lbl_cedula_cert"></span> DE <span class="bold" id="lbl_ciudad_cert"></span>, laboró en la empresa en los siguientes periodos:</p>
                 
-                <p>Desde el <span class="bold" id="lbl_inicio_cert"></span> hasta el <span class="bold" id="lbl_fin_cert"></span>.</p>
+                <ul class="lista-periodos" id="ul_periodos">
+                    <!-- Los periodos se inyectan desde Javascript -->
+                </ul>
 
                 <table class="tabla-datos-sencilla">
                     <tr>
-                        <td class="label">Ultimo Tipo de Contrato:</td>
+                        <td class="label">Último Tipo de Contrato:</td>
                         <td id="lbl_contrato"></td>
                     </tr>
                     <tr>
@@ -180,7 +188,7 @@
                     </tr>
                     <tr id="tr_motivo_retiro" style="display: none;">
                         <td class="label">Motivo del retiro:</td>
-                        <td>VOLUNTARIO</td>
+                        <td id="lbl_motivo_retiro"></td>
                     </tr>
                 </table>
                 
@@ -189,7 +197,7 @@
                 <p class="mt-4">Cordialmente,</p>
                 <div class="signature-box">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA HENAO DIAZ<br>TALENTO HUMANO<br>SADAFA SERVICIOS INTEGRALES</div>
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>TALENTO HUMANO<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                 </div>
             </div>
 
@@ -205,7 +213,7 @@
 
                 <p class="bold mb-4">ASUNTO: NOTIFICACIÓN EXÁMEN MÉDICO DE <span id="lbl_tipo_examen"></span></p>
                 
-                <p>SADAFA SERVICIOS INTEGRALES S.A.S, comprometida con el SISTEMA DE GESTION DE SEGURIDAD Y SALUD EN EL TRABAJO SG-SST y dando cumplimiento a los requisitos definidos por el Capítulo 6, titulo 4, Parte 2 del libro 2 del Decreto 1072 de 2015 y la Resolución 0312 de 2019 procede a realizar la siguiente notificación:</p>
+                <p>SADAFA SERVICIOS INTEGRALES S.A.S., comprometida con el SISTEMA DE GESTION DE SEGURIDAD Y SALUD EN EL TRABAJO SG-SST y dando cumplimiento a los requisitos definidos por el Capítulo 6, titulo 4, Parte 2 del libro 2 del Decreto 1072 de 2015 y la Resolución 0312 de 2019 procede a realizar la siguiente notificación:</p>
                 
                 <p>Solicitamos su colaboración programando la cita del EXÁMEN MÉDICO DE <span id="lbl_tipo_examen_2"></span> dentro de los primeros 05 días hábiles después de recibir este comunicado.</p>
                 
@@ -217,11 +225,11 @@
                 <div class="signature-container">
                     <div class="signature-box">
                         <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
-                        <div class="signature-line">JOHN FREDY LOPEZ REINOSA<br>Representante Legal</div>
+                        <div class="signature-line">JOHN FREDY LOPEZ REINOSA<br>Representante Legal<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                     </div>
                     <div class="signature-box">
                         <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                        <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano</div>
+                        <div class="signature-line">MARIANA HENAO DIAZ<br>Responsable SST<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                     </div>
                 </div>
             </div>
@@ -233,7 +241,7 @@
                 <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
                 
                 <p>Señores:<br>
-                <span class="bold">FONDO DE CESANTIAS</span></p>
+                <span class="bold">FONDO DE CESANTIAS PROTECCIÓN</span></p>
                 
                 <p class="bold mb-4">Asunto: Retiro total de cesantías</p>
                 
@@ -241,9 +249,9 @@
                 
                 <p>Agradeciendo la atención que da a esta solicitud, me despido cordialmente.</p>
                 
-                <div class="signature-box">
+                <div class="signature-box" style="margin-top: 40px;">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA HENAO DIAZ<br>C.C. 1.010.074.494 MZL<br>Talento Humano</div>
+                    <div class="signature-line">MARIANA HENAO DIAZ<br>C.C. 1.010.074.494 MZL<br>Talento Humano<br>SADAFA SERVICIOS INTEGRALES S.A.S.</div>
                 </div>
             </div>
 
@@ -251,11 +259,12 @@
                  5. CUENTA
                  ============================================== -->
             <div id="doc-cuenta" class="content" style="display: none;">
-                <p class="text-right" <span id="fecha_actual_cta"></span></p>
+                <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
                 
                 <p>Señores<br>
-                <span class="bold">BANCO DAVIVIENDA</span></p>
-                <p class="text-right">Sede <span id="lbl_sede_cta">
+                <span class="bold">BANCO DAVIVIENDA</span><br>
+                Sede <span id="lbl_sede_cta"></span></p>
+                
                 <p class="text-right mb-4">Ref. Apertura cuenta Nómina</p>
                 
                 <p>Cordial saludo,</p>
@@ -267,7 +276,7 @@
                 
                 <div class="signature-box">
                     <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
-                    <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES S.A.S.<br>NIT. 901262796-6</div>
+                    <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES S.A.S.<br>NIT. 901.262.796-6</div>
                 </div>
             </div>
 
@@ -280,7 +289,7 @@
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
 
-        // FUNCIÓN: Convierte la fecha del sistema (YYYY-MM-DD) al formato escrito natural (28 de Septiembre del 2026)
+        // Convierte la fecha del sistema a texto natural
         function formatearFechaTextoExacta(fechaIso) {
             if(!fechaIso) return '...';
             const partes = fechaIso.split('-');
@@ -292,7 +301,7 @@
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
         
-        // Fecha actual en español (Para membretes)
+        // Fechas del día actual
         const dateObj = new Date();
         const dia = String(dateObj.getDate()).padStart(2, '0');
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -310,6 +319,7 @@
                 document.getElementById('lbl_cedula_carta').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
                 document.getElementById('lbl_ciudad_carta').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
                 document.getElementById('lbl_cliente').innerText = String(params.get('cliente') || '').toUpperCase();
+                document.getElementById('lbl_cliente_ciudad').innerText = String(params.get('cliente_ciudad') || 'Manizales').toUpperCase();
                 document.getElementById('lbl_admin').innerText = String(params.get('admin') || 'Administradora').toUpperCase();
                 document.getElementById('lbl_cargo').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_eps').innerText = String(params.get('eps') || '').toUpperCase();
@@ -335,13 +345,26 @@
                 document.getElementById('lbl_cargo_cert').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_salario').innerText = formatearMoneda(params.get('salario'));
                 
-                document.getElementById('lbl_inicio_cert').innerText = formatearFechaTextoExacta(params.get('fecha_inicio'));
-                const fin = params.get('fecha_fin');
-                if(fin && fin.trim() !== '') {
-                    document.getElementById('lbl_fin_cert').innerText = formatearFechaTextoExacta(fin);
+                // Lógica de Múltiples Periodos
+                let listHTML = "";
+                const inicio1 = formatearFechaTextoExacta(params.get('fecha_inicio'));
+                const fin1Text = params.get('fecha_fin') ? `el ${formatearFechaTextoExacta(params.get('fecha_fin'))}` : 'la fecha';
+                listHTML += `<li>Primer periodo desde el ${inicio1} hasta ${fin1Text}.</li>`;
+                
+                const inicio2 = params.get('inicio2');
+                const fin2 = params.get('fin2');
+                if (inicio2 && inicio2.trim() !== "") {
+                    const fin2Text = fin2 ? `el ${formatearFechaTextoExacta(fin2)}` : 'la fecha';
+                    listHTML += `<li>Segundo periodo desde el ${formatearFechaTextoExacta(inicio2)} hasta ${fin2Text}.</li>`;
+                }
+                
+                document.getElementById('ul_periodos').innerHTML = listHTML;
+                
+                // Motivo de retiro
+                const motivo = params.get('motivo');
+                if (motivo && motivo !== 'ACTIVO') {
                     document.getElementById('tr_motivo_retiro').style.display = 'table-row';
-                } else {
-                    document.getElementById('lbl_fin_cert').innerText = "la fecha";
+                    document.getElementById('lbl_motivo_retiro').innerText = String(motivo).toUpperCase();
                 }
             }
             else if(tipo === 'examen') {
