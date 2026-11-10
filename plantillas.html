@@ -23,7 +23,7 @@
             overflow: hidden; 
         }
         
-        /* Membrete SADAFA (Fondo absoluto, no empuja el texto) */
+        /* Membrete SADAFA como marca de agua absoluta en el fondo */
         .header-bg { 
             position: absolute; 
             top: 0; 
@@ -33,11 +33,11 @@
             z-index: 0; 
         }
         
-        /* Contenedor central (respeta el membrete superior e inferior) */
+        /* Margen protector aumentado a 5cm para que el texto nunca toque el membrete superior */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 4cm 2.5cm 3.5cm 2.5cm; 
+            padding: 5cm 2.5cm 3.5cm 2.5cm; 
             min-height: 29.7cm; 
             box-sizing: border-box; 
         }
@@ -49,14 +49,60 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
-        /* Tablas estandarizadas (Carta y Certificado) */
-        .tabla-datos { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
-        .tabla-datos td { padding: 4px 0; font-size: 11pt; }
-        .tabla-datos td.label { font-weight: bold; width: 40%; }
+        /* =========================================
+           NUEVA CAJA DE PERFIL CORPORATIVO
+           ========================================= */
+        .perfil-box {
+            display: flex;
+            align-items: stretch;
+            border: 2px solid #0b3c36;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 25px 0;
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco sutil */
+            gap: 20px;
+            page-break-inside: avoid; /* Evita que la caja se parta en dos hojas */
+        }
+        .perfil-foto {
+            flex: 0 0 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid #0b3c36;
+            padding-right: 20px;
+        }
+        .perfil-foto img {
+            max-width: 100%;
+            max-height: 160px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .perfil-datos {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .perfil-datos table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .perfil-datos td {
+            padding: 6px 0;
+            font-size: 11pt;
+            border-bottom: 1px dashed #ccc;
+        }
+        .perfil-datos tr:last-child td { border-bottom: none; }
+        .perfil-datos td.label { font-weight: bold; color: #0b3c36; width: 40%; }
         
-        /* Firmas corporativas adaptadas a modelos reales */
+        /* Tablas estandarizadas (Para el certificado laboral) */
+        .tabla-datos-sencilla { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
+        .tabla-datos-sencilla td { padding: 4px 0; font-size: 11pt; }
+        .tabla-datos-sencilla td.label { font-weight: bold; width: 40%; }
+
+        /* Firmas corporativas */
         .signature-container { margin-top: 50px; display: flex; gap: 40px; }
-        .signature-box { display: inline-block; }
+        .signature-box { display: inline-block; margin-top: 30px; }
         .signature-box img { max-width: 200px; max-height: 100px; display: block; margin-bottom: -5px; }
         .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
         
@@ -80,14 +126,9 @@
         <div class="content-wrapper">
             
             <!-- ==============================================
-                 1. CARTA DE PRESENTACIÓN (Estructura Modelo)
+                 1. CARTA DE PRESENTACIÓN (NUEVO DISEÑO EN CAJA)
                  ============================================== -->
             <div id="doc-carta" class="content" style="display: none;">
-                
-                <div class="text-center" style="margin-bottom: 25px;">
-                    <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border: 1px solid #000; display: none; margin: 0 auto;">
-                </div>
-
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
                 
                 <div class="mb-4">
@@ -100,38 +141,33 @@
                 
                 <p>Por medio de la presente nos permitimos relacionar los datos del personal asignado para prestar los servicios contratados con nuestra empresa:</p>
                 
-                <table class="tabla-datos">
-                    <tr>
-                        <td class="label">NOMBRE</td>
-                        <td id="lbl_nombre_carta"></td>
-                    </tr>
-                    <tr>
-                        <td class="label">No. IDENTIFICACIÓN</td>
-                        <td>CC. No. <span id="lbl_cedula_carta"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="label">CARGO A DESEMPEÑAR</td>
-                        <td id="lbl_cargo"></td>
-                    </tr>
-                    <tr>
-                        <td class="label">ARL</td>
-                        <td id="lbl_arl"></td>
-                    </tr>
-                    <tr>
-                        <td class="label">EPS</td>
-                        <td id="lbl_eps"></td>
-                    </tr>
-                </table>
+                <!-- CAJA DE PERFIL (FOTO + DATOS ORGANIZADOS) -->
+                <div class="perfil-box">
+                    <div class="perfil-foto" id="contenedor_foto_empleado" style="display: none;">
+                        <img id="foto_empleado" src="" alt="Foto Empleado">
+                    </div>
+                    <div class="perfil-datos">
+                        <table>
+                            <tr><td class="label">NOMBRE:</td><td class="bold" id="lbl_nombre_carta"></td></tr>
+                            <tr><td class="label">No. IDENTIFICACIÓN:</td><td>CC. <span class="bold" id="lbl_cedula_carta"></span> DE <span id="lbl_ciudad_carta"></span></td></tr>
+                            <tr><td class="label">CARGO:</td><td class="bold" id="lbl_cargo"></td></tr>
+                            <tr><td class="label">ARL:</td><td id="lbl_arl"></td></tr>
+                            <tr><td class="label">EPS:</td><td id="lbl_eps"></td></tr>
+                            <tr><td class="label">RH:</td><td id="lbl_rh"></td></tr>
+                        </table>
+                    </div>
+                </div>
                 
-                <p class="mt-4">Cordialmente,</p>
-                <div class="signature-box" style="margin-top: 30px;">
+                <p class="mt-4">Agradecemos la atención prestada.</p>
+                <p>Cordialmente,</p>
+                <div class="signature-box">
                     <img src="FIRMA MARIANA.png" alt="Firma Mariana" onerror="this.style.display='none'">
                     <div class="signature-line">MARIANA HENAO DIAZ<br>Talento Humano</div>
                 </div>
             </div>
 
             <!-- ==============================================
-                 2. CERTIFICADO LABORAL (Estructura Modelo)
+                 2. CERTIFICADO LABORAL
                  ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
                 <p class="bold text-center mt-4 mb-4">A QUIEN INTERESE</p>
@@ -141,7 +177,7 @@
                 <p id="p_rango_fechas" style="display: none;">Desde el <span class="bold" id="lbl_inicio_cert"></span> hasta el <span class="bold" id="lbl_fin_cert"></span>.</p>
                 <p id="p_fecha_unica">Desde el <span class="bold" id="lbl_inicio_unico"></span>.</p>
 
-                <table class="tabla-datos">
+                <table class="tabla-datos-sencilla">
                     <tr>
                         <td class="label">Ultimo Tipo de Contrato:</td>
                         <td id="lbl_contrato"></td>
@@ -170,7 +206,7 @@
             </div>
 
             <!-- ==============================================
-                 3. EXAMEN MÉDICO (Estructura Modelo)
+                 3. EXAMEN MÉDICO
                  ============================================== -->
             <div id="doc-examen" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
@@ -203,7 +239,7 @@
             </div>
 
             <!-- ==============================================
-                 4. CESANTÍAS (Estructura Modelo)
+                 4. CESANTÍAS
                  ============================================== -->
             <div id="doc-cesantias" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
@@ -217,13 +253,13 @@
                 
                 <p>Agradeciendo la atención que da a esta solicitud, me despido cordialmente.</p>
                 
-                <div class="signature-box" style="margin-top: 40px;">
+                <div class="signature-box">
                     <div class="signature-line">MARIANA HENAO DIAZ<br>C.C. 1.010.074.494 MZL<br>Talento Humano</div>
                 </div>
             </div>
 
             <!-- ==============================================
-                 5. CUENTA (Estructura Modelo)
+                 5. CUENTA
                  ============================================== -->
             <div id="doc-cuenta" class="content" style="display: none;">
                 <p class="text-right">Sede <span id="lbl_sede_cta"></span>, <span id="fecha_actual_cta"></span></p>
@@ -240,7 +276,7 @@
                 <p>Agradecemos de antemano la atención suministrada a la presente.</p>
                 <p>Cordialmente,</p>
                 
-                <div class="signature-box" style="margin-top: 40px;">
+                <div class="signature-box">
                     <img src="FIRMA JHON.png" alt="Firma Jhon" onerror="this.style.display='none'">
                     <div class="signature-line">JHON FREDY LOPEZ REINOSA<br>GERENTE<br>SADAFA SERVICIOS INTEGRALES SAS<br>NIT. 901262796-6</div>
                 </div>
@@ -287,18 +323,21 @@
                 document.getElementById('fecha_actual_carta').innerText = fechaHoyLarga;
                 document.getElementById('lbl_nombre_carta').innerText = String(params.get('nombre') || '').toUpperCase();
                 document.getElementById('lbl_cedula_carta').innerText = new Intl.NumberFormat('es-CO').format(params.get('cedula'));
+                document.getElementById('lbl_ciudad_carta').innerText = String(params.get('ciudad_cedula') || '').toUpperCase();
                 document.getElementById('lbl_cliente').innerText = String(params.get('cliente') || '').toUpperCase();
                 document.getElementById('lbl_admin').innerText = String(params.get('admin') || 'Administrador').toUpperCase();
                 document.getElementById('lbl_cargo').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_eps').innerText = String(params.get('eps') || '').toUpperCase();
                 document.getElementById('lbl_arl').innerText = String(params.get('arl') || '').toUpperCase();
+                document.getElementById('lbl_rh').innerText = String(params.get('rh') || '').toUpperCase();
                 
-                // MÁGIA DE FOTO
+                // MÁGIA DE FOTO: Activa el contenedor completo y carga la imagen
                 const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
+                const contFoto = document.getElementById('contenedor_foto_empleado');
                 if (fotoTemp && imgEl) {
                     imgEl.src = fotoTemp;
-                    imgEl.style.display = 'block';
+                    contFoto.style.display = 'flex'; 
                     setTimeout(() => { localStorage.removeItem('sadafa_temp_foto_carta'); }, 1500);
                 }
             }
