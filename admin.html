@@ -43,6 +43,7 @@
         .sidebar.collapsed .form-check-label { display: none !important; }
         .sidebar.collapsed .form-check { display: flex; justify-content: center; padding-left: 0; margin-left: 0; }
         .sidebar.collapsed .form-check-input { margin-left: 0; margin-top: 0; float: none; cursor: pointer; }
+        
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
@@ -71,6 +72,22 @@
         .sticky-top { z-index: 10 !important; }
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
+
+        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
+        @media (max-width: 768px) {
+            .wrapper { overflow-x: hidden; }
+            .sidebar { position: fixed; left: -260px; height: 100vh; z-index: 1050; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5); transition: left 0.3s ease; }
+            .sidebar.collapsed { left: 0; }
+            .main-content { width: 100% !important; margin-left: 0; padding: 15px 10px; }
+            
+            .btn-toggle-sidebar { right: -40px; top: 15px; transform: rotate(180deg); width: 40px; height: 40px; border-radius: 0 50% 50% 0; opacity: 0.9; }
+            .sidebar.collapsed .btn-toggle-sidebar { right: 15px; transform: rotate(0deg); width: 30px; height: 30px; border-radius: 50%; }
+            
+            .sidebar.collapsed .brand { opacity: 1; pointer-events: auto; }
+            .sidebar.collapsed .nav-text, .sidebar.collapsed .form-check-label { display: inline-block !important; }
+            .sidebar.collapsed a { justify-content: flex-start; padding: 12px 20px; }
+            .sidebar.collapsed a i { margin-right: 12px; font-size: 1.2rem; }
+        }
     </style>
 </head>
 <body spellcheck="true" data-rol="">
@@ -90,7 +107,6 @@
             </button>
             <div class="position-sticky">
                 <h4 class="brand">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
-                <i class="bi bi-building brand-icon" style="display:none;"></i>
                 
                 <ul class="nav flex-column px-2">
                     <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
@@ -124,7 +140,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-12">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-speedometer2 me-2 text-success"></i> Panel de Control Administrativo</h4>
-                        <p class="text-muted small mb-0">Alertas vencimientos, contratos e inventario</p>
+                        <p class="text-muted small mb-0">Alertas legales, contratos e inventario (Actualización en tiempo real con Firebase).</p>
                     </div>
                 </div>
 
@@ -206,7 +222,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-4">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-person-badge me-2 text-success"></i> Personal y Contratos</h4>
-                        <p class="text-muted small mb-0">Base de datos de contratos y operarios activos.</p>
+                        <p class="text-muted small mb-0">Base de datos de contratos y cuadrilla activa.</p>
                     </div>
                     <div class="col-md-8 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;">
@@ -371,7 +387,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-journal-text me-2 text-success"></i> Bitácora de Novedades</h4>
-                        <p class="text-muted small mb-0">Registro operativo</p>
+                        <p class="text-muted small mb-0">Registro operativo (Fotos suben a Firebase Storage).</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
@@ -387,7 +403,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-5">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-wallet2 me-2 text-success"></i> Caja Menor y Gastos</h4>
-                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos</p>
+                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos (Cloud Storage).</p>
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
                         <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
@@ -688,11 +704,11 @@
                                 <label class="small fw-bold text-muted">Sueldo Básico Mensual</label>
                                 <select id="op_sueldo" class="form-select bg-body-tertiary" required>
                                     <option value="">Seleccione sueldo...</option>
+                                    <option value="220000">$ 220.000</option>
                                     <option value="875452">$ 875.452</option>
                                     <option value="1750905">$ 1.750.905</option>
                                     <option value="1950905">$ 1.950.905</option>
                                     <option value="2184500">$ 2.184.500</option>
-                                    <option value="2200000">$ 2.200.000</option>
                                     <option value="2260000">$ 2.260.000</option>
                                     <option value="3282800">$ 3.282.800</option>
                                     <option value="5191200">$ 5.191.200</option>
@@ -1254,6 +1270,9 @@
             document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active')); 
             event.currentTarget.classList.add('active');
             
+            // FIX MÓVIL: Ocultar menú lateral al tocar una opción si está en vista celular
+            if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('collapsed'); }
+            
             if (seccionId === 'dashboard') { window.cargarDashboardResumen(); }
             if (seccionId === 'empleado') { document.getElementById('tablaContratosBody').innerHTML = '<tr><td colspan="12" class="text-center text-muted py-3">Cargando base de datos...</td></tr>'; window.cargarOperarioTabla(); }
             if (seccionId === 'cliente') { document.getElementById('tablaClientesBody').innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr>'; window.cargarClientesTabla(); }
@@ -1706,6 +1725,8 @@
             if (tipo === 'carta') {
                 params.append('cliente', document.getElementById('carta_cliente').value); params.append('cargo', document.getElementById('carta_cargo').value); params.append('rh', document.getElementById('carta_rh').value); params.append('eps', document.getElementById('carta_eps').value); params.append('arl', document.getElementById('carta_arl').value); params.append('ciudad_cedula', document.getElementById('carta_ciudad_exp').value);
                 const selectCliente = document.getElementById('carta_cliente'); if(selectCliente.selectedIndex > 0) { const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); if(admin) params.append('admin', admin); }
+                
+                // MÁGIA DE FOTO: Guardamos la foto temporal en SessionStorage para leerla en plantillas.html
                 const fileInput = document.getElementById('carta_foto');
                 if (fileInput && fileInput.files.length > 0) {
                     if (fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto es muy pesada. Límite 3MB.", true);
