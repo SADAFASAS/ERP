@@ -5,10 +5,14 @@
     <title>Generador de Documentos SADAFA</title>
     <style>
         body { font-family: Arial, sans-serif; background: #525659; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .page { background: white; width: 21cm; min-height: 29.7cm; padding: 2.5cm; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); position: relative; }
         
-        /* CORRECCIÓN: Límite de altura restaurado para no empujar el texto. object-fit evita la distorsión. */
-        .header-img { width: 100%; max-height: 140px; object-fit: contain; display: block; margin-bottom: 20px; }
+        .page { background: white; width: 21cm; min-height: 29.7cm; position: relative; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); overflow: hidden; }
+        
+        /* FIX QA: El membrete ahora es un fondo absoluto (no empuja el texto) */
+        .header-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
+        
+        /* FIX QA: Contenedor flotante para que el texto quede por encima del fondo */
+        .content-wrapper { position: relative; z-index: 1; padding: 4cm 2.5cm 3cm 2.5cm; min-height: 29.7cm; box-sizing: border-box; }
         
         .content { line-height: 1.6; font-size: 11pt; text-align: justify; }
         .text-center { text-align: center; }
@@ -17,15 +21,16 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
-        .signature { margin-top: 50px; }
+        .signature { margin-top: 40px; }
         .signature img { max-width: 250px; max-height: 100px; display: block; margin-bottom: -5px; }
         .signature-line { border-top: 1px solid #000; width: 250px; padding-top: 5px; font-weight: bold; }
         
-        .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
         .print-btn:hover { background: #166c62; }
+        
         @media print {
             body { background: white; padding: 0; }
-            .page { box-shadow: none; width: 100%; height: auto; padding: 2cm; }
+            .page { box-shadow: none; width: 100%; height: auto; margin: 0; }
             .print-btn { display: none; }
         }
     </style>
@@ -34,103 +39,106 @@
     <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF / Guardar</button>
     
     <div class="page">
-        <!-- LOGO SUPERIOR -->
-        <img src="Membrete.png" alt="Membrete SADAFA" class="header-img" onerror="this.style.display='none'">
+        <!-- CAPA DE FONDO (MEMBRETE SADAFA A4) -->
+        <img src="Membrete.png" alt="Membrete SADAFA" class="header-bg" onerror="this.style.display='none'">
         
-        <!-- 1. CARTA DE PRESENTACIÓN -->
-        <div id="doc-carta" class="content" style="display: none;">
-            <p class="text-right">Manizales, <span id="fecha_actual_carta"></span></p>
-            <div class="mt-4 mb-4">
-                <p>Señores<br><span class="bold" id="lbl_cliente"></span><br>Attn: <span id="lbl_admin">Administración</span></p>
-            </div>
+        <!-- CAPA DE TEXTO (SOBRE EL FONDO) -->
+        <div class="content-wrapper">
             
-            <p class="bold text-center mt-4 mb-4">REF: PRESENTACIÓN DE PERSONAL</p>
-            <p>Respetados señores:</p>
-            <p>Por medio de la presente, nos permitimos presentar al señor(a) <span class="bold" id="lbl_nombre_carta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_carta"></span> expedida en <span id="lbl_ciudad_carta"></span>, quien a partir de la fecha se desempeñará en el cargo de <span class="bold" id="lbl_cargo"></span> en sus instalaciones.</p>
-            
-            <!-- FOTO DEL EMPLEADO -->
-            <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border-radius: 8px; border: 1px solid #ccc; display: none; margin: 20px auto;">
-            
-            <p>Para su conocimiento y fines pertinentes, informamos su afiliación al Sistema de Seguridad Social:</p>
-            <ul>
-                <li><span class="bold">EPS:</span> <span id="lbl_eps"></span></li>
-                <li><span class="bold">ARL:</span> <span id="lbl_arl"></span></li>
-                <li><span class="bold">RH:</span> <span id="lbl_rh"></span></li>
-            </ul>
-            <p>Agradecemos la atención prestada y la colaboración que le puedan brindar en el desempeño de sus funciones.</p>
-            <p>Cordialmente,</p>
-            <div class="signature">
-                <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                <div class="signature-line">MARIANA GIRALDO<br>Coordinadora de Talento Humano<br>SADAFA S.A.S.</div>
+            <!-- 1. CARTA DE PRESENTACIÓN -->
+            <div id="doc-carta" class="content" style="display: none;">
+                <p class="text-right">Manizales, <span id="fecha_actual_carta"></span></p>
+                <div class="mt-4 mb-4">
+                    <p>Señores<br><span class="bold" id="lbl_cliente"></span><br>Attn: <span id="lbl_admin">Administración</span></p>
+                </div>
+                
+                <p class="bold text-center mt-4 mb-4">REF: PRESENTACIÓN DE PERSONAL</p>
+                <p>Respetados señores:</p>
+                <p>Por medio de la presente, nos permitimos presentar al señor(a) <span class="bold" id="lbl_nombre_carta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_carta"></span> expedida en <span id="lbl_ciudad_carta"></span>, quien a partir de la fecha se desempeñará en el cargo de <span class="bold" id="lbl_cargo"></span> en sus instalaciones.</p>
+                
+                <!-- FOTO DEL EMPLEADO -->
+                <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border-radius: 8px; border: 1px solid #ccc; display: none; margin: 20px auto;">
+                
+                <p>Para su conocimiento y fines pertinentes, informamos su afiliación al Sistema de Seguridad Social:</p>
+                <ul>
+                    <li><span class="bold">EPS:</span> <span id="lbl_eps"></span></li>
+                    <li><span class="bold">ARL:</span> <span id="lbl_arl"></span></li>
+                    <li><span class="bold">RH:</span> <span id="lbl_rh"></span></li>
+                </ul>
+                <p>Agradecemos la atención prestada y la colaboración que le puedan brindar en el desempeño de sus funciones.</p>
+                <p>Cordialmente,</p>
+                <div class="signature">
+                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA GIRALDO<br>Coordinadora de Talento Humano<br>SADAFA S.A.S.</div>
+                </div>
             </div>
-        </div>
 
-        <!-- 2. CERTIFICADO LABORAL -->
-        <div id="doc-certificado" class="content" style="display: none;">
-            <p class="text-right">Manizales, <span id="fecha_actual_cert"></span></p>
-            <p class="bold text-center mt-4 mb-4" style="font-size: 14pt;">EL DEPARTAMENTO DE TALENTO HUMANO DE SADAFA S.A.S.<br>CERTIFICA:</p>
-            
-            <p>Que el(la) señor(a) <span class="bold" id="lbl_nombre_cert"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cert"></span> expedida en <span id="lbl_ciudad_cert"></span>, <span id="txt_laboro">laboró</span> con nuestra compañía mediante un contrato <span class="bold" id="lbl_contrato"></span>.</p>
-            
-            <p>Fecha de inicio de labores: <span class="bold" id="lbl_inicio_cert"></span>.</p>
-            <p id="p_fin_cert" style="display: none;">Fecha de terminación: <span class="bold" id="lbl_fin_cert"></span>.</p>
-            <p>Último salario básico devengado: <span class="bold" id="lbl_salario"></span> mensuales.</p>
-            <p>El presente certificado se expide a solicitud del interesado(a).</p>
-            <p class="mt-4">Atentamente,</p>
-            <div class="signature">
-                <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+            <!-- 2. CERTIFICADO LABORAL -->
+            <div id="doc-certificado" class="content" style="display: none;">
+                <p class="text-right">Manizales, <span id="fecha_actual_cert"></span></p>
+                <p class="bold text-center mt-4 mb-4" style="font-size: 14pt;">EL DEPARTAMENTO DE TALENTO HUMANO DE SADAFA S.A.S.<br>CERTIFICA:</p>
+                
+                <p>Que el(la) señor(a) <span class="bold" id="lbl_nombre_cert"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cert"></span> expedida en <span id="lbl_ciudad_cert"></span>, <span id="txt_laboro">laboró</span> con nuestra compañía mediante un contrato <span class="bold" id="lbl_contrato"></span>.</p>
+                
+                <p>Fecha de inicio de labores: <span class="bold" id="lbl_inicio_cert"></span>.</p>
+                <p id="p_fin_cert" style="display: none;">Fecha de terminación: <span class="bold" id="lbl_fin_cert"></span>.</p>
+                <p>Último salario básico devengado: <span class="bold" id="lbl_salario"></span> mensuales.</p>
+                <p>El presente certificado se expide a solicitud del interesado(a).</p>
+                <p class="mt-4">Atentamente,</p>
+                <div class="signature">
+                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                </div>
             </div>
-        </div>
 
-        <!-- 3. EXAMEN MÉDICO -->
-        <div id="doc-examen" class="content" style="display: none;">
-            <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
-            <p class="bold text-center mt-4 mb-4">ORDEN DE EXAMEN MÉDICO OCUPACIONAL</p>
-            <p>Señores<br><span class="bold" id="lbl_laboratorio"></span></p>
-            <p>Agradecemos realizar examen médico ocupacional de <span class="bold" id="lbl_tipo_examen"></span> al siguiente trabajador(a):</p>
-            <p><span class="bold">Nombre Completo:</span> <span id="lbl_nombre_exam"></span><br>
-            <span class="bold">Documento de Identidad:</span> <span id="lbl_cedula_exam"></span> de <span id="lbl_ciudad_exam"></span></p>
-            <p>Por favor facturar a nombre de SADAFA S.A.S. NIT 901.262.796-6.</p>
-            <p>Cordialmente,</p>
-            <div class="signature">
-                <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+            <!-- 3. EXAMEN MÉDICO -->
+            <div id="doc-examen" class="content" style="display: none;">
+                <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
+                <p class="bold text-center mt-4 mb-4">ORDEN DE EXAMEN MÉDICO OCUPACIONAL</p>
+                <p>Señores<br><span class="bold" id="lbl_laboratorio"></span></p>
+                <p>Agradecemos realizar examen médico ocupacional de <span class="bold" id="lbl_tipo_examen"></span> al siguiente trabajador(a):</p>
+                <p><span class="bold">Nombre Completo:</span> <span id="lbl_nombre_exam"></span><br>
+                <span class="bold">Documento de Identidad:</span> <span id="lbl_cedula_exam"></span> de <span id="lbl_ciudad_exam"></span></p>
+                <p>Por favor facturar a nombre de SADAFA S.A.S. NIT 901.262.796-6.</p>
+                <p>Cordialmente,</p>
+                <div class="signature">
+                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                </div>
             </div>
-        </div>
 
-        <!-- 4. CESANTÍAS -->
-        <div id="doc-cesantias" class="content" style="display: none;">
-            <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
-            <p class="bold text-center mt-4 mb-4">AUTORIZACIÓN DE RETIRO DE CESANTÍAS</p>
-            <p>A QUIEN INTERESE:</p>
-            <p>Por medio de la presente, SADAFA S.A.S. con NIT 901.262.796-6, autoriza al fondo de cesantías para realizar el pago correspondiente a liquidación definitiva al señor(a) <span class="bold" id="lbl_nombre_cesan"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cesan"></span> de <span id="lbl_ciudad_cesan"></span>.</p>
-            <p>El periodo laborado comprende desde el <span class="bold" id="lbl_inicio_cesan"></span> hasta el <span class="bold" id="lbl_fin_cesan"></span>.</p>
-            <p>Cordialmente,</p>
-            <div class="signature">
-                <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+            <!-- 4. CESANTÍAS -->
+            <div id="doc-cesantias" class="content" style="display: none;">
+                <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
+                <p class="bold text-center mt-4 mb-4">AUTORIZACIÓN DE RETIRO DE CESANTÍAS</p>
+                <p>A QUIEN INTERESE:</p>
+                <p>Por medio de la presente, SADAFA S.A.S. con NIT 901.262.796-6, autoriza al fondo de cesantías para realizar el pago correspondiente a liquidación definitiva al señor(a) <span class="bold" id="lbl_nombre_cesan"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cesan"></span> de <span id="lbl_ciudad_cesan"></span>.</p>
+                <p>El periodo laborado comprende desde el <span class="bold" id="lbl_inicio_cesan"></span> hasta el <span class="bold" id="lbl_fin_cesan"></span>.</p>
+                <p>Cordialmente,</p>
+                <div class="signature">
+                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                </div>
             </div>
-        </div>
 
-        <!-- 5. CUENTA -->
-        <div id="doc-cuenta" class="content" style="display: none;">
-            <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
-            <p class="bold text-center mt-4 mb-4">SOLICITUD DE APERTURA DE CUENTA DE NÓMINA</p>
-            <p>Señores<br><span class="bold">BANCO DAVIVIENDA</span><br>Sucursal <span id="lbl_sede_cta"></span></p>
-            <p>Respetados señores:</p>
-            <p>Por medio de la presente, solicitamos amablemente la apertura de una cuenta de ahorros (Nómina) a nombre del señor(a) <span class="bold" id="lbl_nombre_cta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cta"></span> expedida en <span id="lbl_ciudad_cta"></span>.</p>
-            <p>Esta cuenta será utilizada exclusivamente para el pago de sus salarios y prestaciones sociales por parte de nuestra empresa SADAFA S.A.S. NIT 901.262.796-6.</p>
-            <p>Cordialmente,</p>
-            <div class="signature">
-                <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+            <!-- 5. CUENTA -->
+            <div id="doc-cuenta" class="content" style="display: none;">
+                <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
+                <p class="bold text-center mt-4 mb-4">SOLICITUD DE APERTURA DE CUENTA DE NÓMINA</p>
+                <p>Señores<br><span class="bold">BANCO DAVIVIENDA</span><br>Sucursal <span id="lbl_sede_cta"></span></p>
+                <p>Respetados señores:</p>
+                <p>Por medio de la presente, solicitamos amablemente la apertura de una cuenta de ahorros (Nómina) a nombre del señor(a) <span class="bold" id="lbl_nombre_cta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_cta"></span> expedida en <span id="lbl_ciudad_cta"></span>.</p>
+                <p>Esta cuenta será utilizada exclusivamente para el pago de sus salarios y prestaciones sociales por parte de nuestra empresa SADAFA S.A.S. NIT 901.262.796-6.</p>
+                <p>Cordialmente,</p>
+                <div class="signature">
+                    <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
+                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div> <!-- Fin de content-wrapper -->
+    </div> <!-- Fin de page -->
 
-    <!-- LÓGICA DE PROCESAMIENTO DE DATOS -->
     <script>
         function formatearMoneda(valor) { 
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
@@ -138,7 +146,6 @@
         
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
-        
         const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
         const fechaHoy = new Date().toLocaleDateString('es-CO', opcionesFecha);
         
@@ -207,7 +214,7 @@
                 document.getElementById('lbl_ciudad_cta').innerText = params.get('ciudad_cedula');
             }
         } else {
-            document.body.innerHTML = '<h2>Error: No se proporcionaron datos para generar el documento. Intente de nuevo desde el Panel.</h2>';
+            document.body.innerHTML = '<h2>Error: Faltan datos para generar el documento.</h2>';
         }
     </script>
 </body>
