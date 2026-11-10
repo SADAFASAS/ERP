@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SADAFA - Panel de Administración ERP</title>
+    
     <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
@@ -78,7 +79,7 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
+        /* --- REPARACIÓN RESPONSIVE (MÓVILES FIX EXTREMO) --- */
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
@@ -442,7 +443,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -631,7 +632,7 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-4"><input type="text" id="cli_rs" class="form-control bg-body-tertiary" placeholder="Razón Social" required></div>
                             <div class="col-md-4"><input type="text" id="cli_nit" class="form-control bg-body-tertiary" placeholder="NIT" required></div>
-                            <div class="col-md-4"><input type="text" id="cli_ciudad" class="form-control bg-body-tertiary" placeholder="Ciudad Sede (Ej: Manizales)" required></div>
+                            <div class="col-md-4"><input type="text" id="cli_ciudad" class="form-control bg-body-tertiary" placeholder="Ciudad Sede (Ej: Pereira)" required></div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6"><input type="text" id="cli_dir" class="form-control bg-body-tertiary" placeholder="Dirección" required></div>
@@ -1029,6 +1030,7 @@
                             </div>
                         </div>
                         
+                        <!-- NUEVOS CAMPOS: SEGUNDO PERIODO -->
                         <div class="row g-3 mb-3 border-top pt-3">
                             <label class="small fw-bold text-success mb-0">Segundo Periodo Laboral (Opcional)</label>
                             <div class="col-md-6">
@@ -1826,4 +1828,4 @@
         });
     </script>
 </body>
-</html>
+</html>   
