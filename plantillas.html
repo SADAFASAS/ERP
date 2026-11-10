@@ -4,15 +4,43 @@
     <meta charset="UTF-8">
     <title>Generador de Documentos SADAFA</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #525659; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #525659; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+        }
         
-        .page { background: white; width: 21cm; min-height: 29.7cm; position: relative; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); overflow: hidden; }
+        .page { 
+            background: white; 
+            width: 21cm; 
+            min-height: 29.7cm; 
+            position: relative; 
+            box-sizing: border-box; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+            overflow: hidden; 
+        }
         
-        /* FIX QA: El membrete ahora es un fondo absoluto (no empuja el texto) */
-        .header-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; }
+        /* FIX QA: El membrete es ahora una capa fantasma de fondo absoluto. No empujará nada. */
+        .header-bg { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+        }
         
-        /* FIX QA: Contenedor flotante para que el texto quede por encima del fondo */
-        .content-wrapper { position: relative; z-index: 1; padding: 4cm 2.5cm 3cm 2.5cm; min-height: 29.7cm; box-sizing: border-box; }
+        /* FIX QA: Margen protector para que el texto no toque ni el borde superior ni el inferior del membrete */
+        .content-wrapper { 
+            position: relative; 
+            z-index: 1; 
+            padding: 3.5cm 2.5cm 3.5cm 2.5cm; 
+            min-height: 29.7cm; 
+            box-sizing: border-box; 
+        }
         
         .content { line-height: 1.6; font-size: 11pt; text-align: justify; }
         .text-center { text-align: center; }
@@ -20,6 +48,11 @@
         .bold { font-weight: bold; }
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
+        
+        /* Estructura de Tabla para Carta de Presentación */
+        .tabla-datos { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
+        .tabla-datos td { padding: 4px 0; font-size: 11pt; }
+        .tabla-datos td.label { font-weight: bold; width: 40%; }
         
         .signature { margin-top: 40px; }
         .signature img { max-width: 250px; max-height: 100px; display: block; margin-bottom: -5px; }
@@ -45,31 +78,57 @@
         <!-- CAPA DE TEXTO (SOBRE EL FONDO) -->
         <div class="content-wrapper">
             
-            <!-- 1. CARTA DE PRESENTACIÓN -->
+            <!-- 1. CARTA DE PRESENTACIÓN (ESTRUCTURA ESTANDARIZADA) -->
             <div id="doc-carta" class="content" style="display: none;">
-                <p class="text-right">Manizales, <span id="fecha_actual_carta"></span></p>
-                <div class="mt-4 mb-4">
-                    <p>Señores<br><span class="bold" id="lbl_cliente"></span><br>Attn: <span id="lbl_admin">Administración</span></p>
+                
+                <!-- FOTO DEL EMPLEADO (Centrada arriba como en el modelo) -->
+                <div class="text-center" style="margin-bottom: 25px;">
+                    <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 130px; border: 1px solid #000; display: none; margin: 0 auto;">
+                </div>
+
+                <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
+                
+                <div class="mb-4">
+                    <p>Señores<br>
+                    <span class="bold" id="lbl_cliente"></span><br>
+                    Attn: <span id="lbl_admin">Administración</span></p>
                 </div>
                 
-                <p class="bold text-center mt-4 mb-4">REF: PRESENTACIÓN DE PERSONAL</p>
-                <p>Respetados señores:</p>
-                <p>Por medio de la presente, nos permitimos presentar al señor(a) <span class="bold" id="lbl_nombre_carta"></span>, identificado(a) con cédula de ciudadanía No. <span class="bold" id="lbl_cedula_carta"></span> expedida en <span id="lbl_ciudad_carta"></span>, quien a partir de la fecha se desempeñará en el cargo de <span class="bold" id="lbl_cargo"></span> en sus instalaciones.</p>
+                <p>Cordial Saludo,</p>
                 
-                <!-- FOTO DEL EMPLEADO -->
-                <img id="foto_empleado" src="" alt="Foto Empleado" style="max-width: 140px; border-radius: 8px; border: 1px solid #ccc; display: none; margin: 20px auto;">
+                <p>Por medio de la presente nos permitimos relacionar los datos del personal asignado para prestar los servicios contratados con nuestra empresa:</p>
                 
-                <p>Para su conocimiento y fines pertinentes, informamos su afiliación al Sistema de Seguridad Social:</p>
-                <ul>
-                    <li><span class="bold">EPS:</span> <span id="lbl_eps"></span></li>
-                    <li><span class="bold">ARL:</span> <span id="lbl_arl"></span></li>
-                    <li><span class="bold">RH:</span> <span id="lbl_rh"></span></li>
-                </ul>
-                <p>Agradecemos la atención prestada y la colaboración que le puedan brindar en el desempeño de sus funciones.</p>
-                <p>Cordialmente,</p>
-                <div class="signature">
+                <table class="tabla-datos">
+                    <tr>
+                        <td class="label">NOMBRE</td>
+                        <td id="lbl_nombre_carta"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">No. IDENTIFICACIÓN</td>
+                        <td>CC. No. <span id="lbl_cedula_carta"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="label">CARGO A DESEMPEÑAR</td>
+                        <td id="lbl_cargo"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">ARL</td>
+                        <td id="lbl_arl"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">EPS</td>
+                        <td id="lbl_eps"></td>
+                    </tr>
+                    <tr>
+                        <td class="label">RH</td>
+                        <td id="lbl_rh"></td>
+                    </tr>
+                </table>
+                
+                <p class="mt-4">Cordialmente,</p>
+                <div class="signature" style="margin-top: 30px;">
                     <img src="FIRMA MARIANA.png" alt="Firma" onerror="this.style.display='none'">
-                    <div class="signature-line">MARIANA GIRALDO<br>Coordinadora de Talento Humano<br>SADAFA S.A.S.</div>
+                    <div class="signature-line">MARIANA GIRALDO<br>Talento Humano<br>SADAFA S.A.S.</div>
                 </div>
             </div>
 
@@ -154,15 +213,14 @@
             
             if(tipo === 'carta') {
                 document.getElementById('fecha_actual_carta').innerText = fechaHoy;
-                document.getElementById('lbl_nombre_carta').innerText = params.get('nombre');
+                document.getElementById('lbl_nombre_carta').innerText = String(params.get('nombre') || '').toUpperCase();
                 document.getElementById('lbl_cedula_carta').innerText = params.get('cedula');
-                document.getElementById('lbl_ciudad_carta').innerText = params.get('ciudad_cedula');
-                document.getElementById('lbl_cliente').innerText = params.get('cliente');
+                document.getElementById('lbl_cliente').innerText = String(params.get('cliente') || '').toUpperCase();
                 document.getElementById('lbl_admin').innerText = params.get('admin') || 'Administración';
-                document.getElementById('lbl_cargo').innerText = params.get('cargo');
-                document.getElementById('lbl_eps').innerText = params.get('eps');
-                document.getElementById('lbl_arl').innerText = params.get('arl');
-                document.getElementById('lbl_rh').innerText = params.get('rh');
+                document.getElementById('lbl_cargo').innerText = String(params.get('cargo') || '').toUpperCase();
+                document.getElementById('lbl_eps').innerText = String(params.get('eps') || '').toUpperCase();
+                document.getElementById('lbl_arl').innerText = String(params.get('arl') || '').toUpperCase();
+                document.getElementById('lbl_rh').innerText = String(params.get('rh') || '').toUpperCase();
                 
                 const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
