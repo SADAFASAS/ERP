@@ -78,7 +78,7 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* --- REPARACIÓN RESPONSIVE (MÓVILES FIX EXTREMO) --- */
+        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
@@ -326,8 +326,8 @@
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
                     <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#clientes-activos">Clientes Activos</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#clientes-inactivos">Historial (Inactivos)</button></li></ul></div>
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="clientes-activos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>NIT</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
-                        <div class="tab-pane fade" id="clientes-inactivos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>NIT</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesInactivosBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade show active" id="clientes-activos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade" id="clientes-inactivos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesInactivosBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
                     </div>
                 </div>
             </div>
@@ -629,8 +629,9 @@
                     <form onsubmit="guardarClienteAdmin(event)">
                         <input type="hidden" id="cli_id">
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6"><input type="text" id="cli_rs" class="form-control bg-body-tertiary" placeholder="Razón Social" required></div>
-                            <div class="col-md-6"><input type="text" id="cli_nit" class="form-control bg-body-tertiary" placeholder="NIT" required></div>
+                            <div class="col-md-4"><input type="text" id="cli_rs" class="form-control bg-body-tertiary" placeholder="Razón Social" required></div>
+                            <div class="col-md-4"><input type="text" id="cli_nit" class="form-control bg-body-tertiary" placeholder="NIT" required></div>
+                            <div class="col-md-4"><input type="text" id="cli_ciudad" class="form-control bg-body-tertiary" placeholder="Ciudad Sede (Ej: Manizales)" required></div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6"><input type="text" id="cli_dir" class="form-control bg-body-tertiary" placeholder="Dirección" required></div>
@@ -1007,7 +1008,6 @@
                 <div class="modal-body">
                     <form id="formCertificado" onsubmit="generarPDF(event, 'cert')">
                         <input type="hidden" id="cert_ciudad">
-                        <!-- FIX QA: Añadimos el campo de cargo oculto para pasarlo al PDF -->
                         <input type="hidden" id="cert_cargo">
                         <div class="mb-3">
                             <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
@@ -1017,17 +1017,31 @@
                             <label class="small text-muted fw-bold">Nombres Completos</label>
                             <input type="text" id="cert_nombre" class="form-control bg-body-tertiary fw-bold" placeholder="Esperando selección..." readonly required>
                         </div>
-                        <div class="alert alert-secondary py-2 small mb-3 border-0"><i class="bi bi-info-circle me-1"></i> Puede modificar las fechas si necesita certificar un periodo de contratación anterior.</div>
+                        <div class="alert alert-secondary py-2 small mb-3 border-0"><i class="bi bi-info-circle me-1"></i> Primer periodo (Obligatorio). Deje el campo "Fecha Fin" en blanco si el empleado sigue activo.</div>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <label class="small text-muted fw-bold">Fecha de Ingreso</label>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Inicio (1)</label>
                                 <input type="date" id="cert_ingreso" class="form-control bg-body-tertiary" required>
                             </div>
-                            <div class="col-md-4">
-                                <label class="small text-muted fw-bold">Fecha Fin / Egreso</label>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Fin (1)</label>
                                 <input type="date" id="cert_egreso" class="form-control bg-body-tertiary">
-                                <small class="text-muted d-block" style="font-size:0.75rem;">Dejar en blanco si el empleado sigue activo</small>
                             </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-3 border-top pt-3">
+                            <label class="small fw-bold text-success mb-0">Segundo Periodo Laboral (Opcional)</label>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Inicio (2)</label>
+                                <input type="date" id="cert_inicio2" class="form-control bg-body-tertiary">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted fw-bold">Fecha Fin (2)</label>
+                                <input type="date" id="cert_fin2" class="form-control bg-body-tertiary">
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4 border-top pt-3">
                             <div class="col-md-4">
                                 <label class="small text-muted fw-bold">Tipo de Contrato</label>
                                 <select id="cert_contrato" class="form-select bg-body-tertiary" required>
@@ -1037,10 +1051,19 @@
                                     <option value="Prestación de Servicios">Prestación de Servicios</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <label class="small text-muted fw-bold">Salario Básico Mensual</label>
-                            <input type="number" id="cert_salario" class="form-control bg-body-tertiary" placeholder="Ej: 1750905" required>
+                            <div class="col-md-4">
+                                <label class="small text-muted fw-bold">Salario Mensual</label>
+                                <input type="number" id="cert_salario" class="form-control bg-body-tertiary" placeholder="Ej: 1750905" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="small text-muted fw-bold">Motivo de Retiro</label>
+                                <select id="cert_motivo" class="form-select bg-body-tertiary" required>
+                                    <option value="ACTIVO">Activo (No mostrar retiro)</option>
+                                    <option value="VOLUNTARIO">Voluntario</option>
+                                    <option value="TERMINACIÓN DE CONTRATO">Terminación de Contrato</option>
+                                    <option value="MUTUO ACUERDO">Mutuo Acuerdo</option>
+                                </select>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-success w-100 fw-bold py-2 mt-2">Emitir Certificado Laboral</button>
                     </form>
@@ -1384,21 +1407,21 @@
             await window.cargarClientesCache();
             const activos = window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo'); const inactivos = window.cacheClientesPDF.filter(c => c.estado_cliente === 'Inactivo');
             
-            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.nit_cedula)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.correo_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-warning btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Enviar al Historial"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
-            document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.nit_cedula)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.correo_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Reactivar"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
+            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-warning btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Enviar al Historial"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
+            document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.ciudad)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="text-muted">${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Reactivar"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
         window.abrirModalClienteId = function(id) {
             window.limpiarFormulario('modalCliente');
             setTimeout(() => {
                 const c = window.cacheClientesPDF.find(x => x.id === id);
-                if(c) { document.getElementById('cli_id').value = c.id; document.getElementById('cli_rs').value = c.razon_social || ''; document.getElementById('cli_nit').value = c.nit_cedula || ''; document.getElementById('cli_dir').value = c.direccion || ''; document.getElementById('cli_cel').value = c.celular_cliente || ''; document.getElementById('cli_cor').value = c.correo_cliente || ''; document.getElementById('cli_adm').value = c.nombre_contacto_admin || ''; document.getElementById('cli_adm_cel').value = c.celular_admin || ''; document.getElementById('cli_adm_cor').value = c.correo_admin || ''; }
+                if(c) { document.getElementById('cli_id').value = c.id; document.getElementById('cli_rs').value = c.razon_social || ''; document.getElementById('cli_nit').value = c.nit_cedula || ''; document.getElementById('cli_ciudad').value = c.ciudad || 'Manizales'; document.getElementById('cli_dir').value = c.direccion || ''; document.getElementById('cli_cel').value = c.celular_cliente || ''; document.getElementById('cli_cor').value = c.correo_cliente || ''; document.getElementById('cli_adm').value = c.nombre_contacto_admin || ''; document.getElementById('cli_adm_cel').value = c.celular_admin || ''; document.getElementById('cli_adm_cor').value = c.correo_admin || ''; }
             }, 50);
         };
 
         window.guardarClienteAdmin = async function(e) { 
             e.preventDefault(); const id = document.getElementById('cli_id').value; 
-            const data = { razon_social: document.getElementById('cli_rs').value, nit_cedula: document.getElementById('cli_nit').value, direccion: document.getElementById('cli_dir').value, celular_cliente: document.getElementById('cli_cel').value, correo_cliente: document.getElementById('cli_cor').value, nombre_contacto_admin: document.getElementById('cli_adm').value, celular_admin: document.getElementById('cli_adm_cel').value, correo_admin: document.getElementById('cli_adm_cor').value, estado_cliente: 'Activo', fecha_registro: new Date().toISOString() };
+            const data = { razon_social: document.getElementById('cli_rs').value, nit_cedula: document.getElementById('cli_nit').value, ciudad: document.getElementById('cli_ciudad').value, direccion: document.getElementById('cli_dir').value, celular_cliente: document.getElementById('cli_cel').value, correo_cliente: document.getElementById('cli_cor').value, nombre_contacto_admin: document.getElementById('cli_adm').value, celular_admin: document.getElementById('cli_adm_cel').value, correo_admin: document.getElementById('cli_adm_cor').value, estado_cliente: 'Activo', fecha_registro: new Date().toISOString() };
             try { if (id) { await updateDoc(doc(db, "clientes", id), data); } else { await addDoc(collection(db, "clientes"), data); } window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalCliente'); window.cargarClientesTabla(); } catch(err) { window.mostrarAlerta("Error al guardar cliente.", true); }
         };
 
@@ -1706,7 +1729,7 @@
             if (!targetId) return; window.limpiarFormulario(targetId);
             if (tipo === 'carta') {
                 const selectCarta = document.getElementById('carta_cliente');
-                if (selectCarta) { selectCarta.innerHTML = '<option value="">Seleccione una sede...</option>' + window.cacheClientesPDF.map(c => `<option value="${window.sanitizar(c.razon_social)}" data-admin="${window.sanitizar(c.nombre_contacto_admin || '')}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
+                if (selectCarta) { selectCarta.innerHTML = '<option value="">Seleccione una sede...</option>' + window.cacheClientesPDF.map(c => `<option value="${window.sanitizar(c.razon_social)}" data-admin="${window.sanitizar(c.nombre_contacto_admin || '')}" data-ciudad="${window.sanitizar(c.ciudad || 'Manizales')}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
             }
             const datalist = document.getElementById('listaCedulasGlobal');
             if (datalist && window.cacheOperariosPDF.length > 0) { datalist.innerHTML = window.cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo').map(o => `<option value="${window.sanitizar(o.cedula)}">${window.sanitizar(o.nombres_completos)}</option>`).join(''); }
@@ -1731,7 +1754,13 @@
             
             if (tipo === 'carta') {
                 params.append('cliente', document.getElementById('carta_cliente').value); params.append('cargo', document.getElementById('carta_cargo').value); params.append('rh', document.getElementById('carta_rh').value); params.append('eps', document.getElementById('carta_eps').value); params.append('arl', document.getElementById('carta_arl').value); params.append('ciudad_cedula', document.getElementById('carta_ciudad_exp').value);
-                const selectCliente = document.getElementById('carta_cliente'); if(selectCliente.selectedIndex > 0) { const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); if(admin) params.append('admin', admin); }
+                const selectCliente = document.getElementById('carta_cliente'); 
+                if(selectCliente.selectedIndex > 0) { 
+                    const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); 
+                    const ciudadCli = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-ciudad');
+                    if(admin) params.append('admin', admin); 
+                    if(ciudadCli) params.append('cliente_ciudad', ciudadCli);
+                }
                 
                 // MÁGIA DE FOTO FIX: Guardamos en localStorage para cruzar entre pestañas nuevas
                 const fileInput = document.getElementById('carta_foto');
@@ -1741,7 +1770,18 @@
                 }
                 window.abrirPlantilla(params, 'modalCarta');
             } 
-            else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); params.append('cargo', document.getElementById('cert_cargo').value); window.abrirPlantilla(params, 'modalCertificado'); } 
+            else if (tipo === 'cert') { 
+                params.append('fecha_inicio', document.getElementById('cert_ingreso').value); 
+                params.append('fecha_fin', document.getElementById('cert_egreso').value); 
+                params.append('inicio2', document.getElementById('cert_inicio2').value); 
+                params.append('fin2', document.getElementById('cert_fin2').value); 
+                params.append('motivo', document.getElementById('cert_motivo').value);
+                params.append('contrato', document.getElementById('cert_contrato').value); 
+                params.append('salario', document.getElementById('cert_salario').value); 
+                params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); 
+                params.append('cargo', document.getElementById('cert_cargo').value); 
+                window.abrirPlantilla(params, 'modalCertificado'); 
+            } 
             else if (tipo === 'exam') { params.append('tipo_examen', document.getElementById('exam_tipo').value); params.append('laboratorio', document.getElementById('exam_lab').value); params.append('ciudad_cedula', document.getElementById('exam_ciudad_exp').value); window.abrirPlantilla(params, 'modalExamen'); } 
             else if (tipo === 'cesan') { params.append('fecha_inicio', document.getElementById('cesan_inicio').value); params.append('fecha_fin', document.getElementById('cesan_fin').value); params.append('ciudad_cedula', document.getElementById('cesan_ciudad').value); window.abrirPlantilla(params, 'modalCesantias'); } 
             else if (tipo === 'cta') { params.append('sede', document.getElementById('cta_sede_op').value); params.append('ciudad_cedula', document.getElementById('cta_ciudad').value); window.abrirPlantilla(params, 'modalCuenta'); }
@@ -1787,4 +1827,3 @@
     </script>
 </body>
 </html>    
-    
