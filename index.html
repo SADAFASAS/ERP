@@ -48,6 +48,8 @@
         .service-card h5 { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
         .service-card p { font-size: 0.85rem; color: var(--texto-muted); line-height: 1.5; margin: 0; }
         .footer { text-align: center; padding: 20px; background-color: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--texto-muted); }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
 <body>
@@ -102,10 +104,10 @@
                         <div id="loginAlert" class="alert alert-danger d-none small py-2 text-center" role="alert"></div>
                         
                         <div class="mb-3 text-start">
-                            <label class="form-label small fw-semibold text-secondary">Correo Electrónico</label>
+                            <label class="form-label small fw-semibold text-secondary">Documento de Identidad</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
-                                <input type="email" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_correo" required>
+                                <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-person text-secondary"></i></span>
+                                <input type="number" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_documento" required>
                             </div>
                         </div>
                         
@@ -161,7 +163,7 @@
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ==========================================
-        // CONFIGURACIÓN DE FIREBASE (Con tus llaves)
+        // CONFIGURACIÓN DE FIREBASE
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyC81HOxo4CAcIe1jFeZB63sc7MTGAfngOY",
@@ -202,13 +204,13 @@
         }
 
         // ==========================================
-        // LOGIN SEGURO CON FIREBASE
+        // LOGIN SEGURO CON FIREBASE (POR DOCUMENTO)
         // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
             const alertBox = document.getElementById('loginAlert');
-            const correo = document.getElementById('login_correo').value;
+            const documento = document.getElementById('login_documento').value;
             const password = document.getElementById('login_password').value;
 
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Autenticando...';
@@ -216,25 +218,27 @@
             alertBox.classList.add('d-none');
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, correo, password);
-                const user = userCredential.user;
-
-                const q = query(collection(db, "usuarios"), where("correo", "==", correo));
+                // 1. Buscamos el correo asociado al documento en la base de datos
+                const q = query(collection(db, "usuarios"), where("documento", "==", documento));
                 const querySnapshot = await getDocs(q);
                 
                 if (querySnapshot.empty) {
-                    await auth.signOut();
-                    throw new Error("Usuario no registrado en la base de datos.");
+                    throw new Error("Documento no registrado en el sistema.");
                 }
 
                 let userData = null;
                 querySnapshot.forEach((doc) => { userData = doc.data(); });
 
+                // 2. Verificamos que el Administrador lo haya aprobado
                 if (userData.estado !== 'Aprobado') {
-                    await auth.signOut();
                     throw new Error("Acceso denegado: Cuenta suspendida o en revisión.");
                 }
 
+                // 3. Google Firebase verifica la contraseña con el correo encontrado
+                const userCredential = await signInWithEmailAndPassword(auth, userData.correo, password);
+                const user = userCredential.user;
+
+                // 4. Todo perfecto, guardamos sesión y entramos
                 localStorage.setItem('sadafa_token', user.accessToken);
                 localStorage.setItem('sadafa_rol', userData.rol);
                 localStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
@@ -242,8 +246,8 @@
                 window.location.href = 'admin.html';
 
             } catch (error) {
-                let mensajeError = "Credenciales incorrectas o problema de conexión.";
-                if (error.code === 'auth/invalid-credential') mensajeError = "Correo o contraseña incorrectos.";
+                let mensajeError = "Documento o contraseña incorrectos.";
+                if (error.code === 'auth/invalid-credential') mensajeError = "Contraseña incorrecta.";
                 if (error.code === 'auth/too-many-requests') mensajeError = "Demasiados intentos. Cuenta bloqueada temporalmente.";
                 if (error.message.includes("Acceso denegado") || error.message.includes("no registrado")) mensajeError = error.message;
                 
