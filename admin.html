@@ -73,20 +73,20 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
+        /* --- REPARACIÓN RESPONSIVE (MÓVILES FIX EXTREMO) --- */
         @media (max-width: 768px) {
-            .wrapper { overflow-x: hidden; }
-            .sidebar { position: fixed; left: -260px; height: 100vh; z-index: 1050; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5); transition: left 0.3s ease; }
-            .sidebar.collapsed { left: 0; }
-            .main-content { width: 100% !important; margin-left: 0; padding: 15px 10px; }
+            .wrapper { overflow-x: hidden !important; position: relative !important; }
+            .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
+            .sidebar.collapsed { left: 0 !important; }
+            .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
             
-            .btn-toggle-sidebar { right: -40px; top: 15px; transform: rotate(180deg); width: 40px; height: 40px; border-radius: 0 50% 50% 0; opacity: 0.9; }
-            .sidebar.collapsed .btn-toggle-sidebar { right: 15px; transform: rotate(0deg); width: 30px; height: 30px; border-radius: 50%; }
+            .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
+            .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
             
-            .sidebar.collapsed .brand { opacity: 1; pointer-events: auto; }
+            .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; }
             .sidebar.collapsed .nav-text, .sidebar.collapsed .form-check-label { display: inline-block !important; }
-            .sidebar.collapsed a { justify-content: flex-start; padding: 12px 20px; }
-            .sidebar.collapsed a i { margin-right: 12px; font-size: 1.2rem; }
+            .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
+            .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
         }
     </style>
 </head>
@@ -437,7 +437,7 @@
 
         </main>
     </div>
-    <!-- ==================== TODOS LOS MODALES ==================== -->
+<!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
