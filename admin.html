@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SADAFA - Panel de Administración ERP</title>
+    <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
+    <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
+    <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
+    <meta name="apple-mobile-web-app-title" content="SADAFA ERP">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -1002,6 +1007,8 @@
                 <div class="modal-body">
                     <form id="formCertificado" onsubmit="generarPDF(event, 'cert')">
                         <input type="hidden" id="cert_ciudad">
+                        <!-- FIX QA: Añadimos el campo de cargo oculto para pasarlo al PDF -->
+                        <input type="hidden" id="cert_cargo">
                         <div class="mb-3">
                             <label class="small text-muted fw-bold">Buscar Cédula / Empleado</label>
                             <input list="listaCedulasGlobal" class="form-control bg-body-tertiary border-success" id="cert_cedula" placeholder="Escriba la cédula o seleccione de la lista..." onchange="buscarOperarioPDF(this.value, 'cert')" oninput="buscarOperarioPDF(this.value, 'cert')" autocomplete="off" required>
@@ -1709,7 +1716,7 @@
             if (!cedula) return; const op = window.cacheOperariosPDF.find(o => String(o.cedula).trim() === String(cedula).trim());
             if (op) {
                 if (prefijo === 'carta') { document.getElementById('carta_cedula').value = op.cedula || ''; document.getElementById('carta_nombre').value = op.nombres_completos || ''; document.getElementById('carta_cargo').value = op.especialidad || op.cargo || ''; document.getElementById('carta_rh').value = op.rh || ''; document.getElementById('carta_eps').value = op.eps || ''; document.getElementById('carta_arl').value = op.arl || ''; document.getElementById('carta_ciudad_exp').value = op.ciudad_expedicion || ''; if (op.cliente_nombre) document.getElementById('carta_cliente').value = op.cliente_nombre; }
-                else if (prefijo === 'cert') { document.getElementById('cert_cedula').value = op.cedula || ''; document.getElementById('cert_nombre').value = op.nombres_completos || ''; document.getElementById('cert_ingreso').value = op.fecha_inicio || ''; document.getElementById('cert_egreso').value = op.fecha_fin || ''; document.getElementById('cert_contrato').value = op.tipo_contrato || 'Fijo'; document.getElementById('cert_salario').value = op.sueldo ? Math.floor(Number(op.sueldo)) : ''; document.getElementById('cert_ciudad').value = op.ciudad_expedicion || ''; }
+                else if (prefijo === 'cert') { document.getElementById('cert_cedula').value = op.cedula || ''; document.getElementById('cert_nombre').value = op.nombres_completos || ''; document.getElementById('cert_ingreso').value = op.fecha_inicio || ''; document.getElementById('cert_egreso').value = op.fecha_fin || ''; document.getElementById('cert_contrato').value = op.tipo_contrato || 'Fijo'; document.getElementById('cert_salario').value = op.sueldo ? Math.floor(Number(op.sueldo)) : ''; document.getElementById('cert_ciudad').value = op.ciudad_expedicion || ''; document.getElementById('cert_cargo').value = op.especialidad || op.cargo || ''; }
                 else if (prefijo === 'exam') { document.getElementById('exam_cedula').value = op.cedula || ''; document.getElementById('exam_nombre').value = op.nombres_completos || ''; document.getElementById('exam_ciudad_exp').value = op.ciudad_expedicion || ''; }
                 else if (prefijo === 'cesan') { document.getElementById('cesan_cedula').value = op.cedula || ''; document.getElementById('cesan_nombre').value = op.nombres_completos || ''; document.getElementById('cesan_inicio').value = op.fecha_inicio || ''; document.getElementById('cesan_fin').value = op.fecha_fin || ''; document.getElementById('cesan_ciudad').value = op.ciudad_expedicion || ''; }
                 else if (prefijo === 'cta') { document.getElementById('cta_cedula').value = op.cedula || ''; document.getElementById('cta_nombre').value = op.nombres_completos || ''; document.getElementById('cta_ciudad').value = op.ciudad_expedicion || ''; }
@@ -1734,7 +1741,7 @@
                 }
                 window.abrirPlantilla(params, 'modalCarta');
             } 
-            else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); window.abrirPlantilla(params, 'modalCertificado'); } 
+            else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); params.append('cargo', document.getElementById('cert_cargo').value); window.abrirPlantilla(params, 'modalCertificado'); } 
             else if (tipo === 'exam') { params.append('tipo_examen', document.getElementById('exam_tipo').value); params.append('laboratorio', document.getElementById('exam_lab').value); params.append('ciudad_cedula', document.getElementById('exam_ciudad_exp').value); window.abrirPlantilla(params, 'modalExamen'); } 
             else if (tipo === 'cesan') { params.append('fecha_inicio', document.getElementById('cesan_inicio').value); params.append('fecha_fin', document.getElementById('cesan_fin').value); params.append('ciudad_cedula', document.getElementById('cesan_ciudad').value); window.abrirPlantilla(params, 'modalCesantias'); } 
             else if (tipo === 'cta') { params.append('sede', document.getElementById('cta_sede_op').value); params.append('ciudad_cedula', document.getElementById('cta_ciudad').value); window.abrirPlantilla(params, 'modalCuenta'); }
@@ -1779,4 +1786,5 @@
         });
     </script>
 </body>
-</html>
+</html>    
+    
