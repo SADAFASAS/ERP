@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SADAFA - Panel de Administración ERP</title>
-    
     <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
@@ -443,7 +442,7 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+<!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -595,7 +594,8 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="nov_notificar_cliente">
-                                <label class="form-check-label small fw-bold text-primary" for="nov_notificar_cliente">Enviar copia al Cliente de la sede (info@sadafa.com.co)</label>
+                                <!-- EL CORREO SE INYECTA AQUÍ -->
+                                <label class="form-check-label small fw-bold text-primary" for="nov_notificar_cliente" id="lbl_notificar_cliente">Enviar copia al Cliente de la sede</label>
                             </div>
                         </div>
 
@@ -632,7 +632,7 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-4"><input type="text" id="cli_rs" class="form-control bg-body-tertiary" placeholder="Razón Social" required></div>
                             <div class="col-md-4"><input type="text" id="cli_nit" class="form-control bg-body-tertiary" placeholder="NIT" required></div>
-                            <div class="col-md-4"><input type="text" id="cli_ciudad" class="form-control bg-body-tertiary" placeholder="Ciudad Sede (Ej: Pereira)" required></div>
+                            <div class="col-md-4"><input type="text" id="cli_ciudad" class="form-control bg-body-tertiary" placeholder="Ciudad Sede (Ej: Manizales)" required></div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6"><input type="text" id="cli_dir" class="form-control bg-body-tertiary" placeholder="Dirección" required></div>
@@ -1030,7 +1030,6 @@
                             </div>
                         </div>
                         
-                        <!-- NUEVOS CAMPOS: SEGUNDO PERIODO -->
                         <div class="row g-3 mb-3 border-top pt-3">
                             <label class="small fw-bold text-success mb-0">Segundo Periodo Laboral (Opcional)</label>
                             <div class="col-md-6">
@@ -1629,10 +1628,26 @@
             const selectCli = document.getElementById('nov_nueva_sede'); if (selectCli) { selectCli.innerHTML = '<option value="">Seleccione la nueva sede...</option>' + window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo').map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
             const selRep = document.getElementById('nov_reporta'); if (selRep) { selRep.innerHTML = '<option value="">Seleccione quien reporta...</option>' + window.cacheUsuariosPDF.filter(u => u.rol === 'Supervisor' || u.rol === 'Administrador').map(u => `<option value="${window.sanitizar(u.correo)}">${window.sanitizar(u.documento)} - ${window.sanitizar(u.nombre_completo || u.correo)}</option>`).join(''); }
         };
+        
         window.cargarSedeNovedad = function() {
             const idOp = document.getElementById('nov_operario').value; if(!idOp) return document.getElementById('nov_sede_actual').value = '';
-            const op = window.cacheOperariosPDF.find(o => o.id === idOp); document.getElementById('nov_sede_actual').value = op ? (op.cliente_nombre || 'Sin Sede Asignada') : '';
+            const op = window.cacheOperariosPDF.find(o => o.id === idOp);
+            document.getElementById('nov_sede_actual').value = op ? (op.cliente_nombre || 'Sin Sede Asignada') : '';
+            
+            // Lógica para cambiar dinámicamente el correo del cliente en la notificación
+            const lblNotificar = document.getElementById('lbl_notificar_cliente');
+            if (op && op.id_cliente_asignado) {
+                const cli = window.cacheClientesPDF.find(c => c.id === op.id_cliente_asignado);
+                if (cli && cli.correo_cliente) {
+                    lblNotificar.innerHTML = `Enviar copia al Cliente de la sede (<span class="text-decoration-underline">${window.sanitizar(cli.correo_cliente)}</span>)`;
+                } else {
+                    lblNotificar.innerText = "Enviar copia al Cliente de la sede (No hay correo registrado)";
+                }
+            } else {
+                lblNotificar.innerText = "Enviar copia al Cliente de la sede";
+            }
         };
+        
         window.toggleTrasladoSede = function() { const chk = document.getElementById('chk_traslado').checked; document.getElementById('div_nueva_sede').style.display = chk ? 'block' : 'none'; if(!chk) document.getElementById('nov_nueva_sede').value = ''; };
 
         window.cargarNovedades = async function() {
@@ -1828,4 +1843,4 @@
         });
     </script>
 </body>
-</html>   
+</html>    
