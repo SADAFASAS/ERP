@@ -53,6 +53,7 @@
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
         .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
+        
         .erp-color-rojo { color: #e63946 !important; }
         .erp-border-rojo { border-left-color: #e63946 !important; }
         .erp-color-azul { color: #0284c7 !important; }
@@ -63,20 +64,16 @@
         .erp-border-amarillo { border-left-color: #ffb703 !important; }
         .erp-color-morado { color: #8b5cf6 !important; }
         .erp-border-morado { border-left-color: #8b5cf6 !important; }
+        
         .table-scrollable { max-height: 480px; overflow-y: auto; }
         .table-scrollable::-webkit-scrollbar { width: 6px; }
         .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
         [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
         .text-muted { color: var(--texto-muted) !important; }
         
-        /* CORRECCIÓN DE TABS DEL DASHBOARD */
-        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; }
-        .nav-pills .nav-link.active { background-color: var(--sadafa-accent); color: #ffffff; }
-        
-        /* Estilos específicos para los tabs de alertas en el Dashboard */
-        .nav-pills.tabs-alertas .nav-link { border: 1px solid transparent; }
-        .nav-pills.tabs-alertas .nav-link.active { background-color: rgba(108, 117, 125, 0.15) !important; border: 1px solid var(--borde-tarjeta); }
-        [data-bs-theme="dark"] .nav-pills.tabs-alertas .nav-link.active { background-color: rgba(255, 255, 255, 0.05) !important; }
+        /* UNIFICACIÓN ESTILOS PESTAÑAS (TABS) */
+        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; border: 1px solid transparent; }
+        .nav-pills .nav-link.active { background-color: var(--sadafa-accent) !important; color: #ffffff !important; border: 1px solid var(--sadafa-accent); }
 
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
@@ -201,9 +198,9 @@
                     <div class="col-md-5">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
                             <div class="p-2 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
-                                <ul class="nav nav-pills nav-fill w-100 mb-0 tabs-alertas" role="tablist">
-                                    <li class="nav-item" role="presentation"><button class="nav-link active small py-1 erp-color-rojo fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-op">Alerta Personal <span class="badge border border-danger erp-color-rojo ms-1" id="badgeVenceCount">0</span></button></li>
-                                    <li class="nav-item" role="presentation"><button class="nav-link small py-1 erp-color-naranja fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-warning erp-color-naranja ms-1" id="badgeVenceCliCount">0</span></button></li>
+                                <ul class="nav nav-pills nav-fill w-100 mb-0" role="tablist">
+                                    <li class="nav-item" role="presentation"><button class="nav-link active small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-op">Alerta Personal <span class="badge border border-white ms-1" id="badgeVenceCount">0</span></button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
                             <div class="tab-content table-scrollable" style="max-height: 250px;">
@@ -1514,6 +1511,21 @@
             if (proximos.length > 0) window.mostrarAlerta(`Alerta: ${proximos.length} contrato(s) de personal vencen pronto.`, true);
         };
 
+        window.verificarMostrarAlertaClientes = async function() {
+            const srvSnap = await getDocs(collection(db, "contratos_clientes"));
+            let proximosCli = 0;
+            srvSnap.forEach(d => {
+                let data = d.data();
+                if(data.fecha_fin) {
+                    const diffDays = Math.ceil((new Date(data.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
+                    if(diffDays >= 0 && diffDays <= 45) proximosCli++;
+                }
+            });
+            if (proximosCli > 0) {
+                setTimeout(() => window.mostrarAlerta(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`, true), 5000);
+            }
+        };
+
         // ==========================================
         // MÓDULO: CLIENTES Y CONTRATOS B2B
         // ==========================================
@@ -1956,6 +1968,30 @@
         // ==========================================
         // INICIO SEGURO Y GUARDIÁN DE ESTADO
         // ==========================================
+        window.verificarMostrarAlertaVencimientos = function() {
+            if (!window.cacheOperariosPDF || window.cacheOperariosPDF.length === 0) return;
+            let proximos = window.cacheOperariosPDF.filter(o => {
+                if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
+                const diffDays = Math.ceil((new Date(o.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24)); return diffDays >= 0 && diffDays <= 30;
+            });
+            if (proximos.length > 0) window.mostrarAlerta(`Alerta: ${proximos.length} contrato(s) de personal vencen pronto.`, true);
+        };
+
+        window.verificarMostrarAlertaClientes = async function() {
+            const srvSnap = await getDocs(collection(db, "contratos_clientes"));
+            let proximosCli = 0;
+            srvSnap.forEach(d => {
+                let data = d.data();
+                if(data.fecha_fin) {
+                    const diffDays = Math.ceil((new Date(data.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
+                    if(diffDays >= 0 && diffDays <= 45) proximosCli++;
+                }
+            });
+            if (proximosCli > 0) {
+                setTimeout(() => window.mostrarAlerta(`Alerta: ${proximosCli} contrato(s) comercial(es) por vencer.`, true), 5500);
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => { 
             const token = localStorage.getItem('sadafa_token');
             const rol = localStorage.getItem('sadafa_rol');
@@ -1974,6 +2010,7 @@
                     await window.cargarUsuariosCache();
                     window.cargarOperarioTabla(); 
                     window.verificarMostrarAlertaVencimientos();
+                    window.verificarMostrarAlertaClientes();
                 } else {
                     window.location.href = 'index.html';
                 }
