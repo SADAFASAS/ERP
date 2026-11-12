@@ -1352,15 +1352,27 @@
 
         window.mostrarAlerta = function(mensaje, esError = false) {
             const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
+            toastEl.style.backgroundColor = ''; // Restablecer fondo
             toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
             toastEl.classList.add(esError ? 'text-bg-danger' : 'text-bg-success');
+            toastMsg.className = 'toast-body fw-semibold text-white';
             toastMsg.innerText = mensaje; new bootstrap.Toast(toastEl, { delay: 4500 }).show();
         };
         
         window.mostrarAlertaAmarilla = function(mensaje) {
             const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
+            toastEl.style.backgroundColor = ''; // Restablecer fondo
             toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
-            toastEl.classList.add('text-bg-warning', 'text-dark');
+            toastEl.classList.add('text-bg-warning');
+            toastMsg.className = 'toast-body fw-semibold text-dark';
+            toastMsg.innerText = mensaje; new bootstrap.Toast(toastEl, { delay: 6000 }).show();
+        };
+
+        window.mostrarAlertaNaranja = function(mensaje) {
+            const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
+            toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
+            toastEl.style.backgroundColor = '#ea580c'; // Naranja corporativo SADAFA
+            toastMsg.className = 'toast-body fw-semibold text-white';
             toastMsg.innerText = mensaje; new bootstrap.Toast(toastEl, { delay: 6000 }).show();
         };
 
@@ -1522,7 +1534,8 @@
                 }
             });
             if (proximosCli > 0) {
-                setTimeout(() => window.mostrarAlerta(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`, true), 5000);
+                // Aparece un segundo después de la roja para que no se superpongan
+                setTimeout(() => window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`), 5500);
             }
         };
 
@@ -1988,7 +2001,8 @@
                 }
             });
             if (proximosCli > 0) {
-                setTimeout(() => window.mostrarAlerta(`Alerta: ${proximosCli} contrato(s) comercial(es) por vencer.`, true), 5500);
+                // Aparece un segundo después de la roja para que no se superpongan
+                setTimeout(() => window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`), 5500);
             }
         };
 
@@ -2018,4 +2032,4 @@
         });
     </script>
 </body>
-</html>   
+</html>
