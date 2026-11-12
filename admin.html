@@ -68,8 +68,16 @@
         .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
         [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
         .text-muted { color: var(--texto-muted) !important; }
-        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; }
+        
+        /* CORRECCIÓN DE TABS DEL DASHBOARD */
+        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; }
         .nav-pills .nav-link.active { background-color: var(--sadafa-accent); color: #ffffff; }
+        
+        /* Estilos específicos para los tabs de alertas en el Dashboard */
+        .nav-pills.tabs-alertas .nav-link { border: 1px solid transparent; }
+        .nav-pills.tabs-alertas .nav-link.active { background-color: rgba(108, 117, 125, 0.15) !important; border: 1px solid var(--borde-tarjeta); }
+        [data-bs-theme="dark"] .nav-pills.tabs-alertas .nav-link.active { background-color: rgba(255, 255, 255, 0.05) !important; }
+
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         .metric-card { border-left: 4px solid var(--sadafa-accent); border-radius: 8px; }
@@ -117,6 +125,7 @@
                     <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
+                    
                     <li class="nav-item admin-only"><a href="#" onclick="cambiarSeccion('usuario', event)" title="Control de Usuarios"><i class="bi bi-shield-lock"></i> <span class="nav-text">Control de Usuarios</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('inventario', event)" title="Inventario y Dotación"><i class="bi bi-box-seam"></i> <span class="nav-text">Inventario y Dotación</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('auditoria', event)" title="Auditorías en Sede"><i class="bi bi-clipboard-check"></i> <span class="nav-text">Auditorías en Sede</span></a></li>
@@ -192,7 +201,7 @@
                     <div class="col-md-5">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
                             <div class="p-2 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
-                                <ul class="nav nav-pills nav-fill w-100 mb-0" role="tablist">
+                                <ul class="nav nav-pills nav-fill w-100 mb-0 tabs-alertas" role="tablist">
                                     <li class="nav-item" role="presentation"><button class="nav-link active small py-1 erp-color-rojo fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-op">Alerta Personal <span class="badge border border-danger erp-color-rojo ms-1" id="badgeVenceCount">0</span></button></li>
                                     <li class="nav-item" role="presentation"><button class="nav-link small py-1 erp-color-naranja fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-warning erp-color-naranja ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
@@ -462,7 +471,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -672,7 +681,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
-                    <h5 class="modal-title fw-bold text-success">Contratos Comerciales</h5>
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-briefcase me-2"></i> Contratos Comerciales</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -700,7 +709,7 @@
                                 <input type="date" id="srv_fin" class="form-control bg-body-tertiary" required title="Fecha de Fin">
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-success w-100 fw-bold">Guardar Servicio</button>
+                                <button type="submit" class="btn btn-success w-100 fw-bold">Agregar</button>
                             </div>
                         </div>
                     </form>
@@ -1972,4 +1981,4 @@
         });
     </script>
 </body>
-</html>
+</html>   
