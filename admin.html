@@ -117,17 +117,11 @@
                     <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
-                    
-                    <!-- ============================================== -->
-                    <!-- MÓDULOS YA VISIBLES -->
-                    <!-- ============================================== -->
-                    
                     <li class="nav-item admin-only"><a href="#" onclick="cambiarSeccion('usuario', event)" title="Control de Usuarios"><i class="bi bi-shield-lock"></i> <span class="nav-text">Control de Usuarios</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('inventario', event)" title="Inventario y Dotación"><i class="bi bi-box-seam"></i> <span class="nav-text">Inventario y Dotación</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('auditoria', event)" title="Auditorías en Sede"><i class="bi bi-clipboard-check"></i> <span class="nav-text">Auditorías en Sede</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
-                    
                     
                     <li class="nav-item px-3 mt-4 mb-2">
                         <div class="form-check form-switch m-0 d-flex align-items-center" title="Cambiar Tema">
@@ -689,7 +683,7 @@
                         <h6 class="fw-bold small text-muted mb-2">Agregar Nuevo Servicio a este Cliente</h6>
                         <div class="row g-2">
                             <div class="col-md-4">
-                                <select id="srv_tipo" class="form-select bg-white" required>
+                                <select id="srv_tipo" class="form-select bg-body-tertiary" required>
                                     <option value="">Seleccione servicio...</option>
                                     <option value="Aseo">Aseo</option>
                                     <option value="Conserjería">Conserjería</option>
@@ -700,10 +694,10 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="date" id="srv_inicio" class="form-control bg-white" required title="Fecha de Inicio">
+                                <input type="date" id="srv_inicio" class="form-control bg-body-tertiary" required title="Fecha de Inicio">
                             </div>
                             <div class="col-md-3">
-                                <input type="date" id="srv_fin" class="form-control bg-white" required title="Fecha de Fin">
+                                <input type="date" id="srv_fin" class="form-control bg-body-tertiary" required title="Fecha de Fin">
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-warning w-100 fw-bold">Agregar</button>
@@ -985,9 +979,9 @@
                         <input type="hidden" id="mtto_id_activo">
                         <h6 class="fw-bold small text-muted mb-2">Registrar Reparación o Repuesto</h6>
                         <div class="row g-2 mb-2">
-                            <div class="col-md-3"><input type="date" id="mtto_fecha" class="form-control bg-white" required></div>
-                            <div class="col-md-5"><input type="text" id="mtto_detalle" class="form-control bg-white" placeholder="Detalle (Ej: Cambio de bujía)" required></div>
-                            <div class="col-md-4"><input type="number" id="mtto_costo" class="form-control bg-white" placeholder="Costo ($)" min="0" required></div>
+                            <div class="col-md-3"><input type="date" id="mtto_fecha" class="form-control bg-body-tertiary" required></div>
+                            <div class="col-md-5"><input type="text" id="mtto_detalle" class="form-control bg-body-tertiary" placeholder="Detalle (Ej: Cambio de bujía)" required></div>
+                            <div class="col-md-4"><input type="number" id="mtto_costo" class="form-control bg-body-tertiary" placeholder="Costo ($)" min="0" required></div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 fw-bold py-1">Registrar Mantenimiento</button>
                     </form>
@@ -1520,7 +1514,7 @@
             await window.cargarClientesCache();
             const activos = window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo'); const inactivos = window.cacheClientesPDF.filter(c => c.estado_cliente === 'Inactivo');
             
-            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-warning btn-sm py-0 me-1 fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalServiciosCliente" onclick="abrirServiciosCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-briefcase"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
+            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-warning btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalServiciosCliente" onclick="abrirServiciosCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-briefcase"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
             document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.ciudad)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="text-muted">${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
@@ -1978,5 +1972,4 @@
         });
     </script>
 </body>
-</html>
-    
+</html>    
