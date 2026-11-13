@@ -495,7 +495,7 @@
                         <div class="mb-4 border p-3 rounded bg-body-tertiary">
                             <label class="form-label small fw-semibold"><i class="bi bi-camera"></i> Foto del Recibo / Factura</label>
                             <input type="file" id="gast_soporte" class="form-control form-control-sm" accept="image/*,application/pdf" required>
-                            <small class="text-muted" style="font-size: 0.75rem;">Obligatorio adjuntar el soporte visual (Máx. 3MB).</small>
+                            <small class="text-muted" style="font-size: 0.75rem;">Obligatorio adjuntar el soporte.</small>
                         </div>
                         <button type="submit" id="btnGuardarGasto" class="btn btn-success w-100 fw-bold py-2">Reportar Gasto</button>
                     </form>
@@ -554,7 +554,7 @@
                             <textarea id="audi_obs" class="form-control bg-body-tertiary" rows="2" placeholder="Detalles de la auditoría..."></textarea>
                         </div>
                         <div class="mb-3 border p-3 rounded bg-body-tertiary">
-                            <label class="form-label small fw-semibold"><i class="bi bi-camera"></i> Adjuntar Foto / Evidencia (Máx. 3MB)</label>
+                            <label class="form-label small fw-semibold"><i class="bi bi-camera"></i> Adjuntar Foto / Evidencia</label>
                             <input type="file" id="audi_foto" class="form-control form-control-sm" accept="image/*">
                         </div>
                         <button type="submit" id="btnGuardarAuditoria" class="btn btn-success w-100 fw-bold py-2">Guardar Auditoría</button>
@@ -611,7 +611,7 @@
                             <textarea id="nov_desc" class="form-control bg-body-tertiary" rows="3" required placeholder="Detalles..."></textarea>
                         </div>
                         <div class="mb-3 border p-3 rounded bg-body-tertiary">
-                            <label class="form-label small fw-semibold"><i class="bi bi-paperclip"></i> Adjuntar Evidencia (Máx. 3MB)</label>
+                            <label class="form-label small fw-semibold"><i class="bi bi-paperclip"></i> Adjuntar Evidencia</label>
                             <input type="file" id="nov_foto" class="form-control form-control-sm" accept="image/*,application/pdf">
                         </div>
                         <div class="border rounded p-3 mb-3">
@@ -766,6 +766,7 @@
                                 <label class="small fw-bold text-muted">Cargo</label>
                                 <select id="op_esp" class="form-select bg-body-tertiary" required>
                                     <option value="">Seleccione cargo...</option>
+                                    <option>Operario (a) de aseo y mantenimiento</option>
                                     <option>Operario (a) de aseo</option>
                                     <option>Conserje</option>
                                     <option>Guadañador</option>
@@ -1012,7 +1013,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info small py-2 mb-3 border-0">Los usuarios creados aquí nacen automáticamente <strong>Aprobados</strong>.</div>
+                    <div class="alert alert-info small py-2 mb-3 border-0">Los usuarios creados aquí son automáticamente <strong>Aprobados</strong>.</div>
                     <form onsubmit="crearUsuarioAdmin(event)">
                         <input type="number" id="cu_doc" class="form-control mb-3 bg-body-tertiary" placeholder="Documento de Identidad" required>
                         <input type="text" id="cu_nombre" class="form-control mb-3 bg-body-tertiary" placeholder="Nombre Completo" required>
@@ -1096,7 +1097,7 @@
                             <div class="col-md-4"><label class="small text-muted fw-bold">ARL</label><input type="text" id="carta_arl" class="form-control bg-body-tertiary" readonly required></div>
                         </div>
                         <div class="mb-3 border p-3 rounded bg-body-tertiary">
-                            <label class="form-label small fw-semibold"><i class="bi bi-image"></i> Adjuntar Foto Local (Opcional, Máx 3MB)</label>
+                            <label class="form-label small fw-semibold"><i class="bi bi-image"></i> Adjuntar Foto</label>
                             <input type="file" id="carta_foto" class="form-control form-control-sm" accept="image/*">
                         </div>
                         <button type="submit" class="btn btn-primary w-100 fw-bold py-2 mt-2">Generar e Imprimir Carta</button>
@@ -1540,7 +1541,7 @@
         };
 
         // ==========================================
-        // MÓDULO: CLIENTES Y CONTRATOS B2B
+        // MÓDULO: CLIENTES Y CONTRATOS
         // ==========================================
         window.prepararNuevoCliente = function() { window.limpiarFormulario('modalCliente'); document.getElementById('cli_id').value = ''; };
 
