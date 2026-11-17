@@ -1348,8 +1348,9 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
-        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
+        // AHORA USAMOS sessionStorage
+        const rolUsuarioActivo = sessionStorage.getItem('sadafa_rol');
+        const nombreUsuarioActivo = sessionStorage.getItem('sadafa_nombre');
 
         // ==========================================
         // 🛡️ QA: SANITIZACIÓN XSS Y UTILIDADES
@@ -1410,7 +1411,10 @@
         // UX Y SESIÓN
         // ==========================================
         document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => {
-            e.preventDefault(); await signOut(auth); localStorage.clear(); window.location.href = 'index.html';
+            e.preventDefault(); 
+            await signOut(auth); 
+            sessionStorage.clear(); // Limpiamos la memoria segura al hacer logout
+            window.location.href = 'index.html';
         });
 
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
@@ -1589,31 +1593,6 @@
                     plugins: { legend: { display: false } }
                 }
             });
-        };
-
-        window.verificarMostrarAlertaVencimientos = function() {
-            if (!window.cacheOperariosPDF || window.cacheOperariosPDF.length === 0) return;
-            let proximos = window.cacheOperariosPDF.filter(o => {
-                if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
-                const diffDays = Math.ceil((new Date(o.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24)); return diffDays >= 0 && diffDays <= 30;
-            });
-            if (proximos.length > 0) window.mostrarAlerta(`Alerta: ${proximos.length} contrato(s) de personal vencen pronto.`, true);
-        };
-
-        window.verificarMostrarAlertaClientes = async function() {
-            const srvSnap = await getDocs(collection(db, "contratos_clientes"));
-            let proximosCli = 0;
-            srvSnap.forEach(d => {
-                let data = d.data();
-                if(data.fecha_fin) {
-                    const diffDays = Math.ceil((new Date(data.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 45) proximosCli++;
-                }
-            });
-            if (proximosCli > 0) {
-                // Aparece un segundo después de la roja para que no se superpongan
-                setTimeout(() => window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`), 5500);
-            }
         };
 
         // ==========================================
@@ -2056,41 +2035,38 @@
         };
 
         // ==========================================
-        // INICIO SEGURO Y GUARDIÁN DE ESTADO
+        // INICIO SEGURO Y CIERRE POR INACTIVIDAD (1 MIN)
         // ==========================================
-        window.verificarMostrarAlertaVencimientos = function() {
-            if (!window.cacheOperariosPDF || window.cacheOperariosPDF.length === 0) return;
-            let proximos = window.cacheOperariosPDF.filter(o => {
-                if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
-                const diffDays = Math.ceil((new Date(o.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24)); return diffDays >= 0 && diffDays <= 30;
-            });
-            if (proximos.length > 0) window.mostrarAlerta(`Alerta: ${proximos.length} contrato(s) de personal vencen pronto.`, true);
-        };
+        let temporizadorInactividad;
+        const TIEMPO_LIMITE_INACTIVIDAD = 1 * 60 * 1000; // 1 minuto (60,000 milisegundos)
 
-        window.verificarMostrarAlertaClientes = async function() {
-            const srvSnap = await getDocs(collection(db, "contratos_clientes"));
-            let proximosCli = 0;
-            srvSnap.forEach(d => {
-                let data = d.data();
-                if(data.fecha_fin) {
-                    const diffDays = Math.ceil((new Date(data.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 45) proximosCli++;
-                }
-            });
-            if (proximosCli > 0) {
-                // Aparece un segundo después de la roja para que no se superpongan
-                setTimeout(() => window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`), 5500);
-            }
-        };
+        function reiniciarTemporizador() {
+            clearTimeout(temporizadorInactividad);
+            temporizadorInactividad = setTimeout(cerrarSesionPorInactividad, TIEMPO_LIMITE_INACTIVIDAD);
+        }
+
+        async function cerrarSesionPorInactividad() {
+            await signOut(auth);
+            sessionStorage.clear();
+            alert("Tu sesión ha expirado por 1 minuto de inactividad. Por seguridad, vuelve a iniciar sesión.");
+            window.location.href = 'index.html';
+        }
 
         document.addEventListener('DOMContentLoaded', () => { 
-            const token = localStorage.getItem('sadafa_token');
-            const rol = localStorage.getItem('sadafa_rol');
+            const token = sessionStorage.getItem('sadafa_token');
+            const rol = sessionStorage.getItem('sadafa_rol');
             
             if (!token || !rol) { window.location.href = 'index.html'; return; }
             
             document.getElementById('rolUsuarioActivo').innerText = rol;
             document.body.setAttribute('data-rol', rol);
+
+            // Reiniciar el temporizador con cualquier interacción
+            window.onload = reiniciarTemporizador;
+            document.onmousemove = reiniciarTemporizador;
+            document.onkeypress = reiniciarTemporizador;
+            document.onclick = reiniciarTemporizador;
+            document.onscroll = reiniciarTemporizador;
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
