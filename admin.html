@@ -99,6 +99,7 @@
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body spellcheck="true" data-rol="">
 
@@ -190,6 +191,26 @@
                                 <i class="bi bi-box-seam erp-color-azul fs-1 opacity-50"></i>
                             </div>
                             <div class="small mt-2 text-muted">Inventario &le; 3 und</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NUEVO BLOQUE DE GRÁFICAS -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 shadow-sm h-100">
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Estado del Personal Operativo</h6>
+                            <div style="position: relative; height:250px; width:100%; display:flex; justify-content:center;">
+                                <canvas id="chartOperarios"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 shadow-sm h-100">
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos B2B</h6>
+                            <div style="position: relative; height:250px; width:100%;">
+                                <canvas id="chartClientes"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1513,6 +1534,61 @@
             document.getElementById('tbodyDashVencimientosCli').innerHTML = vencimientosCli.length ? vencimientosCli.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.cliente)} <br><small class="text-muted fw-normal">${window.sanitizar(v.servicio)}</small></td><td class="text-end pe-3"><span class="badge bg-warning text-dark">${v.dias} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas comerciales.</td></tr>';
             document.getElementById('tbodyDashStock').innerHTML = stockBajo.length ? stockBajo.map(s => `<tr><td class="ps-3 fw-bold">${window.sanitizar(s.tipo_prenda)} <span class="badge bg-secondary ms-1">${window.sanitizar(s.talla)}</span></td><td class="text-center pe-3"><span class="badge erp-bg-azul">${s.cantidad}</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Stock seguro.</td></tr>';
             document.getElementById('tbodyDashLegal').innerHTML = alertasLegal.length ? alertasLegal.map(a => `<tr><td class="ps-3 fw-bold">${window.sanitizar(a.nombres_completos)}</td><td class="text-end pe-3"><span class="badge" style="background-color:#8b5cf6;">${a.dias_sin_dotacion} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr>';
+
+            // --- LÓGICA DE GRÁFICAS CHART.JS ---
+            const temaAct = document.documentElement.getAttribute('data-bs-theme');
+            const colorTexto = temaAct === 'dark' ? '#cbd5e1' : '#6c757d';
+
+            const opsActivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo').length;
+            const opsInactivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Inactivo').length;
+            
+            if(window.miGraficoOps) window.miGraficoOps.destroy();
+            const ctxOps = document.getElementById('chartOperarios').getContext('2d');
+            window.miGraficoOps = new Chart(ctxOps, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Activos', 'Retirados'],
+                    datasets: [{
+                        data: [opsActivos, opsInactivos],
+                        backgroundColor: ['#0b3c36', '#e63946'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: colorTexto } } }
+                }
+            });
+
+            let conteoServicios = { 'Aseo': 0, 'Conserjería': 0, 'Jardinería': 0, 'Aseo y Mantenimiento': 0, 'Otro': 0 };
+            srvSnap.forEach(d => {
+                let serv = d.data().servicio;
+                if(conteoServicios[serv] !== undefined) conteoServicios[serv]++; else conteoServicios['Otro']++;
+            });
+
+            if(window.miGraficoCli) window.miGraficoCli.destroy();
+            const ctxCli = document.getElementById('chartClientes').getContext('2d');
+            window.miGraficoCli = new Chart(ctxCli, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(conteoServicios),
+                    datasets: [{
+                        label: 'Contratos Activos',
+                        data: Object.values(conteoServicios),
+                        backgroundColor: '#ea580c',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: colorTexto, stepSize: 1 }, grid: { color: 'rgba(200,200,200,0.1)' } },
+                        x: { ticks: { color: colorTexto }, grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
         };
 
         window.verificarMostrarAlertaVencimientos = function() {
