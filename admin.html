@@ -207,7 +207,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card card-custom p-3 shadow-sm h-100">
-                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos</h6>
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos B2B</h6>
                             <div style="position: relative; height:250px; width:100%;">
                                 <canvas id="chartClientes"></canvas>
                             </div>
@@ -384,7 +384,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-shield-lock me-2 text-success"></i> Control de Usuarios</h4>
-                        <p class="text-muted small mb-0">Gestión de credenciales.</p>
+                        <p class="text-muted small mb-0">Gestión de credenciales para Administradores y Supervisores.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
@@ -489,6 +489,7 @@
 
         </main>
     </div>
+
  <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
@@ -647,7 +648,7 @@
                         </div>
                         <div class="form-check form-switch mb-3 border p-2 rounded bg-body-tertiary">
                             <input class="form-check-input ms-0 me-2" type="checkbox" id="chk_traslado" onchange="toggleTrasladoSede()">
-                            <label class="form-check-label small fw-bold text-danger" for="chk_traslado">¿Trasladar a otra Sede?</label>
+                            <label class="form-check-label small fw-bold text-danger" for="chk_traslado">¿Trasladar a otra Sede tras esta novedad?</label>
                         </div>
                         <div class="mb-3" id="div_nueva_sede" style="display: none;">
                             <label class="small fw-bold text-muted">Nueva Sede de Asignación</label>
@@ -1315,7 +1316,20 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MODAL: CIERRE POR INACTIVIDAD -->
+    <div class="modal fade" id="modalInactividad" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content card-custom p-4 text-center shadow-lg border border-warning border-2">
+                <div class="mb-3">
+                    <i class="bi bi-shield-lock-fill text-warning" style="font-size: 3.5rem;"></i>
+                </div>
+                <h5 class="fw-bold text-body mb-2">Sesión Expirada</h5>
+                <p class="small text-muted mb-4">Por tu seguridad, la sesión se ha cerrado tras 1 minuto de inactividad.</p>
+                <button type="button" class="btn btn-warning w-100 fw-bold text-dark" onclick="window.location.href='index.html'">Volver a Ingresar</button>
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- LÓGICA MODULAR DE FIREBASE -->
     <script type="module">
@@ -1520,7 +1534,7 @@
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
-            // 4. Cumpleañeros del Mes
+            // 4. Cumpleañeros del Mes (MUESTRA ALERTA INMEDIATAMENTE)
             let txtCumples = "";
             const cumpleañeros = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.cumpleanos && o.cumpleanos.split('/')[1] === mesStr);
             if (cumpleañeros.length > 0) {
@@ -1593,6 +1607,31 @@
                     plugins: { legend: { display: false } }
                 }
             });
+        };
+
+        // ALERTAS EN CASCADA
+        window.verificarMostrarAlertaVencimientos = function() {
+            if (!window.cacheOperariosPDF || window.cacheOperariosPDF.length === 0) return;
+            let proximos = window.cacheOperariosPDF.filter(o => {
+                if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
+                const diffDays = Math.ceil((new Date(o.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24)); return diffDays >= 0 && diffDays <= 30;
+            });
+            if (proximos.length > 0) window.mostrarAlerta(`Alerta: ${proximos.length} contrato(s) de personal vencen pronto.`, true);
+        };
+
+        window.verificarMostrarAlertaClientes = async function() {
+            const srvSnap = await getDocs(collection(db, "contratos_clientes"));
+            let proximosCli = 0;
+            srvSnap.forEach(d => {
+                let data = d.data();
+                if(data.fecha_fin) {
+                    const diffDays = Math.ceil((new Date(data.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
+                    if(diffDays >= 0 && diffDays <= 45) proximosCli++;
+                }
+            });
+            if (proximosCli > 0) {
+                window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`);
+            }
         };
 
         // ==========================================
@@ -2038,7 +2077,7 @@
         // INICIO SEGURO Y CIERRE POR INACTIVIDAD (1 MIN)
         // ==========================================
         let temporizadorInactividad;
-        const TIEMPO_LIMITE_INACTIVIDAD = 1 * 60 * 1000; // 1 minuto (60,000 milisegundos)
+        const TIEMPO_LIMITE_INACTIVIDAD = 1 * 60 * 1000; // 1 minuto exacto (60.000 ms)
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
@@ -2048,8 +2087,16 @@
         async function cerrarSesionPorInactividad() {
             await signOut(auth);
             sessionStorage.clear();
-            alert("Tu sesión ha expirado por 1 minuto de inactividad. Por seguridad, vuelve a iniciar sesión.");
-            window.location.href = 'index.html';
+            
+            // Ocultamos cualquier otro modal (ventana) que el usuario tuviera abierto
+            document.querySelectorAll('.modal.show').forEach(m => {
+                const modalInstance = bootstrap.Modal.getInstance(m);
+                if (modalInstance) modalInstance.hide();
+            });
+
+            // Mostramos nuestro nuevo modal corporativo de inactividad
+            const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad'));
+            modalInact.show();
         }
 
         document.addEventListener('DOMContentLoaded', () => { 
@@ -2061,7 +2108,7 @@
             document.getElementById('rolUsuarioActivo').innerText = rol;
             document.body.setAttribute('data-rol', rol);
 
-            // Reiniciar el temporizador con cualquier interacción
+            // Se reinicia el temporizador de inactividad con cualquier movimiento del mouse o teclado
             window.onload = reiniciarTemporizador;
             document.onmousemove = reiniciarTemporizador;
             document.onkeypress = reiniciarTemporizador;
@@ -2070,14 +2117,23 @@
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    await window.cargarDashboardResumen();
+                    await window.cargarDashboardResumen(); // Dispara cumpleaños (segundo 1)
                     await window.cargarOperariosCache();
                     await window.cargarClientesCache();
                     await window.cargarDotacionCache();
                     await window.cargarUsuariosCache();
                     window.cargarOperarioTabla(); 
-                    window.verificarMostrarAlertaVencimientos();
-                    window.verificarMostrarAlertaClientes();
+                    
+                    // Disparamos la alerta de personal sin que choque (segundo 7)
+                    setTimeout(() => {
+                        window.verificarMostrarAlertaVencimientos();
+                    }, 7000);
+
+                    // Disparamos la alerta de clientes sin que choque (segundo 13)
+                    setTimeout(() => {
+                        window.verificarMostrarAlertaClientes();
+                    }, 13000);
+
                 } else {
                     window.location.href = 'index.html';
                 }
@@ -2085,4 +2141,4 @@
         });
     </script>
 </body>
-</html>
+</html>    
