@@ -45,9 +45,11 @@
         .sidebar.collapsed a { justify-content: center; padding: 12px 0; }
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
-        .sidebar.collapsed .form-check-label { display: none !important; }
-        .sidebar.collapsed .form-check { display: flex; justify-content: center; padding-left: 0; margin-left: 0; }
-        .sidebar.collapsed .form-check-input { margin-left: 0; margin-top: 0; float: none; cursor: pointer; }
+        
+        /* Ajuste de Botón Modo Día/Oscuro en versión colapsada */
+        .sidebar.collapsed .theme-toggle-container span { display: none !important; }
+        .sidebar.collapsed .theme-toggle-container .form-check-input { margin-left: 0 !important; }
+        .theme-toggle-container { padding: 10px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
@@ -94,7 +96,7 @@
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
             
             .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; }
-            .sidebar.collapsed .nav-text, .sidebar.collapsed .form-check-label { display: inline-block !important; }
+            .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
         }
@@ -130,10 +132,14 @@
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
+                    <!-- NUEVO BOTÓN DINÁMICO DÍA/OSCURO -->
                     <li class="nav-item px-3 mt-4 mb-2">
-                        <div class="form-check form-switch m-0 d-flex align-items-center" title="Cambiar Tema">
-                            <input class="form-check-input" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer;">
-                            <label class="form-check-label small fw-semibold ms-2 nav-text" for="modoOscuroSwitch" id="labelModo" style="cursor: pointer;">Modo Oscuro</label>
+                        <div class="d-flex align-items-center justify-content-center theme-toggle-container">
+                            <span id="txtModoDia" class="small fw-bold me-2 text-primary" style="display:none; cursor: pointer;" onclick="document.getElementById('modoOscuroSwitch').click()">Modo Día</span>
+                            <div class="form-check form-switch m-0 d-flex align-items-center justify-content-center" style="min-height: 24px;">
+                                <input class="form-check-input m-0" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer; width: 40px; height: 20px;">
+                            </div>
+                            <span id="txtModoOscuro" class="small fw-bold ms-2 text-primary" style="display:none; cursor: pointer;" onclick="document.getElementById('modoOscuroSwitch').click()">Modo Oscuro</span>
                         </div>
                     </li>
                     <li class="nav-item mt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
@@ -195,7 +201,7 @@
                     </div>
                 </div>
 
-                <!-- NUEVO BLOQUE DE GRÁFICAS -->
+                <!-- BLOQUE DE GRÁFICAS -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="card card-custom p-3 shadow-sm h-100">
@@ -489,7 +495,7 @@
 
         </main>
     </div>
-  <!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -710,15 +716,18 @@
                         <h6 class="fw-bold small text-muted mb-2">Agregar Nuevo Servicio a este Cliente</h6>
                         <div class="row g-2">
                             <div class="col-md-4">
-                                <select id="srv_tipo" class="form-select bg-body-tertiary" required>
+                                <select id="srv_tipo" class="form-select bg-body-tertiary" onchange="toggleOtroServicio()" required>
                                     <option value="">Seleccione servicio...</option>
                                     <option value="Aseo">Aseo</option>
                                     <option value="Conserjería">Conserjería</option>
                                     <option value="Jardinería">Jardinería</option>
                                     <option value="Aseo y Mantenimiento">Aseo y Mantenimiento</option>
                                     <option value="Fumigación">Fumigación</option>
-                                    <option value="Otro">Otro</option>
+                                    <option value="Obra Civil">Obra Civil</option>
+                                    <option value="Pintura">Pintura</option>
+                                    <option value="Otro">Otro (Especificar)</option>
                                 </select>
+                                <input type="text" id="srv_tipo_otro" class="form-control bg-body-tertiary mt-2" placeholder="Ej: Acompañamiento" style="display: none;">
                             </div>
                             <div class="col-md-3">
                                 <input type="date" id="srv_inicio" class="form-control bg-body-tertiary" required title="Fecha de Inicio">
@@ -1433,15 +1442,26 @@
 
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
-        document.getElementById('modoOscuroSwitch').checked = (tema === 'light');
-        document.getElementById('labelModo').innerText = (tema === 'light') ? 'Modo Oscuro' : 'Modo Día';
+        
+        // Inicializar botón de tema
+        const switchEl = document.getElementById('modoOscuroSwitch');
+        const lblDia = document.getElementById('txtModoDia');
+        const lblOscuro = document.getElementById('txtModoOscuro');
+        
+        if(switchEl) { 
+            switchEl.checked = (tema === 'light'); 
+            if(tema === 'light') { lblOscuro.style.display = 'inline-block'; lblDia.style.display = 'none'; }
+            else { lblDia.style.display = 'inline-block'; lblOscuro.style.display = 'none'; }
+        }
 
-        document.getElementById('modoOscuroSwitch').addEventListener('change', () => {
+        switchEl.addEventListener('change', () => {
             const temaActual = document.documentElement.getAttribute('data-bs-theme');
             const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-bs-theme', nuevoTema);
             localStorage.setItem('sadafa_theme', nuevoTema);
-            document.getElementById('labelModo').innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
+            
+            if(nuevoTema === 'light') { lblOscuro.style.display = 'inline-block'; lblDia.style.display = 'none'; }
+            else { lblDia.style.display = 'inline-block'; lblOscuro.style.display = 'none'; }
         });
 
         document.addEventListener('input', function (e) {
@@ -1583,11 +1603,15 @@
                 }
             });
 
-            let conteoServicios = { 'Aseo': 0, 'Conserjería': 0, 'Jardinería': 0, 'Aseo y Mantenimiento': 0, 'Otro': 0 };
+            // GRÁFICA B2B DINÁMICA CON COLORES VIBRANTES
+            let conteoServicios = {};
             srvSnap.forEach(d => {
                 let serv = d.data().servicio;
-                if(conteoServicios[serv] !== undefined) conteoServicios[serv]++; else conteoServicios['Otro']++;
+                if(conteoServicios[serv] === undefined) conteoServicios[serv] = 1; else conteoServicios[serv]++;
             });
+            
+            const paletaVibrante = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4', '#10b981', '#f43f5e', '#f59e0b', '#6366f1', '#14b8a6'];
+            const coloresAsignados = Object.keys(conteoServicios).map((_, i) => paletaVibrante[i % paletaVibrante.length]);
 
             if(window.miGraficoCli) window.miGraficoCli.destroy();
             const ctxCli = document.getElementById('chartClientes').getContext('2d');
@@ -1598,7 +1622,7 @@
                     datasets: [{
                         label: 'Contratos Activos',
                         data: Object.values(conteoServicios),
-                        backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4'], // Colores vibrantes múltiples
+                        backgroundColor: coloresAsignados,
                         borderRadius: 6
                     }]
                 },
@@ -1668,11 +1692,20 @@
         window.reactivarCliente = async function(id, nombre) { if (confirm(`¿Reactivar a ${nombre}?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Activo' }); window.cargarClientesTabla(); } };
 
         // SERVICIOS B2B
+        window.toggleOtroServicio = function() {
+            const select = document.getElementById('srv_tipo');
+            const inputOtro = document.getElementById('srv_tipo_otro');
+            if(select.value === 'Otro') { inputOtro.style.display = 'block'; inputOtro.required = true; } 
+            else { inputOtro.style.display = 'none'; inputOtro.required = false; inputOtro.value = ''; }
+        };
+
         window.abrirServiciosCliente = async function(idCli, nomCli) {
             document.getElementById('srv_id_cliente').value = idCli; document.getElementById('srv_nom_cliente').innerText = window.sanitizar(nomCli);
-            document.getElementById('srv_tipo').value = ""; document.getElementById('srv_inicio').value = ""; document.getElementById('srv_fin').value = "";
+            document.getElementById('srv_tipo').value = ""; document.getElementById('srv_tipo_otro').value = ""; document.getElementById('srv_tipo_otro').style.display = "none";
+            document.getElementById('srv_inicio').value = ""; document.getElementById('srv_fin').value = "";
             await window.cargarServiciosEnTabla(idCli);
         };
+        
         window.cargarServiciosEnTabla = async function(idCli) {
             const srvSnap = await getDocs(query(collection(db, "contratos_clientes"), where("id_cliente", "==", idCli)));
             let srvs = []; srvSnap.forEach(d => srvs.push({ id: d.id, ...d.data() }));
@@ -1683,10 +1716,22 @@
                 return `<tr><td class="ps-3 fw-bold">${window.sanitizar(s.servicio)}</td><td>${s.fecha_inicio}</td><td>${s.fecha_fin}</td><td>${estado}</td><td class="text-end pe-3"><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarServicioCliente('${s.id}', '${idCli}')"><i class="bi bi-trash"></i></button></td></tr>`;
             }).join('') : `<tr><td colspan="5" class="text-center text-muted py-3">Sin servicios registrados.</td></tr>`;
         };
+        
         window.guardarServicioCliente = async function(e) {
             e.preventDefault(); const idCli = document.getElementById('srv_id_cliente').value;
-            try { await addDoc(collection(db, "contratos_clientes"), { id_cliente: idCli, servicio: document.getElementById('srv_tipo').value, fecha_inicio: document.getElementById('srv_inicio').value, fecha_fin: document.getElementById('srv_fin').value }); await window.cargarServiciosEnTabla(idCli); document.getElementById('srv_tipo').value = ""; document.getElementById('srv_fin').value = ""; window.cargarDashboardResumen(); } catch(err) { window.mostrarAlerta("Error al agregar servicio.", true); }
+            let tipoServ = document.getElementById('srv_tipo').value;
+            if (tipoServ === 'Otro') {
+                tipoServ = document.getElementById('srv_tipo_otro').value.trim();
+                if (!tipoServ) return window.mostrarAlerta("Por favor especifique el servicio.", true);
+            }
+            try { 
+                await addDoc(collection(db, "contratos_clientes"), { id_cliente: idCli, servicio: tipoServ, fecha_inicio: document.getElementById('srv_inicio').value, fecha_fin: document.getElementById('srv_fin').value }); 
+                await window.cargarServiciosEnTabla(idCli); 
+                document.getElementById('srv_tipo').value = ""; document.getElementById('srv_tipo_otro').value = ""; document.getElementById('srv_tipo_otro').style.display = "none"; document.getElementById('srv_fin').value = ""; 
+                window.cargarDashboardResumen(); 
+            } catch(err) { window.mostrarAlerta("Error al agregar servicio.", true); }
         };
+        
         window.eliminarServicioCliente = async function(idServicio, idCli) { if (confirm("¿Eliminar este servicio del contrato?")) { await deleteDoc(doc(db, "contratos_clientes", idServicio)); await window.cargarServiciosEnTabla(idCli); window.cargarDashboardResumen(); } };
 
         // ==========================================
@@ -2080,9 +2125,9 @@
         // ==========================================
         // INICIO SEGURO Y CIERRE POR INACTIVIDAD (3 MIN)
         // ==========================================
-        window.isKickedOut = false; // Bandera para evitar el redireccionamiento instantáneo
+        window.isKickedOut = false; 
         let temporizadorInactividad;
-        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; // 3 minutos exactos (180,000 ms)
+        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; 
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
@@ -2094,13 +2139,11 @@
             await signOut(auth);
             localStorage.clear();
             
-            // Ocultamos cualquier otro modal (ventana) que el usuario tuviera abierto
             document.querySelectorAll('.modal.show').forEach(m => {
                 const modalInstance = bootstrap.Modal.getInstance(m);
                 if (modalInstance) modalInstance.hide();
             });
 
-            // Mostramos nuestro nuevo modal corporativo de inactividad
             const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad'));
             modalInact.show();
         }
@@ -2114,7 +2157,6 @@
             document.getElementById('rolUsuarioActivo').innerText = rol;
             document.body.setAttribute('data-rol', rol);
 
-            // Se reinicia el temporizador de inactividad con cualquier movimiento del mouse o teclado
             window.onload = reiniciarTemporizador;
             document.onmousemove = reiniciarTemporizador;
             document.onkeypress = reiniciarTemporizador;
@@ -2123,21 +2165,18 @@
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    await window.cargarDashboardResumen(); // Dispara cumpleaños (segundo 1)
+                    await window.cargarDashboardResumen(); 
                     window.cargarOperarioTabla(); 
                     
-                    // Disparamos la alerta de personal sin que choque (segundo 7)
                     setTimeout(() => {
                         window.verificarMostrarAlertaVencimientos();
                     }, 7000);
 
-                    // Disparamos la alerta de clientes sin que choque (segundo 13)
                     setTimeout(() => {
                         window.verificarMostrarAlertaClientes();
                     }, 13000);
 
                 } else {
-                    // Solo redirige si NO fue expulsado por inactividad
                     if (!window.isKickedOut) {
                         window.location.href = 'index.html';
                     }
@@ -2146,4 +2185,4 @@
         });
     </script>
 </body>
-</html>  
+</html>   
