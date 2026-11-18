@@ -33,31 +33,27 @@
             --hover-casilla: #334155; 
         }
         
-        /* OVERFLOW HIDDEN PARA EVITAR SCROLL GLOBAL */
-        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow: hidden; height: 100vh; margin: 0; }
-        .wrapper { display: flex; width: 100%; height: 100vh; overflow: hidden; }
-        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 15px; z-index: 1030; position: relative; white-space: nowrap; display: flex; flex-direction: column; }
+        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
+        .wrapper { display: flex; width: 100%; min-height: 100vh; overflow-x: hidden; }
+        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1030; position: relative; white-space: nowrap; }
         .sidebar.collapsed { width: 75px; }
-        .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 1.5rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
+        .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
         .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
-        .sidebar-menu-scroll { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; }
-        .sidebar-menu-scroll::-webkit-scrollbar { width: 4px; }
-        .sidebar-menu-scroll::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.2); }
-        .sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; padding: 10px 20px; border-radius: 6px; margin-bottom: 4px; font-weight: 500; overflow: hidden; }
+        .sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; padding: 12px 20px; border-radius: 6px; margin-bottom: 4px; font-weight: 500; overflow: hidden; }
         .sidebar a i { font-size: 1.2rem; margin-right: 12px; color: var(--sadafa-accent); min-width: 25px; text-align: center; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(45, 212, 191, 0.15); color: var(--sadafa-accent); font-weight: 600; }
-        .sidebar.collapsed a { justify-content: center; padding: 10px 0; }
+        .sidebar.collapsed a { justify-content: center; padding: 12px 0; }
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
         
         /* BOTÓN DINÁMICO TEMA */
-        .theme-toggle-container { padding: 6px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
         .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
         [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
         [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
-        .theme-switch-input { width: 40px !important; height: 22px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
@@ -67,11 +63,10 @@
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         
-        /* AJUSTES DE ESPACIO PARA EL CONTENIDO PRINCIPAL */
-        .main-content { flex-grow: 1; padding: 10px 25px; transition: all 0.3s ease; width: calc(100% - 260px); height: 100vh; overflow-y: auto; overflow-x: hidden; }
-        .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; }
+        /* RESTAURADO A TAMAÑO NORMAL */
+        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
+        .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
         
-        /* COLORES MÈTRICAS */
         .erp-color-rojo { color: #e63946 !important; }
         .erp-border-rojo { border-left-color: #e63946 !important; }
         .erp-color-azul { color: #0284c7 !important; }
@@ -83,8 +78,7 @@
         .erp-color-morado { color: #8b5cf6 !important; }
         .erp-border-morado { border-left-color: #8b5cf6 !important; }
         
-        /* SCROLL INTERNO COMPACTO */
-        .table-scrollable { max-height: 220px; overflow-y: auto; }
+        .table-scrollable { max-height: 250px; overflow-y: auto; }
         .table-scrollable::-webkit-scrollbar { width: 6px; }
         .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
         [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
@@ -102,13 +96,14 @@
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
         @media (max-width: 768px) {
-            body { overflow: auto; height: auto; }
-            .wrapper { overflow: visible; height: auto; }
+            .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
             .sidebar.collapsed { left: 0 !important; }
-            .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; height: auto; overflow: visible; }
+            .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
+            
             .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
+            
             .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; }
             .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
@@ -132,10 +127,10 @@
             <button class="btn-toggle-sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed')" title="Expandir/Contraer Menú">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <h4 class="brand mt-1">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
-            
-            <div class="sidebar-menu-scroll px-2">
-                <ul class="nav flex-column">
+            <div class="position-sticky">
+                <h4 class="brand">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
+                
+                <ul class="nav flex-column px-2">
                     <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
@@ -148,109 +143,114 @@
                     
                     <li class="nav-item mt-4 mb-2 d-flex justify-content-center">
                         <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
-                            <i class="bi bi-sun-fill fs-6 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                            <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                             <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
                                 <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
                             </div>
-                            <i class="bi bi-moon-stars-fill fs-6 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                            <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                         </div>
                     </li>
-                    <li class="nav-item mt-1"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
+
+                    <li class="nav-item mt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
                 </ul>
             </div>
         </nav>
 
         <main class="main-content">
             
-            <div class="d-flex justify-content-end align-items-center mb-3 pb-1 border-bottom">
+            <div class="d-flex justify-content-end align-items-center mb-4 border-bottom pb-2">
                 <span class="badge bg-secondary fs-6 shadow-sm py-2 px-3">
                     <i class="bi bi-person-circle me-1"></i> <span id="nombreUI" class="fw-bold">Cargando...</span>
                     <span class="badge bg-light text-dark ms-2" id="rolUI"></span>
                 </span>
             </div>
 
-            <!-- 0. PANEL DE CONTROL COMPACTO -->
+            <!-- 0. PANEL DE CONTROL -->
             <div id="sec-dashboard" class="seccion-contenido">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-12">
-                        <h5 class="fw-bold mb-0 text-body"><i class="bi bi-speedometer2 me-2 text-success"></i> Panel de Control Administrativo</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-speedometer2 me-2 text-success"></i> Panel de Control Administrativo</h4>
+                        <p class="text-muted small mb-0">Alertas operativas y comerciales.</p>
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3">
+                <div class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <div class="card card-custom p-2 px-3 metric-card shadow-sm erp-border-rojo h-100">
+                        <div class="card card-custom p-3 metric-card shadow-sm erp-border-rojo">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="erp-color-rojo fw-bold small mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">CONTRATOS PERSONAL</div>
-                                    <div class="fs-2 fw-bold erp-color-rojo lh-1" id="dashVenceContratos">0</div>
+                                    <div class="erp-color-rojo fw-bold small mb-1" style="letter-spacing: 0.5px;">CONTRATOS PERSONAL</div>
+                                    <div class="fs-2 fw-bold erp-color-rojo" id="dashVenceContratos">0</div>
                                 </div>
-                                <i class="bi bi-person-badge erp-color-rojo fs-2 opacity-50"></i>
+                                <i class="bi bi-person-badge erp-color-rojo fs-1 opacity-50"></i>
                             </div>
+                            <div class="small mt-2 text-muted">Vencen en &le; 30 días</div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card card-custom p-2 px-3 metric-card shadow-sm erp-border-naranja h-100">
+                        <div class="card card-custom p-3 metric-card shadow-sm erp-border-naranja">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="erp-color-naranja fw-bold small mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">CONTRATOS CLIENTES</div>
-                                    <div class="fs-2 fw-bold erp-color-naranja lh-1" id="dashVenceClientes">0</div>
+                                    <div class="erp-color-naranja fw-bold small mb-1" style="letter-spacing: 0.5px;">CONTRATOS CLIENTES</div>
+                                    <div class="fs-2 fw-bold erp-color-naranja" id="dashVenceClientes">0</div>
                                 </div>
-                                <i class="bi bi-building-check erp-color-naranja fs-2 opacity-50"></i>
+                                <i class="bi bi-building-check erp-color-naranja fs-1 opacity-50"></i>
                             </div>
+                            <div class="small mt-2 text-muted">Renovación en &le; 45 días</div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card card-custom p-2 px-3 metric-card shadow-sm erp-border-azul h-100">
+                        <div class="card card-custom p-3 metric-card shadow-sm erp-border-azul">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="erp-color-azul fw-bold small mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">DOTACIÓN BAJA</div>
-                                    <div class="fs-2 fw-bold erp-color-azul lh-1" id="dashStockCritico">0</div>
+                                    <div class="erp-color-azul fw-bold small mb-1" style="letter-spacing: 0.5px;">DOTACIÓN BAJA</div>
+                                    <div class="fs-2 fw-bold erp-color-azul" id="dashStockCritico">0</div>
                                 </div>
-                                <i class="bi bi-box-seam erp-color-azul fs-2 opacity-50"></i>
+                                <i class="bi bi-box-seam erp-color-azul fs-1 opacity-50"></i>
                             </div>
+                            <div class="small mt-2 text-muted">Inventario &le; 3 und</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- BLOQUE DE GRÁFICAS COMPACTAS -->
-                <div class="row g-2 mb-3">
-                    <div class="col-md-5">
-                        <div class="card card-custom p-2 shadow-sm h-100">
-                            <h6 class="fw-bold mb-2 small text-body text-center">Estado Personal Operativo</h6>
-                            <div style="position: relative; height:180px; width:100%; display:flex; justify-content:center;">
+                <!-- BLOQUE DE GRÁFICAS -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 shadow-sm h-100">
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Estado del Personal Operativo</h6>
+                            <div style="position: relative; height:250px; width:100%; display:flex; justify-content:center;">
                                 <canvas id="chartOperarios"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7">
-                        <div class="card card-custom p-2 shadow-sm h-100">
-                            <h6 class="fw-bold mb-2 small text-body text-center">Distribución Contratos Comerciales</h6>
-                            <div style="position: relative; height:180px; width:100%;">
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 shadow-sm h-100">
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos B2B</h6>
+                            <div style="position: relative; height:250px; width:100%;">
                                 <canvas id="chartClientes"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- BLOQUE INFERIOR (LISTAS AGRUPADAS) -->
-                <div class="row g-2 mb-3">
-                    <div class="col-md-6">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-5">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
-                            <div class="p-1 border-bottom bg-body-tertiary">
+                            <div class="p-2 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <ul class="nav nav-pills nav-fill w-100 mb-0" role="tablist">
-                                    <li class="nav-item" role="presentation"><button class="nav-link active small py-1" data-bs-toggle="pill" data-bs-target="#tab-vence-op" style="font-size: 0.85rem;">Alerta Personal <span class="badge border border-white ms-1" id="badgeVenceCount">0</span></button></li>
-                                    <li class="nav-item" role="presentation"><button class="nav-link small py-1" data-bs-toggle="pill" data-bs-target="#tab-vence-cli" style="font-size: 0.85rem;">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link active small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-op">Alerta Personal <span class="badge border border-white ms-1" id="badgeVenceCount">0</span></button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
-                            <div class="tab-content table-scrollable bg-body">
+                            <div class="tab-content table-scrollable">
                                 <div class="tab-pane fade show active" id="tab-vence-op">
                                     <table class="table table-hover align-middle mb-0 small">
+                                        <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
                                         <tbody id="tbodyDashVencimientos"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="tab-vence-cli">
-                                    <table class="table table-sm align-middle mb-0 small border-0">
+                                    <table class="table table-hover align-middle mb-0 small">
                                         <tbody id="tbodyDashVencimientosCli"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
                                     </table>
                                 </div>
@@ -259,23 +259,25 @@
                     </div>
                     <div class="col-md-3">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
-                            <div class="p-2 border-bottom bg-body-tertiary text-center">
-                                <h6 class="fw-bold mb-0 small erp-color-amarillo"><i class="bi bi-shield-exclamation me-1"></i> Stock a Reponer</h6>
+                            <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
                             </div>
-                            <div class="table-scrollable bg-body">
+                            <div class="table-scrollable">
                                 <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light sticky-top"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
                                     <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Seguro.</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
-                            <div class="p-2 border-bottom bg-body-tertiary text-center">
-                                <h6 class="fw-bold mb-0 small erp-color-morado"><i class="bi bi-exclamation-octagon me-1"></i> Legal Dotación</h6>
+                            <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Legal Dotación</h6>
                             </div>
-                            <div class="table-scrollable bg-body">
+                            <div class="table-scrollable">
                                 <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
                                     <tbody id="tbodyDashLegal"><tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr></tbody>
                                 </table>
                             </div>
@@ -284,37 +286,35 @@
                 </div>
             </div>
 
-            <!-- SECCIONES OCULTAS (Las tablas pesadas usan max-height superior) -->
+            <!-- SOBREESCRIBIR TABLAS PESADAS PARA QUE TENGAN MÁS ESPACIO -->
             <style>
                 #sec-empleado .table-scrollable, #sec-cliente .table-scrollable, #sec-usuario .table-scrollable, #sec-inventario .table-scrollable, #sec-auditoria .table-scrollable, #sec-bitacora .table-scrollable, #sec-caja .table-scrollable {
-                    max-height: calc(100vh - 200px); 
+                    max-height: 500px; 
                 }
             </style>
-
             <!-- 1. PERSONAL OPERATIVO Y CONTRATOS -->
             <div id="sec-empleado" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-4">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-person-badge me-2 text-success"></i> Personal y Contratos</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-person-badge me-2 text-success"></i> Personal y Contratos</h4>
+                        <p class="text-muted small mb-0">Base de datos de contratos y operativos activos.</p>
                     </div>
-                    <div class="col-md-8 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
+                    <div class="col-md-8 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;">
                             <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                             <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
                         </div>
-                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar</button>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()"><i class="bi bi-person-plus me-1"></i> Nuevo</button>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
                     </div>
                 </div>
                 
                 <div class="card card-custom shadow-sm p-0 mb-4">
-                    <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-body-tertiary flex-wrap gap-2 position-relative" style="z-index: 1020;">
-                        <ul class="nav nav-pills nav-fill m-0" role="tablist">
-                            <li class="nav-item me-2"><button class="nav-link active small py-1 px-3" data-bs-toggle="pill" data-bs-target="#contratos-activos">Activos</button></li>
-                            <li class="nav-item"><button class="nav-link small py-1 px-3" data-bs-toggle="pill" data-bs-target="#contratos-inactivos">Historial</button></li>
-                        </ul>
+                    <div class="p-4 border-bottom d-flex justify-content-between align-items-center bg-body-tertiary flex-wrap gap-2 position-relative" style="z-index: 1020;">
+                        <h5 class="fw-bold mb-0 text-body" style="font-size: 1.1rem;"><i class="bi bi-people-fill me-2 opacity-50"></i> Personal Registrado</h5>
+                        
                         <div class="dropdown d-inline-block">
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown"><i class="bi bi-file-earmark-pdf"></i> Generar PDF</button>
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown"><i class="bi bi-file-earmark-pdf"></i> Generar Documento</button>
                             <ul class="dropdown-menu shadow-sm">
                                 <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCarta" onclick="prepararDocumentosPDF('carta')"><i class="bi bi-file-text text-primary me-2"></i> Carta Presentación</button></li>
                                 <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCertificado" onclick="prepararDocumentosPDF('cert')"><i class="bi bi-award text-success me-2"></i> Certificado Laboral</button></li>
@@ -324,7 +324,12 @@
                             </ul>
                         </div>
                     </div>
-                    
+                    <div class="p-3 bg-body-tertiary border-bottom">
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#contratos-activos">Base de Datos (Activos)</button></li>
+                            <li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#contratos-inactivos">Historial (Retirados)</button></li>
+                        </ul>
+                    </div>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="contratos-activos">
                             <div class="table-responsive table-scrollable">
@@ -336,14 +341,17 @@
                                             <th class="text-nowrap">Cliente Asignado</th>
                                             <th class="text-wrap" style="min-width: 220px;">Nombres Completos</th>
                                             <th class="text-nowrap">Identificación</th>
-                                            <th class="text-nowrap">Tipo Contrato</th>
+                                            <th class="text-nowrap">Tipo de Contrato</th>
                                             <th class="text-nowrap">Cargo</th>
+                                            <th class="text-nowrap">Fecha Inicio</th>
                                             <th class="text-nowrap">Fecha Fin</th>
-                                            <th class="pe-4 text-nowrap">Celular</th>
+                                            <th class="text-nowrap">Sueldo</th>
+                                            <th class="text-nowrap">Celular</th>
+                                            <th class="pe-4 text-nowrap">Correo Electrónico</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tablaContratosBody">
-                                        <tr><td colspan="9" class="text-center text-muted py-3">Cargando base de datos...</td></tr>
+                                        <tr><td colspan="12" class="text-center text-muted py-3">Cargando base de datos con Firebase...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -375,31 +383,33 @@
 
             <!-- 2. GESTIÓN DE CLIENTES -->
             <div id="sec-cliente" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-5">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-building me-2 text-success"></i> Gestión de Clientes</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-building me-2 text-success"></i> Gestión de Clientes</h4>
+                        <p class="text-muted small mb-0">Directorio, sedes y contratos comerciales.</p>
                     </div>
-                    <div class="col-md-7 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
+                    <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
-                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small py-1" data-bs-toggle="pill" data-bs-target="#clientes-activos">Clientes Activos</button></li><li class="nav-item"><button class="nav-link small py-1" data-bs-toggle="pill" data-bs-target="#clientes-inactivos">Historial (Inactivos)</button></li></ul></div>
+                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#clientes-activos">Clientes Activos</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#clientes-inactivos">Historial (Inactivos)</button></li></ul></div>
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="clientes-activos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Celular</th><th>Admin Copropiedad</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesBody"><tr><td colspan="6" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
-                        <div class="tab-pane fade" id="clientes-inactivos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Celular</th><th>Admin Copropiedad</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesInactivosBody"><tr><td colspan="6" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade show active" id="clientes-activos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
+                        <div class="tab-pane fade" id="clientes-inactivos"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Razón Social</th><th>Ciudad</th><th>Dirección</th><th>Cel. Cliente</th><th>Admin</th><th>Cel. Admin</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tablaClientesInactivosBody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando...</td></tr></tbody></table></div></div>
                     </div>
                 </div>
             </div>
 
             <!-- 3. CONTROL DE USUARIOS -->
             <div id="sec-usuario" class="seccion-contenido admin-only" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-shield-lock me-2 text-success"></i> Control de Usuarios</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-shield-lock me-2 text-success"></i> Control de Usuarios</h4>
+                        <p class="text-muted small mb-0">Gestión de credenciales para Administradores y Supervisores.</p>
                     </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end">
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuarioAdmin" onclick="prepararNuevoUsuario()"><i class="bi bi-person-plus-fill"></i> Crear Usuario</button>
                     </div>
@@ -411,17 +421,18 @@
 
             <!-- 4. INVENTARIO Y DOTACIÓN -->
             <div id="sec-inventario" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-box-seam me-2 text-success"></i> Inventario y Dotación</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-box-seam me-2 text-success"></i> Inventario y Dotación</h4>
+                        <p class="text-muted small mb-0">Control de insumos, herramientas y dotación.</p>
                     </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end">
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="prepararNuevoUnificado()"><i class="bi bi-plus-circle"></i> Nuevo Elemento</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
-                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small py-1" data-bs-toggle="pill" data-bs-target="#dotacion-pane">Dotación</button></li><li class="nav-item"><button class="nav-link small py-1" data-bs-toggle="pill" data-bs-target="#activos-pane">Activos Fijos</button></li><li class="nav-item"><button class="nav-link small py-1" data-bs-toggle="pill" data-bs-target="#insumos-pane">Insumos</button></li></ul></div>
+                    <div class="p-3 bg-body-tertiary border-bottom"><ul class="nav nav-pills nav-fill" role="tablist"><li class="nav-item"><button class="nav-link active small" data-bs-toggle="pill" data-bs-target="#dotacion-pane">Dotación</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#activos-pane">Activos Fijos</button></li><li class="nav-item"><button class="nav-link small" data-bs-toggle="pill" data-bs-target="#insumos-pane">Insumos</button></li></ul></div>
                     <div class="tab-content border-top">
                         <div class="tab-pane fade show active" id="dotacion-pane"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Prenda / Elemento</th><th>Talla</th><th>Condición</th><th class="text-center">Cant.</th><th class="pe-4 text-end">Acciones</th></tr></thead><tbody id="tbodyDotacionAdmin"><tr><td colspan="5" class="text-center text-muted py-3">Cargando dotación...</td></tr></tbody></table></div></div>
                         <div class="tab-pane fade" id="activos-pane"><div class="table-scrollable"><table class="table table-hover align-middle mb-0 small"><thead class="table-light sticky-top"><tr><th class="ps-4">Activo</th><th>Serial / Placa</th><th>Responsable / Sede</th><th class="pe-4 text-end" style="min-width: 140px;">Acciones</th></tr></thead><tbody id="tbodyActivos"><tr><td colspan="4" class="text-center text-muted py-3">Cargando activos...</td></tr></tbody></table></div></div>
@@ -432,11 +443,12 @@
 
             <!-- 5. AUDITORÍAS EN SEDE -->
             <div id="sec-auditoria" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-clipboard-check me-2 text-success"></i> Auditorías de Calidad</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-clipboard-check me-2 text-success"></i> Auditorías de Calidad</h4>
+                        <p class="text-muted small mb-0">Inspecciones en puestos.</p>
                     </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end">
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalAuditoria" onclick="prepararNuevaAuditoria()"><i class="bi bi-plus-circle"></i> Nueva Auditoría</button>
                     </div>
                 </div>
@@ -447,11 +459,12 @@
 
             <!-- 6. BITÁCORA DE NOVEDADES -->
             <div id="sec-bitacora" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-journal-text me-2 text-success"></i> Bitácora de Novedades</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-journal-text me-2 text-success"></i> Bitácora de Novedades</h4>
+                        <p class="text-muted small mb-0">Registro operativo.</p>
                     </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end">
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
                     </div>
                 </div>
@@ -462,17 +475,18 @@
 
             <!-- 7. CAJA MENOR Y GASTOS -->
             <div id="sec-caja" class="seccion-contenido" style="display: none;">
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-4 align-items-center">
                     <div class="col-md-5">
-                        <h5 class="fw-bold mb-1 text-body"><i class="bi bi-wallet2 me-2 text-success"></i> Caja Menor y Gastos</h5>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-wallet2 me-2 text-success"></i> Caja Menor y Gastos</h4>
+                        <p class="text-muted small mb-0">Gestión de viáticos y reembolsos.</p>
                     </div>
-                    <div class="col-md-7 text-md-end mt-2 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
-                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                    <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="prepararNuevoGasto()"><i class="bi bi-plus-circle"></i> Reportar Gasto</button>
                     </div>
                 </div>
 
-                <div id="contenedorResumenGastos" class="row g-2 mb-3 admin-only" style="display: none;"></div>
+                <div id="contenedorResumenGastos" class="row g-3 mb-4 admin-only" style="display: none;"></div>
 
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
                     <div class="table-scrollable">
@@ -498,7 +512,8 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+
+    <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -2141,9 +2156,9 @@
         // ==========================================
         // INICIO SEGURO Y CIERRE POR INACTIVIDAD (3 MIN)
         // ==========================================
-        window.isKickedOut = false; // Bandera para evitar el redireccionamiento instantáneo
+        window.isKickedOut = false; 
         let temporizadorInactividad;
-        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; // 3 minutos exactos (180,000 ms)
+        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; 
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
@@ -2155,13 +2170,11 @@
             await signOut(auth);
             localStorage.clear();
             
-            // Ocultamos cualquier otro modal (ventana) que el usuario tuviera abierto
             document.querySelectorAll('.modal.show').forEach(m => {
                 const modalInstance = bootstrap.Modal.getInstance(m);
                 if (modalInstance) modalInstance.hide();
             });
 
-            // Mostramos nuestro nuevo modal corporativo de inactividad
             const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad'));
             modalInact.show();
         }
@@ -2177,7 +2190,6 @@
             document.getElementById('rolUI').innerText = window.sanitizar(rol);
             document.body.setAttribute('data-rol', rol);
 
-            // Se reinicia el temporizador de inactividad con cualquier movimiento del mouse o teclado
             window.onload = reiniciarTemporizador;
             document.onmousemove = reiniciarTemporizador;
             document.onkeypress = reiniciarTemporizador;
@@ -2186,21 +2198,18 @@
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    await window.cargarDashboardResumen(); // Dispara cumpleaños (segundo 1)
+                    await window.cargarDashboardResumen(); 
                     window.cargarOperarioTabla(); 
                     
-                    // Disparamos la alerta de personal sin que choque (segundo 7)
                     setTimeout(() => {
                         window.verificarMostrarAlertaVencimientos();
                     }, 7000);
 
-                    // Disparamos la alerta de clientes sin que choque (segundo 13)
                     setTimeout(() => {
                         window.verificarMostrarAlertaClientes();
                     }, 13000);
 
                 } else {
-                    // Solo redirige si NO fue expulsado por inactividad
                     if (!window.isKickedOut) {
                         window.location.href = 'index.html';
                     }
@@ -2209,4 +2218,4 @@
         });
     </script>
 </body>
-</html>   
+</html>
