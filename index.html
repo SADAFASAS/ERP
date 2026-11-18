@@ -29,47 +29,53 @@
             --texto-muted: #6c757d; 
         }
         body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; min-height: 100vh; display: flex; flex-direction: column; }
-        .top-navbar { padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
-        .navbar-brand-custom { font-weight: 700; font-size: 1.1rem; color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .navbar-brand-custom img { width: 25px; border-radius: 4px; }
+        .top-navbar { padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar-brand-custom { font-weight: 700; font-size: 1.3rem; color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         
-        /* === NUEVO DISEÑO DEL BOTÓN TEMA (DÍA/NOCHE) === */
-        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
+        /* === BOTÓN TEMA (DÍA/NOCHE) === */
+        .theme-toggle-container { padding: 10px 20px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
-        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.3rem; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.3rem; }
         [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
         [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
-        .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input { width: 55px !important; height: 28px !important; margin: 0 10px !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
 
-        .hero-section { text-align: center; padding: 60px 20px; }
-        .hero-title { font-size: 3.5rem; font-weight: 300; margin-bottom: 5px; letter-spacing: 2px; }
-        .hero-subtitle { font-size: 1.5rem; font-weight: 400; margin-bottom: 15px; }
-        .hero-description { color: var(--texto-muted); font-size: 1rem; margin-bottom: 30px; }
-        .btn-accent { background-color: var(--sadafa-accent); color: #0f172a; font-weight: 600; padding: 10px 30px; border-radius: 50px; border: none; transition: transform 0.2s, box-shadow 0.2s; }
-        .btn-accent:hover { background-color: #25b5a3; color: #0f172a; transform: translateY(-2px); box-shadow: 0 4px 12px var(--sadafa-focus-ring); }
+        .hero-section { text-align: center; padding: 80px 20px; }
+        .hero-title { font-size: 4.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: 2px; }
+        .hero-subtitle { font-size: 2rem; font-weight: 400; margin-bottom: 20px; }
+        .hero-description { color: var(--texto-muted); font-size: 1.2rem; margin-bottom: 40px; }
+        
+        .btn-accent { background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; padding: 12px 35px; border-radius: 50px; border: none; font-size: 1.2rem; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-accent:hover { background-color: #25b5a3; color: #0f172a; transform: translateY(-2px); box-shadow: 0 4px 15px var(--sadafa-focus-ring); }
         [data-bs-theme="light"] .btn-accent { color: #ffffff; }
         [data-bs-theme="light"] .btn-accent:hover { background-color: #082b27; color: #ffffff; }
         .form-control:focus { border-color: var(--sadafa-accent); box-shadow: 0 0 0 0.25rem var(--sadafa-focus-ring); background-color: inherit; }
-        .divider { height: 2px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 40px 0; opacity: 0.5; }
-        .services-section { flex: 1; padding: 20px 40px 60px; max-width: 1200px; margin: 0 auto; width: 100%; }
-        .services-title { text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 40px; }
+        
+        .divider { height: 2px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 50px 0; opacity: 0.5; }
+        .services-section { flex: 1; padding: 30px 40px 80px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .services-title { text-align: center; font-size: 2.2rem; font-weight: 700; margin-bottom: 50px; }
         .services-title span { color: var(--sadafa-accent); position: relative; }
-        .services-title span::after { content: ''; position: absolute; width: 100%; height: 3px; background-color: var(--sadafa-accent); bottom: -8px; left: 0; border-radius: 2px; }
-        .service-card { background-color: var(--sadafa-card); border-radius: 12px; padding: 30px 20px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; }
-        [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
-        .service-icon { font-size: 2.5rem; color: var(--sadafa-accent); margin-bottom: 15px; }
-        .service-card h5 { font-weight: 600; font-size: 1.1rem; margin-bottom: 10px; }
-        .service-card p { font-size: 0.85rem; color: var(--texto-muted); line-height: 1.5; margin: 0; }
-        .footer { text-align: center; padding: 20px; background-color: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--texto-muted); line-height: 1.6; }
+        .services-title span::after { content: ''; position: absolute; width: 100%; height: 4px; background-color: var(--sadafa-accent); bottom: -10px; left: 0; border-radius: 2px; }
+        .service-card { background-color: var(--sadafa-card); border-radius: 15px; padding: 40px 25px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; }
+        [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); }
+        .service-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+        .service-icon { font-size: 3.5rem; color: var(--sadafa-accent); margin-bottom: 20px; }
+        .service-card h5 { font-weight: 700; font-size: 1.4rem; margin-bottom: 15px; }
+        .service-card p { font-size: 1rem; color: var(--texto-muted); line-height: 1.6; margin: 0; }
+        .footer { text-align: center; padding: 25px; background-color: rgba(0,0,0,0.2); font-size: 0.9rem; color: var(--texto-muted); line-height: 1.8; }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
+        /* Ajustes Modal Login para hacerlo más grande */
+        .modal-login-custom { max-width: 450px; }
+        
         @media (max-width: 768px) {
             .top-navbar { padding: 15px 20px; }
+            .hero-title { font-size: 3rem; }
+            .hero-subtitle { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -78,13 +84,13 @@
     <header class="top-navbar">
         <a href="#" class="navbar-brand-custom"></a>
         
-        <!-- NUEVO BOTÓN DINÁMICO DÍA/OSCURO -->
+        <!-- BOTÓN DINÁMICO DÍA/OSCURO -->
         <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
-            <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+            <i class="bi bi-sun-fill theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
             <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
                 <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
             </div>
-            <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+            <i class="bi bi-moon-stars-fill theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
         </div>
     </header>
 
@@ -92,7 +98,7 @@
         <h1 class="hero-title">SADAFA</h1>
         <h2 class="hero-subtitle">Servicios Integrales S.A.S.</h2>
         <p class="hero-description">Plataforma corporativa de gestión administrativa y supervisión operativa.</p>
-        <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#modalLogin">
+        <button class="btn btn-accent shadow" data-bs-toggle="modal" data-bs-target="#modalLogin">
             <i class="bi bi-shield-lock me-2"></i> Iniciar Sesión
         </button>
     </section>
@@ -101,7 +107,7 @@
 
     <section class="services-section">
         <h3 class="services-title"><span>Algunos De Nuestros Servicios</span></h3>
-        <div class="row g-4">
+        <div class="row g-4 mt-2">
             <div class="col-md-4"><div class="service-card"><i class="bi bi-stars service-icon"></i><h5>Operarios de Aseo</h5><p>Mantenimiento y limpieza integral para copropiedades, edificios corporativos y sedes comerciales.</p></div></div>
             <div class="col-md-4"><div class="service-card"><i class="bi bi-scissors service-icon"></i><h5>Guadañado y Jardinería</h5><p>Cuidado especializado de zonas verdes, corte de césped, poda técnica y embellecimiento paisajístico.</p></div></div>
             <div class="col-md-4"><div class="service-card"><i class="bi bi-person-badge service-icon"></i><h5>Conserjería y Toderos</h5><p>Personal calificado para control de acceso, mantenimiento locativo menor y atención de instalaciones.</p></div></div>
@@ -116,38 +122,38 @@
         &copy; 2026 SADAFA Servicios Integrales S.A.S. Todos los derechos reservados.
     </footer>
 
-    <!-- MODAL DE LOGIN -->
+    <!-- MODAL DE LOGIN (MÁS GRANDE) -->
     <div class="modal fade" id="modalLogin" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow" style="background-color: var(--sadafa-card);">
+        <div class="modal-dialog modal-dialog-centered modal-login-custom">
+            <div class="modal-content border-0 shadow-lg" style="background-color: var(--sadafa-card); border-radius: 15px;">
                 <div class="modal-header border-bottom-0 pb-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-theme="dark"></button>
+                    <button type="button" class="btn-close fs-5" data-bs-dismiss="modal" data-bs-theme="dark"></button>
                 </div>
-                <div class="modal-body px-4 pb-4 text-center">
-                    <h4 class="fw-bold" style="color: var(--sadafa-accent);">Ingresa tus credenciales</h4>
-                    <p class="small text-secondary mb-4">Acceso exclusivo para personal autorizado.</p>
+                <div class="modal-body px-5 pb-5 text-center">
+                    <h3 class="fw-bold mb-2" style="color: var(--sadafa-accent);">Ingresa tus credenciales</h3>
+                    <p class="text-secondary mb-4 fs-6">Acceso exclusivo para personal autorizado.</p>
                     
                     <form id="loginForm">
-                        <div id="loginAlert" class="alert alert-danger d-none small py-2 text-center" role="alert"></div>
+                        <div id="loginAlert" class="alert alert-danger d-none py-3 fs-6 text-center" role="alert"></div>
                         
-                        <div class="mb-3 text-start">
-                            <label class="form-label small fw-semibold text-secondary">Documento de Identidad</label>
-                            <div class="input-group">
+                        <div class="mb-4 text-start">
+                            <label class="form-label fw-bold text-secondary">Documento de Identidad</label>
+                            <div class="input-group input-group-lg shadow-sm">
                                 <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-person text-secondary"></i></span>
-                                <input type="number" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_documento" required>
+                                <input type="number" class="form-control border-start-0 ps-0 bg-body-tertiary fw-semibold" id="login_documento" required>
                             </div>
                         </div>
                         
                         <div class="mb-4 text-start">
-                            <label class="form-label small fw-semibold text-secondary">Contraseña</label>
-                            <div class="input-group">
+                            <label class="form-label fw-bold text-secondary">Contraseña</label>
+                            <div class="input-group input-group-lg shadow-sm">
                                 <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-lock text-secondary"></i></span>
-                                <input type="password" class="form-control border-start-0 ps-0 bg-body-tertiary" id="login_password" required>
+                                <input type="password" class="form-control border-start-0 ps-0 bg-body-tertiary fw-semibold" id="login_password" required>
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn btn-accent w-100 mb-3" id="btnLogin">Continuar</button>
-                        <a href="#" class="text-decoration-none small" style="color: var(--texto-muted);" data-bs-toggle="modal" data-bs-target="#modalRecuperar">¿Olvidaste tu contraseña?</a>
+                        <button type="submit" class="btn btn-accent w-100 mb-4 shadow" id="btnLogin" style="padding: 14px;">Continuar</button>
+                        <a href="#" class="text-decoration-none" style="color: var(--texto-muted); font-size: 0.95rem;" data-bs-toggle="modal" data-bs-target="#modalRecuperar">¿Olvidaste tu contraseña?</a>
                     </form>
                 </div>
             </div>
@@ -156,25 +162,25 @@
 
     <!-- MODAL DE RECUPERACIÓN DE CONTRASEÑA -->
     <div class="modal fade" id="modalRecuperar" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow" style="background-color: var(--sadafa-card);">
-                <div class="modal-header border-bottom-0 pb-0"><button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-theme="dark"></button></div>
-                <div class="modal-body px-4 pb-4 text-center">
-                    <h5 class="fw-bold mb-3" style="color: var(--sadafa-accent);">Recuperar Acceso</h5>
-                    <p class="small text-secondary mb-4">Se enviará un enlace seguro al correo registrado.</p>
+        <div class="modal-dialog modal-dialog-centered modal-login-custom">
+            <div class="modal-content border-0 shadow-lg" style="background-color: var(--sadafa-card); border-radius: 15px;">
+                <div class="modal-header border-bottom-0 pb-0"><button type="button" class="btn-close fs-5" data-bs-dismiss="modal" data-bs-theme="dark"></button></div>
+                <div class="modal-body px-5 pb-5 text-center">
+                    <h3 class="fw-bold mb-3" style="color: var(--sadafa-accent);">Recuperar Acceso</h3>
+                    <p class="text-secondary mb-4 fs-6">Se enviará un enlace seguro al correo registrado.</p>
                     
                     <form id="recuperarForm">
-                        <div id="recuperarAlert" class="alert alert-success d-none small py-2 text-center" role="alert"></div>
+                        <div id="recuperarAlert" class="alert alert-success d-none py-3 fs-6 text-center" role="alert"></div>
                         
                         <div class="mb-4 text-start">
-                            <label class="form-label small fw-semibold text-secondary">Correo Electrónico</label>
-                            <div class="input-group">
+                            <label class="form-label fw-bold text-secondary">Correo Electrónico</label>
+                            <div class="input-group input-group-lg shadow-sm">
                                 <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
-                                <input type="email" class="form-control border-start-0 ps-0 bg-body-tertiary" id="rec_correo" required>
+                                <input type="email" class="form-control border-start-0 ps-0 bg-body-tertiary fw-semibold" id="rec_correo" required>
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn btn-accent w-100" id="btnRecuperar">Enviar Enlace</button>
+                        <button type="submit" class="btn btn-accent w-100 shadow" id="btnRecuperar" style="padding: 14px;">Enviar Enlace</button>
                     </form>
                 </div>
             </div>
@@ -212,9 +218,7 @@
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
         
-        // Inicializar botón de tema con Iconos
         const switchEl = document.getElementById('modoOscuroSwitch');
-        
         if(switchEl) { 
             switchEl.checked = (tema === 'dark'); 
         }
