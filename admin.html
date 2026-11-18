@@ -224,16 +224,16 @@
                                     <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
-                            <div class="tab-content table-responsive">
+                            <div class="tab-content table-scrollable" style="max-height: 250px; overflow-y: auto;">
                                 <div class="tab-pane fade show active" id="tab-vence-op">
                                     <table class="table table-hover align-middle mb-0 small">
-                                        <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
+                                        <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
                                         <tbody id="tbodyDashVencimientos"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="tab-vence-cli">
                                     <table class="table table-hover align-middle mb-0 small">
-                                        <thead class="table-light"><tr><th class="ps-3">Cliente / Servicio</th><th class="text-end pe-3">Días</th></tr></thead>
+                                        <thead class="table-light sticky-top"><tr><th class="ps-3">Cliente / Servicio</th><th class="text-end pe-3">Días</th></tr></thead>
                                         <tbody id="tbodyDashVencimientosCli"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
                                     </table>
                                 </div>
@@ -245,9 +245,9 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
                             </div>
-                            <div class="table-responsive">
+                            <div class="table-scrollable" style="max-height: 250px; overflow-y: auto;">
                                 <table class="table table-hover align-middle mb-0 small">
-                                    <thead class="table-light"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
+                                    <thead class="table-light sticky-top"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
                                     <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Seguro.</td></tr></tbody>
                                 </table>
                             </div>
@@ -258,9 +258,9 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Legal Dotación</h6>
                             </div>
-                            <div class="table-responsive">
+                            <div class="table-scrollable" style="max-height: 250px; overflow-y: auto;">
                                 <table class="table table-hover align-middle mb-0 small">
-                                    <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
+                                    <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
                                     <tbody id="tbodyDashLegal"><tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr></tbody>
                                 </table>
                             </div>
@@ -489,7 +489,7 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+<!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1362,9 +1362,9 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // AHORA USAMOS sessionStorage
-        const rolUsuarioActivo = sessionStorage.getItem('sadafa_rol');
-        const nombreUsuarioActivo = sessionStorage.getItem('sadafa_nombre');
+        // USO DE localStorage (Fix Bucle)
+        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
+        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
         // ==========================================
         // 🛡️ QA: SANITIZACIÓN XSS Y UTILIDADES
@@ -1427,7 +1427,7 @@
         document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => {
             e.preventDefault(); 
             await signOut(auth); 
-            sessionStorage.clear(); // Limpiamos la memoria segura al hacer logout
+            localStorage.clear(); // Limpiamos la memoria segura al hacer logout
             window.location.href = 'index.html';
         });
 
@@ -2090,7 +2090,7 @@
         async function cerrarSesionPorInactividad() {
             window.isKickedOut = true;
             await signOut(auth);
-            sessionStorage.clear();
+            localStorage.clear();
             
             // Ocultamos cualquier otro modal (ventana) que el usuario tuviera abierto
             document.querySelectorAll('.modal.show').forEach(m => {
@@ -2104,8 +2104,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => { 
-            const token = sessionStorage.getItem('sadafa_token');
-            const rol = sessionStorage.getItem('sadafa_rol');
+            const token = localStorage.getItem('sadafa_token');
+            const rol = localStorage.getItem('sadafa_rol');
             
             if (!token || !rol) { window.location.href = 'index.html'; return; }
             
@@ -2144,4 +2144,4 @@
         });
     </script>
 </body>
-</html>   
+</html>    
