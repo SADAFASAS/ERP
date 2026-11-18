@@ -489,7 +489,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+  <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1323,7 +1323,7 @@
                     <i class="bi bi-shield-lock-fill" style="font-size: 3.5rem; color: var(--sadafa-accent);"></i>
                 </div>
                 <h5 class="fw-bold text-body mb-2">Sesión Expirada</h5>
-                <p class="small text-muted mb-4">Por tu seguridad, la sesión se ha cerrado por inactividad.</p>
+                <p class="small text-muted mb-4">Por tu seguridad, la sesión se ha cerrado tras 3 minutos de inactividad.</p>
                 <button type="button" class="btn text-white w-100 fw-bold shadow-sm" style="background-color: var(--sadafa-accent);" onclick="window.location.href='index.html'">Volver a Ingresar</button>
             </div>
         </div>
@@ -1362,7 +1362,7 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // USO DE localStorage (Fix Bucle)
+        // AHORA USAMOS localStorage
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
         const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
@@ -1427,7 +1427,7 @@
         document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => {
             e.preventDefault(); 
             await signOut(auth); 
-            localStorage.clear(); // Limpiamos la memoria segura al hacer logout
+            localStorage.clear(); 
             window.location.href = 'index.html';
         });
 
@@ -1504,7 +1504,7 @@
         };
 
         window.cargarDashboardResumen = async function() {
-            await window.cargarClientesCache(); // REGLA DE ORO 2: CARGAR CLIENTES PRIMERO (Soluciona 'Desconocido')
+            await window.cargarClientesCache(); 
             await window.cargarOperariosCache(); 
             await window.cargarDotacionCache();
             const hoy = new Date(); const mesActual = hoy.getMonth() + 1; const mesStr = mesActual < 10 ? '0'+mesActual : ''+mesActual;
@@ -1558,6 +1558,7 @@
             // --- LÓGICA DE GRÁFICAS CHART.JS ---
             const temaAct = document.documentElement.getAttribute('data-bs-theme');
             const colorTexto = temaAct === 'dark' ? '#cbd5e1' : '#6c757d';
+            const colorGrilla = temaAct === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
             const opsActivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo').length;
             const opsInactivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Inactivo').length;
@@ -1570,14 +1571,15 @@
                     labels: ['Activos', 'Retirados'],
                     datasets: [{
                         data: [opsActivos, opsInactivos],
-                        backgroundColor: ['#0b3c36', '#e63946'],
+                        backgroundColor: ['#10b981', '#f43f5e'], // Colores Vibrantes: Esmeralda y Carmesí
                         borderWidth: 0,
-                        hoverOffset: 4
+                        hoverOffset: 6
                     }]
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: colorTexto } } }
+                    plugins: { legend: { labels: { color: colorTexto, font: {weight: 'bold'} } } },
+                    cutout: '65%'
                 }
             });
 
@@ -1596,15 +1598,15 @@
                     datasets: [{
                         label: 'Contratos Activos',
                         data: Object.values(conteoServicios),
-                        backgroundColor: '#ea580c',
-                        borderRadius: 4
+                        backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4'], // Colores vibrantes múltiples
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     scales: {
-                        y: { ticks: { color: colorTexto, stepSize: 1 }, grid: { color: 'rgba(200,200,200,0.1)' } },
-                        x: { ticks: { color: colorTexto }, grid: { display: false } }
+                        y: { ticks: { color: colorTexto, stepSize: 1, font: {weight: 'bold'} }, grid: { color: colorGrilla } },
+                        x: { ticks: { color: colorTexto, font: {weight: 'bold'} }, grid: { display: false } }
                     },
                     plugins: { legend: { display: false } }
                 }
@@ -2144,4 +2146,4 @@
         });
     </script>
 </body>
-</html>    
+</html>  
