@@ -206,13 +206,14 @@
             labelModo.innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
         });
 
-        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA (REDIRECCIONA AL PANEL index.html)
-        if (sessionStorage.getItem('sadafa_token') && sessionStorage.getItem('sadafa_rol')) {
-            window.location.href = 'index.html';
+        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA 
+        // Va a admin.html (El panel de control)
+        if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
+            window.location.href = 'admin.html';
         }
 
         // ==========================================
-        // LOGIN SEGURO CON FIREBASE
+        // LOGIN SEGURO CON FIREBASE (POR DOCUMENTO)
         // ==========================================
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -226,7 +227,7 @@
             alertBox.classList.add('d-none');
 
             try {
-                // SESIÓN QUE MUERE AL CERRAR NAVEGADOR
+                // FORZAMOS A QUE LA SESIÓN DE FIREBASE MUERA AL CERRAR LA PESTAÑA
                 await setPersistence(auth, browserSessionPersistence);
 
                 const q = query(collection(db, "usuarios"), where("documento", "==", documento));
@@ -246,13 +247,13 @@
                 const userCredential = await signInWithEmailAndPassword(auth, userData.correo, password);
                 const user = userCredential.user;
 
-                // GUARDADO EN SESSION STORAGE
-                sessionStorage.setItem('sadafa_token', user.accessToken);
-                sessionStorage.setItem('sadafa_rol', userData.rol);
-                sessionStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
+                // GUARDAMOS DATOS TEMPORALES PARA EL PANEL
+                localStorage.setItem('sadafa_token', user.accessToken);
+                localStorage.setItem('sadafa_rol', userData.rol);
+                localStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
                 
-                // REDIRIGE AL NUEVO PANEL PRINCIPAL
-                window.location.href = 'index.html';
+                // Redirige al panel de control (¡La ruta correcta!)
+                window.location.href = 'admin.html';
 
             } catch (error) {
                 let mensajeError = "Documento o contraseña incorrectos.";
