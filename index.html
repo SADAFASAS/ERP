@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SADAFA</title>
+    <title>SADAFA - Iniciar Sesión</title>
     <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
@@ -32,6 +32,18 @@
         .top-navbar { padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
         .navbar-brand-custom { font-weight: 700; font-size: 1.1rem; color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; gap: 10px; }
         .navbar-brand-custom img { width: 25px; border-radius: 4px; }
+        
+        /* === NUEVO DISEÑO DEL BOTÓN TEMA (DÍA/NOCHE) === */
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
+        [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
+        .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input:focus { box-shadow: none !important; }
+        .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
+
         .hero-section { text-align: center; padding: 60px 20px; }
         .hero-title { font-size: 3.5rem; font-weight: 300; margin-bottom: 5px; letter-spacing: 2px; }
         .hero-subtitle { font-size: 1.5rem; font-weight: 400; margin-bottom: 15px; }
@@ -61,9 +73,14 @@
 
     <header class="top-navbar">
         <a href="#" class="navbar-brand-custom"></a>
-        <div class="form-check form-switch m-0 d-flex align-items-center">
-            <input class="form-check-input me-2" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer;">
-            <label class="form-check-label small fw-semibold" for="modoOscuroSwitch" id="labelModo" style="cursor: pointer;">Modo Día</label>
+        
+        <!-- NUEVO BOTÓN DINÁMICO DÍA/OSCURO -->
+        <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
+            <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+            <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
+                <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
+            </div>
+            <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
         </div>
     </header>
 
@@ -165,7 +182,6 @@
     <!-- LÓGICA MODULAR DE FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // Vuelve a browserLocalPersistence para evitar el bucle local
         import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -191,22 +207,22 @@
         // ==========================================
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
+        
+        // Inicializar botón de tema con Iconos
         const switchEl = document.getElementById('modoOscuroSwitch');
-        const labelModo = document.getElementById('labelModo');
+        
         if(switchEl) { 
-            switchEl.checked = (tema === 'light'); 
-            labelModo.innerText = (tema === 'light') ? 'Modo Oscuro' : 'Modo Día'; 
+            switchEl.checked = (tema === 'dark'); 
         }
 
         switchEl.addEventListener('change', () => {
-            const temaActual = document.documentElement.getAttribute('data-bs-theme');
-            const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+            const nuevoTema = switchEl.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-bs-theme', nuevoTema);
             localStorage.setItem('sadafa_theme', nuevoTema);
-            labelModo.innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
         });
 
-        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA (RESTABLECIDA A localStorage)
+        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA 
+        // Va a admin.html (El panel de control)
         if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
             window.location.href = 'admin.html';
         }
