@@ -207,7 +207,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card card-custom p-3 shadow-sm h-100">
-                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos</h6>
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos B2B</h6>
                             <div style="position: relative; height:250px; width:100%;">
                                 <canvas id="chartClientes"></canvas>
                             </div>
@@ -224,7 +224,7 @@
                                     <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
-                            <div class="tab-content table-scrollable" style="max-height: 250px;">
+                            <div class="tab-content table-responsive">
                                 <div class="tab-pane fade show active" id="tab-vence-op">
                                     <table class="table table-hover align-middle mb-0 small">
                                         <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
@@ -245,7 +245,7 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
                             </div>
-                            <div class="table-scrollable" style="max-height: 250px;">
+                            <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0 small">
                                     <thead class="table-light"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
                                     <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Seguro.</td></tr></tbody>
@@ -258,7 +258,7 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Legal Dotación</h6>
                             </div>
-                            <div class="table-scrollable" style="max-height: 250px;">
+                            <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0 small">
                                     <thead class="table-light"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
                                     <tbody id="tbodyDashLegal"><tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr></tbody>
@@ -384,7 +384,7 @@
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
                         <h4 class="fw-bold mb-1 text-body"><i class="bi bi-shield-lock me-2 text-success"></i> Control de Usuarios</h4>
-                        <p class="text-muted small mb-0">Gestión de usuarios.</p>
+                        <p class="text-muted small mb-0">Gestión de credenciales para Administradores y Supervisores.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
