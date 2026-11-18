@@ -60,7 +60,8 @@
 <body>
 
     <header class="top-navbar">
-        <a href="#" class="navbar-brand-custom"></a>
+        <a href="#" class="navbar-brand-custom">
+            </a>
         <div class="form-check form-switch m-0 d-flex align-items-center">
             <input class="form-check-input me-2" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer;">
             <label class="form-check-label small fw-semibold" for="modoOscuroSwitch" id="labelModo" style="cursor: pointer;">Modo Día</label>
@@ -165,8 +166,7 @@
     <!-- LÓGICA MODULAR DE FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // Vuelve a browserLocalPersistence para evitar el bucle local
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ==========================================
@@ -189,7 +189,7 @@
         // ==========================================
         // UX Y TEMAS
         // ==========================================
-        const tema = localStorage.getItem('sadafa_theme') || 'dark';
+        const tema = localStorage.getItem('sadafa_theme') || 'dark'; // El tema visual sí se puede guardar en localStorage
         document.documentElement.setAttribute('data-bs-theme', tema);
         const switchEl = document.getElementById('modoOscuroSwitch');
         const labelModo = document.getElementById('labelModo');
@@ -206,8 +206,8 @@
             labelModo.innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
         });
 
-        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA (RESTABLECIDA A localStorage)
-        if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
+        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA (AHORA CON sessionStorage)
+        if (sessionStorage.getItem('sadafa_token') && sessionStorage.getItem('sadafa_rol')) {
             window.location.href = 'admin.html';
         }
 
@@ -226,8 +226,8 @@
             alertBox.classList.add('d-none');
 
             try {
-                // PERSISTENCIA LOCAL (Evita el bucle en entornos locales/archivo)
-                await setPersistence(auth, browserLocalPersistence);
+                // 1. FORZAMOS A QUE LA SESIÓN MUERA AL CERRAR LA PESTAÑA
+                await setPersistence(auth, browserSessionPersistence);
 
                 const q = query(collection(db, "usuarios"), where("documento", "==", documento));
                 const querySnapshot = await getDocs(q);
@@ -246,10 +246,10 @@
                 const userCredential = await signInWithEmailAndPassword(auth, userData.correo, password);
                 const user = userCredential.user;
 
-                // GUARDADO EN LOCALSTORAGE PARA EVITAR BUCLE
-                localStorage.setItem('sadafa_token', user.accessToken);
-                localStorage.setItem('sadafa_rol', userData.rol);
-                localStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
+                // 2. GUARDAMOS DATOS SOLO MIENTRAS EL NAVEGADOR ESTÉ ABIERTO
+                sessionStorage.setItem('sadafa_token', user.accessToken);
+                sessionStorage.setItem('sadafa_rol', userData.rol);
+                sessionStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
                 
                 window.location.href = 'admin.html';
 
