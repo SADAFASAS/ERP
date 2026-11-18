@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SADAFA - Iniciar Sesión</title>
+    <title>SADAFA</title>
     <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
@@ -189,7 +189,7 @@
         // ==========================================
         // UX Y TEMAS
         // ==========================================
-        const tema = localStorage.getItem('sadafa_theme') || 'dark';
+        const tema = localStorage.getItem('sadafa_theme') || 'dark'; // El tema visual sí se puede guardar en localStorage
         document.documentElement.setAttribute('data-bs-theme', tema);
         const switchEl = document.getElementById('modoOscuroSwitch');
         const labelModo = document.getElementById('labelModo');
@@ -206,9 +206,8 @@
             labelModo.innerText = (nuevoTema === 'light') ? 'Modo Oscuro' : 'Modo Día';
         });
 
-        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA 
-        // Va a admin.html (El panel de control)
-        if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
+        // VALIDACIÓN SEGURA DE SESIÓN ACTIVA (AHORA CON sessionStorage)
+        if (sessionStorage.getItem('sadafa_token') && sessionStorage.getItem('sadafa_rol')) {
             window.location.href = 'admin.html';
         }
 
@@ -227,7 +226,7 @@
             alertBox.classList.add('d-none');
 
             try {
-                // FORZAMOS A QUE LA SESIÓN DE FIREBASE MUERA AL CERRAR LA PESTAÑA
+                // 1. FORZAMOS A QUE LA SESIÓN MUERA AL CERRAR LA PESTAÑA
                 await setPersistence(auth, browserSessionPersistence);
 
                 const q = query(collection(db, "usuarios"), where("documento", "==", documento));
@@ -247,12 +246,11 @@
                 const userCredential = await signInWithEmailAndPassword(auth, userData.correo, password);
                 const user = userCredential.user;
 
-                // GUARDAMOS DATOS TEMPORALES PARA EL PANEL
-                localStorage.setItem('sadafa_token', user.accessToken);
-                localStorage.setItem('sadafa_rol', userData.rol);
-                localStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
+                // 2. GUARDAMOS DATOS SOLO MIENTRAS EL NAVEGADOR ESTÉ ABIERTO
+                sessionStorage.setItem('sadafa_token', user.accessToken);
+                sessionStorage.setItem('sadafa_rol', userData.rol);
+                sessionStorage.setItem('sadafa_nombre', userData.nombre_completo || 'Usuario');
                 
-                // Redirige al panel de control (¡La ruta correcta!)
                 window.location.href = 'admin.html';
 
             } catch (error) {
