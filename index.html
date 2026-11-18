@@ -34,7 +34,7 @@
         .navbar-brand-custom img { width: 25px; border-radius: 4px; }
         
         /* === NUEVO DISEÑO DEL BOTÓN TEMA (DÍA/NOCHE) === */
-        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
         .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
@@ -67,6 +67,10 @@
         .footer { text-align: center; padding: 20px; background-color: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--texto-muted); line-height: 1.6; }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        
+        @media (max-width: 768px) {
+            .top-navbar { padding: 15px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -222,7 +226,6 @@
         });
 
         // VALIDACIÓN SEGURA DE SESIÓN ACTIVA 
-        // Va a admin.html (El panel de control)
         if (localStorage.getItem('sadafa_token') && localStorage.getItem('sadafa_rol')) {
             window.location.href = 'admin.html';
         }
