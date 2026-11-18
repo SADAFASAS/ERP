@@ -46,10 +46,20 @@
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
         
-        /* Ajuste de Botón Modo Día/Oscuro en versión colapsada */
-        .sidebar.collapsed .theme-toggle-container span { display: none !important; }
-        .sidebar.collapsed .theme-toggle-container .form-check-input { margin-left: 0 !important; }
-        .theme-toggle-container { padding: 10px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); }
+        /* === NUEVO DISEÑO DEL BOTÓN TEMA (DÍA/NOCHE) === */
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
+        [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
+        .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input:focus { box-shadow: none !important; }
+        .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
+        
+        /* Ajuste cuando el menú está colapsado */
+        .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; }
+        .sidebar.collapsed .theme-icon-sun, .sidebar.collapsed .theme-icon-moon { display: none !important; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
@@ -132,16 +142,17 @@
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
-                    <!-- NUEVO BOTÓN DINÁMICO DÍA/OSCURO -->
-                    <li class="nav-item px-3 mt-4 mb-2">
-                        <div class="d-flex align-items-center justify-content-center theme-toggle-container">
-                            <span id="txtModoDia" class="small fw-bold me-2 text-primary" style="display:none; cursor: pointer;" onclick="document.getElementById('modoOscuroSwitch').click()">Modo Día</span>
-                            <div class="form-check form-switch m-0 d-flex align-items-center justify-content-center" style="min-height: 24px;">
-                                <input class="form-check-input m-0" type="checkbox" id="modoOscuroSwitch" style="cursor: pointer; width: 40px; height: 20px;">
+                    <!-- NUEVO BOTÓN DINÁMICO DÍA/OSCURO CON ICONOS -->
+                    <li class="nav-item mt-4 mb-2 d-flex justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
+                            <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                            <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
+                                <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
                             </div>
-                            <span id="txtModoOscuro" class="small fw-bold ms-2 text-primary" style="display:none; cursor: pointer;" onclick="document.getElementById('modoOscuroSwitch').click()">Modo Oscuro</span>
+                            <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                         </div>
                     </li>
+
                     <li class="nav-item mt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
                 </ul>
             </div>
@@ -274,8 +285,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 1. PERSONAL OPERATIVO Y CONTRATOS -->
+        <!-- 1. PERSONAL OPERATIVO Y CONTRATOS -->
             <div id="sec-empleado" class="seccion-contenido" style="display: none;">
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-4">
@@ -495,7 +505,8 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+
+    <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1371,7 +1382,7 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // AHORA USAMOS localStorage
+        // USO DE localStorage (Fix Bucle)
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
         const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
@@ -1443,25 +1454,17 @@
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
         
-        // Inicializar botón de tema
+        // Inicializar botón de tema con Iconos
         const switchEl = document.getElementById('modoOscuroSwitch');
-        const lblDia = document.getElementById('txtModoDia');
-        const lblOscuro = document.getElementById('txtModoOscuro');
         
         if(switchEl) { 
-            switchEl.checked = (tema === 'light'); 
-            if(tema === 'light') { lblOscuro.style.display = 'inline-block'; lblDia.style.display = 'none'; }
-            else { lblDia.style.display = 'inline-block'; lblOscuro.style.display = 'none'; }
+            switchEl.checked = (tema === 'dark'); 
         }
 
         switchEl.addEventListener('change', () => {
-            const temaActual = document.documentElement.getAttribute('data-bs-theme');
-            const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+            const nuevoTema = switchEl.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-bs-theme', nuevoTema);
             localStorage.setItem('sadafa_theme', nuevoTema);
-            
-            if(nuevoTema === 'light') { lblOscuro.style.display = 'inline-block'; lblDia.style.display = 'none'; }
-            else { lblDia.style.display = 'inline-block'; lblOscuro.style.display = 'none'; }
         });
 
         document.addEventListener('input', function (e) {
@@ -2125,9 +2128,9 @@
         // ==========================================
         // INICIO SEGURO Y CIERRE POR INACTIVIDAD (3 MIN)
         // ==========================================
-        window.isKickedOut = false; 
+        window.isKickedOut = false; // Bandera para evitar el redireccionamiento instantáneo
         let temporizadorInactividad;
-        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; 
+        const TIEMPO_LIMITE_INACTIVIDAD = 3 * 60 * 1000; // 3 minutos exactos (180,000 ms)
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
@@ -2139,11 +2142,13 @@
             await signOut(auth);
             localStorage.clear();
             
+            // Ocultamos cualquier otro modal (ventana) que el usuario tuviera abierto
             document.querySelectorAll('.modal.show').forEach(m => {
                 const modalInstance = bootstrap.Modal.getInstance(m);
                 if (modalInstance) modalInstance.hide();
             });
 
+            // Mostramos nuestro nuevo modal corporativo de inactividad
             const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad'));
             modalInact.show();
         }
@@ -2157,6 +2162,7 @@
             document.getElementById('rolUsuarioActivo').innerText = rol;
             document.body.setAttribute('data-rol', rol);
 
+            // Se reinicia el temporizador de inactividad con cualquier movimiento del mouse o teclado
             window.onload = reiniciarTemporizador;
             document.onmousemove = reiniciarTemporizador;
             document.onkeypress = reiniciarTemporizador;
@@ -2165,18 +2171,21 @@
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    await window.cargarDashboardResumen(); 
+                    await window.cargarDashboardResumen(); // Dispara cumpleaños (segundo 1)
                     window.cargarOperarioTabla(); 
                     
+                    // Disparamos la alerta de personal sin que choque (segundo 7)
                     setTimeout(() => {
                         window.verificarMostrarAlertaVencimientos();
                     }, 7000);
 
+                    // Disparamos la alerta de clientes sin que choque (segundo 13)
                     setTimeout(() => {
                         window.verificarMostrarAlertaClientes();
                     }, 13000);
 
                 } else {
+                    // Solo redirige si NO fue expulsado por inactividad
                     if (!window.isKickedOut) {
                         window.location.href = 'index.html';
                     }
@@ -2185,4 +2194,4 @@
         });
     </script>
 </body>
-</html>   
+</html>    
