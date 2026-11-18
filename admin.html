@@ -1504,7 +1504,9 @@
         };
 
         window.cargarDashboardResumen = async function() {
-            await window.cargarOperariosCache(); await window.cargarDotacionCache();
+            await window.cargarClientesCache(); // REGLA DE ORO 2: CARGAR CLIENTES PRIMERO (Soluciona 'Desconocido')
+            await window.cargarOperariosCache(); 
+            await window.cargarDotacionCache();
             const hoy = new Date(); const mesActual = hoy.getMonth() + 1; const mesStr = mesActual < 10 ? '0'+mesActual : ''+mesActual;
             
             // 1. Alertas Operarios (30 dias)
@@ -1534,7 +1536,7 @@
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
-            // 4. Cumpleañeros del Mes (MUESTRA ALERTA INMEDIATAMENTE)
+            // 4. Cumpleañeros del Mes (MUESTRA ALERTA INMEDIATAMENTE - SEGUNDO 1)
             let txtCumples = "";
             const cumpleañeros = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.cumpleanos && o.cumpleanos.split('/')[1] === mesStr);
             if (cumpleañeros.length > 0) {
@@ -2076,6 +2078,7 @@
         // ==========================================
         // INICIO SEGURO Y CIERRE POR INACTIVIDAD (1 MIN)
         // ==========================================
+        window.isKickedOut = false; // Bandera para evitar el redireccionamiento instantáneo
         let temporizadorInactividad;
         const TIEMPO_LIMITE_INACTIVIDAD = 1 * 60 * 1000; // 1 minuto exacto (60.000 ms)
 
@@ -2085,6 +2088,7 @@
         }
 
         async function cerrarSesionPorInactividad() {
+            window.isKickedOut = true;
             await signOut(auth);
             sessionStorage.clear();
             
@@ -2118,10 +2122,6 @@
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     await window.cargarDashboardResumen(); // Dispara cumpleaños (segundo 1)
-                    await window.cargarOperariosCache();
-                    await window.cargarClientesCache();
-                    await window.cargarDotacionCache();
-                    await window.cargarUsuariosCache();
                     window.cargarOperarioTabla(); 
                     
                     // Disparamos la alerta de personal sin que choque (segundo 7)
@@ -2135,7 +2135,10 @@
                     }, 13000);
 
                 } else {
-                    window.location.href = 'index.html';
+                    // Solo redirige si NO fue expulsado por inactividad
+                    if (!window.isKickedOut) {
+                        window.location.href = 'index.html';
+                    }
                 }
             });
         });
