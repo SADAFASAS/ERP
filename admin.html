@@ -522,7 +522,7 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+<!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -918,7 +918,10 @@
         <div class="modal-dialog">
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
-                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-person-lines-fill me-2"></i> Entregar Dotación a Operario</h5>
+                    <h5 class="modal-title fw-bold text-success">
+                        <svg viewBox="0 0 512 512" width="20" height="20" fill="currentColor" class="me-2" style="vertical-align: text-bottom;"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg> 
+                        Entregar Dotación a Operario
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -957,7 +960,13 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
-                    <h5 class="modal-title fw-bold text-primary"><i class="bi bi-clock-history me-2"></i> Historial de Dotación Entregada</h5>
+                    <h5 class="modal-title fw-bold text-primary">
+                        <span class="position-relative d-inline-block me-2">
+                            <svg viewBox="0 0 512 512" width="20" height="20" fill="currentColor"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg>
+                            <i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.8rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i>
+                        </span>
+                        Historial de Dotación Entregada
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1393,22 +1402,25 @@
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
-        // ACTIVAR MODO OFFLINE (Punto 4)
+        // ACTIVAR MODO OFFLINE
         enableIndexedDbPersistence(db).catch((err) => {
             if (err.code == 'failed-precondition') { console.log("Múltiples pestañas abiertas, persistencia offline fallida"); }
             else if (err.code == 'unimplemented') { console.log("El navegador no soporta persistencia offline"); }
         });
 
-        // Variables Globales (Protegidas)
+        // Variables Globales
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // USO DE localStorage
+        // ICONOS SVG (Camisa y Camisa con reloj)
+        const svgCamisa = `<svg viewBox="0 0 512 512" width="15" height="15" fill="currentColor" style="vertical-align: middle;"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg>`;
+        const svgHistorial = `<span class="position-relative d-inline-block">${svgCamisa}<i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.65rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i></span>`;
+
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
         const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
         // ==========================================
-        // 🛡️ QA: SANITIZACIÓN, ANTI-DUPLICADOS Y UTILIDADES
+        // 🛡️ QA: SANITIZACIÓN Y UTILIDADES
         // ==========================================
         window.sanitizar = function(str) {
             if (str === null || str === undefined) return '';
@@ -1417,7 +1429,6 @@
         const eStr = (s) => window.sanitizar(String(s||'').replace(/'/g, "\\'"));
         window.eStr = eStr;
 
-        // Anti-Duplicados (Punto 3)
         window.bloquearBoton = function(btn) {
             if(!btn) return null;
             const originalText = btn.innerHTML;
@@ -1737,7 +1748,6 @@
             await window.cargarClientesCache();
             const activos = window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo'); const inactivos = window.cacheClientesPDF.filter(c => c.estado_cliente === 'Inactivo');
             
-            // SE AÑADIÓ: title="Texto" a los botones y se cambiaron los íconos (bi-file-earmark-text, bi-trash3)
             document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-warning btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalServiciosCliente" onclick="abrirServiciosCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Gestionar Contratos Comerciales"><i class="bi bi-file-earmark-text"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')" title="Editar Cliente"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Archivar Cliente (Historial)"><i class="bi bi-trash3"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
             document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.ciudad)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="text-muted">${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Reactivar Cliente"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
@@ -1764,7 +1774,6 @@
         window.desactivarCliente = async function(id, nombre) { if (confirm(`¿Enviar a ${nombre} al historial de inactivos?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Inactivo' }); window.cargarClientesTabla(); } };
         window.reactivarCliente = async function(id, nombre) { if (confirm(`¿Reactivar a ${nombre}?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Activo' }); window.cargarClientesTabla(); } };
 
-        // SERVICIOS B2B
         window.toggleOtroServicio = function() {
             const select = document.getElementById('srv_tipo');
             const inputOtro = document.getElementById('srv_tipo_otro');
@@ -1822,8 +1831,7 @@
             
             const activos = window.cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo'); const inactivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Inactivo');
             
-            // SE AÑADIÓ: title="Texto" a los botones y se cambiaron los íconos (bi-person-lines-fill, bi-clock-history, bi-trash3)
-            document.getElementById('tablaContratosBody').innerHTML = activos.length ? activos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="abrirEdicionOperarioId('${op.id}')" title="Editar Ficha"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-success btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEntregarDotacion" onclick="abrirModalEntregarDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Entregar Dotación"><i class="bi bi-person-lines-fill"></i></button><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalHistorialDotacion" onclick="abrirHistorialDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Ver Historial de Dotación"><i class="bi bi-clock-history"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Archivar Empleado (Historial)"><i class="bi bi-trash3"></i></button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap"><strong>${window.sanitizar(op.cliente_nombre)}</strong></td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap"><span class="badge bg-info-subtle text-info border">${window.sanitizar(op.especialidad)}</span></td><td class="text-nowrap">${op.fecha_inicio || ''}</td><td class="text-nowrap">${op.fecha_fin || ''}</td><td class="text-nowrap">${op.sueldo ? '$' + new Intl.NumberFormat('es-CO').format(op.sueldo) : ''}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td><td class="pe-4 text-nowrap">${window.sanitizar(op.correo_electronico)}</td></tr>`).join('') : `<tr><td colspan="12" class="text-center text-muted py-3">No hay contratos registrados.</td></tr>`;
+            document.getElementById('tablaContratosBody').innerHTML = activos.length ? activos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="abrirEdicionOperarioId('${op.id}')" title="Editar Ficha"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-success btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEntregarDotacion" onclick="abrirModalEntregarDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Entregar Dotación">${svgCamisa}</button><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalHistorialDotacion" onclick="abrirHistorialDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Ver Historial de Dotación">${svgHistorial}</button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Archivar Empleado (Historial)"><i class="bi bi-trash3"></i></button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap"><strong>${window.sanitizar(op.cliente_nombre)}</strong></td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap"><span class="badge bg-info-subtle text-info border">${window.sanitizar(op.especialidad)}</span></td><td class="text-nowrap">${op.fecha_inicio || ''}</td><td class="text-nowrap">${op.fecha_fin || ''}</td><td class="text-nowrap">${op.sueldo ? '$' + new Intl.NumberFormat('es-CO').format(op.sueldo) : ''}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td><td class="pe-4 text-nowrap">${window.sanitizar(op.correo_electronico)}</td></tr>`).join('') : `<tr><td colspan="12" class="text-center text-muted py-3">No hay contratos registrados.</td></tr>`;
             document.getElementById('tablaOperariosInactivosBody').innerHTML = inactivos.length ? inactivos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Reactivar Operario"><i class="bi bi-arrow-counterclockwise"></i> Reactivar</button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap">${window.sanitizar(op.cliente_nombre)}</td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap">${window.sanitizar(op.especialidad)}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td></tr>`).join('') : `<tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
@@ -2291,4 +2299,4 @@
         });
     </script>
 </body>
-</html>   
+</html>
