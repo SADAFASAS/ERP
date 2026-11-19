@@ -63,7 +63,6 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
-        /* Ajuste cuando el menú está colapsado */
         .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; }
         .sidebar.collapsed .theme-icon-sun, .sidebar.collapsed .theme-icon-moon { display: none !important; }
         
@@ -98,7 +97,6 @@
         
         .text-muted { color: var(--texto-muted) !important; }
         
-        /* UNIFICACIÓN ESTILOS PESTAÑAS (TABS) */
         .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; border: 1px solid transparent; }
         .nav-pills .nav-link.active { background-color: var(--sadafa-accent) !important; color: #ffffff !important; border: 1px solid var(--sadafa-accent); }
 
@@ -110,20 +108,17 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* ESTILOS ACORDEÓN DE CLIENTES (SIN BORDES MOLESTOS) */
+        /* ESTILOS ACORDEÓN DE CLIENTES */
         .cliente-acordeon-header { cursor: pointer; transition: background-color 0.2s; }
         .cliente-acordeon-header:hover { background-color: var(--hover-casilla); }
         
-        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
             .sidebar.collapsed { left: 0 !important; }
             .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
-            
             .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
-            
             .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; }
             .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
@@ -162,7 +157,6 @@
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
-                    <!-- BOTÓN DINÁMICO DÍA/OSCURO CON ICONOS -->
                     <li class="nav-item mt-4 mb-2 d-flex justify-content-center">
                         <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
                             <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
@@ -238,7 +232,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="card card-custom p-3 shadow-sm h-100">
-                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Estado del Personal</h6>
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Estado del Personal Operativo</h6>
                             <div style="position: relative; height:250px; width:100%; display:flex; justify-content:center;">
                                 <canvas id="chartOperarios"></canvas>
                             </div>
@@ -246,7 +240,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card card-custom p-3 shadow-sm h-100">
-                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos</h6>
+                            <h6 class="fw-bold mb-3 text-body"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Distribución de Contratos B2B</h6>
                             <div style="position: relative; height:250px; width:100%;">
                                 <canvas id="chartClientes"></canvas>
                             </div>
@@ -254,7 +248,6 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE INFERIOR (LISTAS AGRUPADAS) -->
                 <div class="row g-2 mb-3 align-items-start">
                     <div class="col-md-6">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden">
@@ -295,7 +288,7 @@
                     <div class="col-md-3">
                         <div class="card card-custom shadow-sm p-0 overflow-hidden">
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold mb-0 small erp-color-morado"><i class="bi bi-exclamation-octagon me-1"></i> Operarios sin Dotación</h6>
+                                <h6 class="fw-bold mb-0 small erp-color-morado"><i class="bi bi-exclamation-octagon me-1"></i> Operarios sin dotación</h6>
                             </div>
                             <div class="table-scrollable-dash">
                                 <table class="table table-hover align-middle mb-0 small">
@@ -461,7 +454,7 @@
             <div id="sec-auditoria" class="seccion-contenido" style="display: none;">
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-6">
-                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-clipboard-check me-2 text-success"></i> Auditorías</h4>
+                        <h4 class="fw-bold mb-1 text-body"><i class="bi bi-clipboard-check me-2 text-success"></i> Auditorías de Calidad</h4>
                         <p class="text-muted small mb-0">Inspecciones en puestos.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
@@ -528,7 +521,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1364,8 +1357,8 @@
                 <div class="mb-3">
                     <i class="bi bi-shield-lock-fill" style="font-size: 3.5rem; color: var(--sadafa-accent);"></i>
                 </div>
-                <h5 class="fw-bold text-body mb-2">Sesión Caducada</h5>
-                <p class="small text-muted mb-4">Por tu seguridad, la sesión se ha cerrado por inactividad.</p>
+                <h5 class="fw-bold text-body mb-2">Sesión Expirada</h5>
+                <p class="small text-muted mb-4">Por tu seguridad, la sesión se ha cerrado tras 3 minutos de inactividad.</p>
                 <button type="button" class="btn text-white w-100 fw-bold shadow-sm" style="background-color: var(--sadafa-accent);" onclick="window.location.href='index.html'">Volver a Ingresar</button>
             </div>
         </div>
@@ -1377,7 +1370,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         // ==========================================
@@ -1400,12 +1393,22 @@
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
+        // ACTIVAR MODO OFFLINE (Punto 4)
+        enableIndexedDbPersistence(db).catch((err) => {
+            if (err.code == 'failed-precondition') { console.log("Múltiples pestañas abiertas, persistencia offline fallida"); }
+            else if (err.code == 'unimplemented') { console.log("El navegador no soporta persistencia offline"); }
+        });
+
         // Variables Globales (Protegidas)
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
+        // USO DE localStorage
+        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
+        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
+
         // ==========================================
-        // 🛡️ QA: SANITIZACIÓN XSS Y UTILIDADES
+        // 🛡️ QA: SANITIZACIÓN, ANTI-DUPLICADOS Y UTILIDADES
         // ==========================================
         window.sanitizar = function(str) {
             if (str === null || str === undefined) return '';
@@ -1413,6 +1416,20 @@
         };
         const eStr = (s) => window.sanitizar(String(s||'').replace(/'/g, "\\'"));
         window.eStr = eStr;
+
+        // Anti-Duplicados (Punto 3)
+        window.bloquearBoton = function(btn) {
+            if(!btn) return null;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+            return originalText;
+        };
+        window.desbloquearBoton = function(btn, originalText) {
+            if(!btn) return;
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        };
 
         window.limpiarFormulario = function(modalId) {
             const form = document.querySelector('#' + modalId + ' form');
@@ -1588,7 +1605,7 @@
 
             document.getElementById('tbodyDashVencimientos').innerHTML = vencimientosOp.length ? vencimientosOp.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.nombres_completos)} <br><small class="text-muted fw-normal">${v.fecha_fin}</small></td><td class="text-end pe-3"><span class="badge bg-danger">${v.dias_restantes} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr>';
             
-            // LÓGICA DE AGRUPACIÓN DE CLIENTES (ACORDEÓN SUAVE)
+            // LÓGICA DE AGRUPACIÓN DE CLIENTES EN ACORDEÓN
             let htmlCli = "";
             if (vencimientosCli.length > 0) {
                 const agrupados = vencimientosCli.reduce((acc, curr) => {
@@ -1656,7 +1673,6 @@
                 }
             });
 
-            // GRÁFICA B2B DINÁMICA CON COLORES VIBRANTES
             let conteoServicios = {};
             srvSnap.forEach(d => {
                 let serv = d.data().servicio;
@@ -1734,14 +1750,20 @@
         };
 
         window.guardarClienteAdmin = async function(e) { 
-            e.preventDefault(); const id = document.getElementById('cli_id').value; 
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const id = document.getElementById('cli_id').value; 
             const data = { razon_social: document.getElementById('cli_rs').value, nit_cedula: document.getElementById('cli_nit').value, ciudad: document.getElementById('cli_ciudad').value, direccion: document.getElementById('cli_dir').value, celular_cliente: document.getElementById('cli_cel').value, correo_cliente: document.getElementById('cli_cor').value, nombre_contacto_admin: document.getElementById('cli_adm').value, celular_admin: document.getElementById('cli_adm_cel').value, correo_admin: document.getElementById('cli_adm_cor').value, estado_cliente: 'Activo' };
-            try { if (id) { await updateDoc(doc(db, "clientes", id), data); } else { await addDoc(collection(db, "clientes"), data); } window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalCliente'); window.cargarClientesTabla(); } catch(err) { window.mostrarAlerta("Error al guardar.", true); }
+            try { 
+                if (id) { await updateDoc(doc(db, "clientes", id), data); } else { await addDoc(collection(db, "clientes"), data); } 
+                window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalCliente'); window.cargarClientesTabla(); 
+            } catch(err) { window.mostrarAlerta("Error al guardar.", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
         window.desactivarCliente = async function(id, nombre) { if (confirm(`¿Enviar a ${nombre} al historial de inactivos?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Inactivo' }); window.cargarClientesTabla(); } };
         window.reactivarCliente = async function(id, nombre) { if (confirm(`¿Reactivar a ${nombre}?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Activo' }); window.cargarClientesTabla(); } };
 
-        // SERVICIOS B2B Y CAMPO "OTRO"
+        // SERVICIOS B2B
         window.toggleOtroServicio = function() {
             const select = document.getElementById('srv_tipo');
             const inputOtro = document.getElementById('srv_tipo_otro');
@@ -1768,11 +1790,13 @@
         };
         
         window.guardarServicioCliente = async function(e) {
-            e.preventDefault(); const idCli = document.getElementById('srv_id_cliente').value;
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const idCli = document.getElementById('srv_id_cliente').value;
             let tipoServ = document.getElementById('srv_tipo').value;
             if (tipoServ === 'Otro') {
                 tipoServ = document.getElementById('srv_tipo_otro').value.trim();
-                if (!tipoServ) return window.mostrarAlerta("Por favor especifique el servicio.", true);
+                if (!tipoServ) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("Por favor especifique el servicio.", true); }
             }
             try { 
                 await addDoc(collection(db, "contratos_clientes"), { id_cliente: idCli, servicio: tipoServ, fecha_inicio: document.getElementById('srv_inicio').value, fecha_fin: document.getElementById('srv_fin').value }); 
@@ -1780,6 +1804,7 @@
                 document.getElementById('srv_tipo').value = ""; document.getElementById('srv_tipo_otro').value = ""; document.getElementById('srv_tipo_otro').style.display = "none"; document.getElementById('srv_fin').value = ""; 
                 window.cargarDashboardResumen(); 
             } catch(err) { window.mostrarAlerta("Error al agregar servicio.", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
         
         window.eliminarServicioCliente = async function(idServicio, idCli) { if (confirm("¿Eliminar este servicio del contrato?")) { await deleteDoc(doc(db, "contratos_clientes", idServicio)); await window.cargarServiciosEnTabla(idCli); window.cargarDashboardResumen(); } };
@@ -1810,9 +1835,12 @@
         };
 
         window.guardarOperarioAdmin = async function(e) { 
-            e.preventDefault(); const id = document.getElementById('op_id').value; 
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const id = document.getElementById('op_id').value; 
             const data = { cedula: document.getElementById('op_doc').value, nombres_completos: document.getElementById('op_nom').value, ciudad: document.getElementById('op_ciudad').value, ciudad_expedicion: document.getElementById('op_ciudad_expedicion').value, eps: document.getElementById('op_eps').value, arl: document.getElementById('op_arl').value, rh: document.getElementById('op_rh').value, celular: document.getElementById('op_cel').value, especialidad: document.getElementById('op_esp').value, id_cliente_asignado: document.getElementById('op_cliente').value, tipo_contrato: document.getElementById('op_tipocontrato').value, fecha_inicio: document.getElementById('op_inicio').value, fecha_fin: document.getElementById('op_fin').value, sueldo: document.getElementById('op_sueldo').value, termino_contrato: document.getElementById('op_termino').value, correo_electronico: document.getElementById('op_correo').value, direccion_residencia: document.getElementById('op_direccion').value, cumpleanos: document.getElementById('op_cumpleanos').value, contacto_emergencia: document.getElementById('op_contacto').value, numero_emergencia: document.getElementById('op_num_emergencia').value, observaciones: document.getElementById('op_obs').value, anotaciones: document.getElementById('op_anot').value, estado_operario: 'Activo' };
             try { if (id) { await updateDoc(doc(db, "operarios", id), data); } else { await addDoc(collection(db, "operarios"), data); } window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalOperario'); window.cargarOperarioTabla(); window.cargarDashboardResumen(); } catch(err) { window.mostrarAlerta("Error al guardar.", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
         window.desactivarOperario = async function(id, nombre) { if (confirm(`¿Seguro que desea RETIRAR al operario ${nombre}?`)) { await updateDoc(doc(db, "operarios", id), { estado_operario: 'Inactivo' }); window.cargarOperarioTabla(); window.cargarDashboardResumen(); } };
@@ -1845,22 +1873,29 @@
         };
 
         window.editarUsuarioAdmin = async function(e) {
-            e.preventDefault(); const id = document.getElementById('eu_id').value;
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const id = document.getElementById('eu_id').value;
+            if (rolUsuarioActivo !== 'Administrador') { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("No tienes permisos.", true); }
             try { await updateDoc(doc(db, "usuarios", id), { documento: document.getElementById('eu_doc').value, nombre_completo: document.getElementById('eu_nombre').value, rol: document.getElementById('eu_rol').value }); window.mostrarAlerta("Usuario actualizado."); window.cerrarModalJS('modalEditarUsuarioAdmin'); window.cargarUsuariosTabla(); } catch(err) { window.mostrarAlerta("Error al editar", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
         window.crearUsuarioAdmin = async function(e) { 
-            e.preventDefault(); const btn = document.getElementById('btnCrearUser'); btn.disabled = true; btn.innerHTML = 'Creando...';
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
             const email = document.getElementById('cu_correo').value; const pwd = document.getElementById('cu_pass').value;
+            if (rolUsuarioActivo !== 'Administrador') { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("No tienes permisos.", true); }
             try { 
                 const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, pwd); 
                 await addDoc(collection(db, "usuarios"), { uid: userCred.user.uid, documento: document.getElementById('cu_doc').value, nombre_completo: document.getElementById('cu_nombre').value, correo: email, rol: document.getElementById('cu_rol').value, estado: 'Aprobado', fecha_registro: new Date().toISOString() }); 
                 await signOut(secondaryAuth); window.mostrarAlerta("Usuario creado."); window.cerrarModalJS('modalCrearUsuarioAdmin'); window.cargarUsuariosTabla(); 
-            } catch(err) { window.mostrarAlerta("Error: " + err.message, true); } btn.disabled = false; btn.innerHTML = 'Crear y Aprobar';
+            } catch(err) { window.mostrarAlerta("Error: " + err.message, true); } 
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
-        window.cambiarEstadoUsuario = async function(id, est) { await updateDoc(doc(db, "usuarios", id), { estado: est }); window.cargarUsuariosTabla(); };
-        window.eliminarUsuario = async function(id, correo) { if (confirm(`¿Desactivar al usuario ${correo}?`)) { await updateDoc(doc(db, "usuarios", id), { estado: 'Inactivo' }); window.mostrarAlerta("Usuario desactivado."); window.cargarUsuariosTabla(); } };
+        window.cambiarEstadoUsuario = async function(id, est) { if (rolUsuarioActivo === 'Administrador') { await updateDoc(doc(db, "usuarios", id), { estado: est }); window.cargarUsuariosTabla(); } };
+        window.eliminarUsuario = async function(id, correo) { if (rolUsuarioActivo === 'Administrador' && confirm(`¿Desactivar al usuario ${correo}?`)) { await updateDoc(doc(db, "usuarios", id), { estado: 'Inactivo' }); window.mostrarAlerta("Usuario desactivado."); window.cargarUsuariosTabla(); } };
 
         // ==========================================
         // MÓDULO: INVENTARIO UNIFICADO Y MANTENIMIENTO
@@ -1890,7 +1925,9 @@
         window.abrirEditarDotacionId = function(id) { window.limpiarFormulario('modalUnificado'); setTimeout(() => { const d = window.dotacionGlobal.find(x => x.id === id); if(d) { document.getElementById('tipoElemento').value = 'dotacion'; document.getElementById('tipoElemento').disabled = true; window.toggleCamposUnificado(); document.getElementById('dotId').value = d.id; document.getElementById('dotTipo').value = d.tipo_prenda; document.getElementById('dotTalla').value = d.talla; document.getElementById('dotCondicion').value = d.condicion; document.getElementById('dotCant').value = d.cantidad; } }, 50); };
 
         window.procesarGuardadoUnificado = async function(e) { 
-            e.preventDefault(); const tipo = document.getElementById('tipoElemento').value; const idDot = document.getElementById('dotId').value; const idInv = document.getElementById('invId').value; 
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const tipo = document.getElementById('tipoElemento').value; const idDot = document.getElementById('dotId').value; const idInv = document.getElementById('invId').value; 
             try {
                 if (tipo === 'dotacion') { 
                     const data = { tipo_prenda: document.getElementById('dotTipo').value.trim(), talla: document.getElementById('dotTalla').value, condicion: document.getElementById('dotCondicion').value, cantidad: parseInt(document.getElementById('dotCant').value || 1) };
@@ -1901,6 +1938,7 @@
                 }
                 window.mostrarAlerta("Guardado exitosamente."); window.cerrarModalJS('modalUnificado'); window.cargarTablasInventario(); window.cargarDashboardResumen();
             } catch(err) { window.mostrarAlerta("Error al guardar", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
         window.eliminarInventario = async function(id, nombre) { if (confirm(`¿Seguro que desea eliminar: ${nombre}?`)) { await deleteDoc(doc(db, "inventario", id)); window.cargarTablasInventario(); } };
         window.eliminarDotacion = async function(id, nombre) { if (confirm(`¿Seguro que desea eliminar: ${nombre}?`)) { await deleteDoc(doc(db, "dotacion", id)); window.cargarTablasInventario(); window.cargarDashboardResumen(); } };
@@ -1908,14 +1946,17 @@
         // DOTACION (SUPERVISOR)
         window.abrirModalEntregarDotacion = function(id, nombre) { window.limpiarFormulario('modalEntregarDotacion'); document.getElementById('ent_id_operario').value = id; document.getElementById('ent_nom_operario').innerText = window.sanitizar(nombre); document.getElementById('ent_fecha').value = new Date().toISOString().split('T')[0]; document.getElementById('ent_id_dotacion').innerHTML = '<option value="">Seleccione prenda...</option>' + window.dotacionGlobal.filter(d => d.cantidad > 0).map(d => `<option value="${d.id}" data-cant="${d.cantidad}">${window.sanitizar(d.tipo_prenda)} (Talla: ${window.sanitizar(d.talla)} - Stock: ${d.cantidad})</option>`).join(''); };
         window.guardarEntregaDotacion = async function(e) {
-            e.preventDefault(); const idDot = document.getElementById('ent_id_dotacion').value; const cantReq = parseInt(document.getElementById('ent_cantidad').value);
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const idDot = document.getElementById('ent_id_dotacion').value; const cantReq = parseInt(document.getElementById('ent_cantidad').value);
             const dotSel = window.dotacionGlobal.find(d => d.id === idDot);
-            if (!dotSel || dotSel.cantidad < cantReq) return window.mostrarAlerta("Stock insuficiente.", true);
+            if (!dotSel || dotSel.cantidad < cantReq) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("Stock insuficiente.", true); }
             try {
                 await addDoc(collection(db, "historial_dotacion"), { id_operario: document.getElementById('ent_id_operario').value, id_dotacion: idDot, cantidad: cantReq, fecha_entrega: document.getElementById('ent_fecha').value, notas: document.getElementById('ent_notas').value });
                 await updateDoc(doc(db, "dotacion", idDot), { cantidad: dotSel.cantidad - cantReq });
                 window.mostrarAlerta("Dotación entregada."); window.cerrarModalJS('modalEntregarDotacion'); window.cargarTablasInventario(); window.cargarDashboardResumen();
             } catch(err) { window.mostrarAlerta("Error al registrar entrega.", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
         window.abrirHistorialDotacion = async function(idOp, nombreOp) {
             document.getElementById('hist_nom_operario').innerText = window.sanitizar(nombreOp);
@@ -1939,8 +1980,11 @@
             document.getElementById('tbodyHistorialMtto').innerHTML = mttos.length ? mttos.map(m => `<tr><td class="ps-3 fw-bold">${m.fecha}</td><td>${window.sanitizar(m.detalle)}</td><td class="text-end pe-3 fw-semibold text-danger">$${new Intl.NumberFormat('es-CO').format(m.costo)}</td></tr>`).join('') : `<tr><td colspan="3" class="text-center text-muted py-3">Sin mantenimientos registrados.</td></tr>`;
         };
         window.guardarMantenimiento = async function(e) {
-            e.preventDefault(); const idActivo = document.getElementById('mtto_id_activo').value;
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const idActivo = document.getElementById('mtto_id_activo').value;
             try { await addDoc(collection(db, "mantenimiento_activos"), { id_activo: idActivo, fecha: document.getElementById('mtto_fecha').value, detalle: document.getElementById('mtto_detalle').value, costo: parseFloat(document.getElementById('mtto_costo').value) }); await window.cargarMantenimientosEnTabla(idActivo); document.getElementById('mtto_detalle').value = ""; document.getElementById('mtto_costo').value = ""; } catch(err) { window.mostrarAlerta("Error al registrar.", true); }
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
         // ==========================================
@@ -1969,11 +2013,13 @@
         };
 
         window.guardarAuditoria = async function(e) {
-            e.preventDefault(); const fileInput = document.getElementById('audi_foto');
-            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto excede los 3MB.", true);
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const fileInput = document.getElementById('audi_foto');
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("La foto excede los 3MB.", true); }
             const chks = document.querySelectorAll('.chk-operario-audi:checked');
-            if (chks.length === 0) return window.mostrarAlerta("Debes seleccionar al menos un operario.", true);
-            const btn = document.getElementById('btnGuardarAuditoria'); btn.disabled = true;
+            if (chks.length === 0) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("Debes seleccionar al menos un operario.", true); }
+            
             let operariosAuditados = []; let hasNoUni = false, hasNoHerr = false, hasNoLimp = false; let allNaUni = true, allNaHerr = true, allNaLimp = true;
             
             chks.forEach(chk => {
@@ -1989,7 +2035,7 @@
                 await addDoc(collection(db, "auditorias_calidad"), { id_cliente: document.getElementById('audi_cliente').value, evaluador: document.getElementById('audi_evaluador').value, operarios_auditados: operariosAuditados.join(' | '), fecha: document.getElementById('audi_fecha').value, uniforme_ok: hasNoUni ? 'No' : (allNaUni ? 'N/A' : 'Si'), herramientas_ok: hasNoHerr ? 'No' : (allNaHerr ? 'N/A' : 'Si'), limpieza_ok: hasNoLimp ? 'No' : (allNaLimp ? 'N/A' : 'Si'), observaciones: document.getElementById('audi_obs').value, url_evidencia: urlFoto || '', fecha_registro: new Date().toISOString() });
                 window.mostrarAlerta("Auditoría registrada."); window.cerrarModalJS('modalAuditoria'); window.cargarAuditorias();
             } catch(err) { window.mostrarAlerta("Error al registrar.", true); }
-            btn.disabled = false;
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
         window.prepararNuevaNovedad = function() {
@@ -2023,18 +2069,19 @@
         };
 
         window.guardarNovedad = async function(e) {
-            e.preventDefault(); const fileInput = document.getElementById('nov_foto');
-            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La evidencia excede los 3MB.", true);
-            const btn = document.getElementById('btnGuardarNovedad'); btn.disabled = true;
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const fileInput = document.getElementById('nov_foto');
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("La evidencia excede los 3MB.", true); }
             const trasladar = document.getElementById('chk_traslado').checked; const idNuevaSede = trasladar ? document.getElementById('nov_nueva_sede').value : null; 
-            if (trasladar && !idNuevaSede) { btn.disabled = false; return window.mostrarAlerta("Debes seleccionar la nueva sede.", true); }
+            if (trasladar && !idNuevaSede) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("Debes seleccionar la nueva sede.", true); }
             try {
                 let urlFoto = await subirImagenStorage(fileInput.files[0], 'novedades');
                 await addDoc(collection(db, "bitacora_novedades"), { id_operario: document.getElementById('nov_operario').value, fecha_novedad: document.getElementById('nov_fecha').value, tipo_novedad: document.getElementById('nov_tipo').value, descripcion: document.getElementById('nov_desc').value, reportado_por: document.getElementById('nov_reporta').value, url_evidencia: urlFoto || '', fecha_registro: new Date().toISOString() });
                 if (trasladar) { await updateDoc(doc(db, "operarios", document.getElementById('nov_operario').value), { id_cliente_asignado: idNuevaSede }); await window.cargarOperariosCache(); }
                 window.mostrarAlerta("Novedad registrada."); window.cerrarModalJS('modalNovedad'); window.cargarNovedades();
             } catch(err) { window.mostrarAlerta("Error al registrar.", true); }
-            btn.disabled = false;
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
         // ==========================================
@@ -2078,18 +2125,19 @@
         window.verSoporte = function(url) { document.getElementById('imgSoporte').src = url; new bootstrap.Modal(document.getElementById('modalVerSoporte')).show(); };
 
         window.guardarGasto = async function(e) {
-            e.preventDefault(); const btn = document.getElementById('btnGuardarGasto'); const fileInput = document.getElementById('gast_soporte'); 
-            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto excede los 3MB. Comprímela e intenta de nuevo.", true);
-            btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Subiendo...';
+            e.preventDefault(); 
+            const btnOriginal = window.bloquearBoton(e.submitter);
+            const fileInput = document.getElementById('gast_soporte'); 
+            if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("La foto excede los 3MB. Comprímela e intenta de nuevo.", true); }
             try {
                 let urlFoto = await subirImagenStorage(fileInput.files[0], 'gastos');
                 await addDoc(collection(db, "gastos_caja_menor"), { fecha_gasto: document.getElementById('gast_fecha').value, concepto: document.getElementById('gast_concepto').value, valor: parseFloat(document.getElementById('gast_valor').value), soporte_url: urlFoto, estado: 'Pendiente', reportado_por: window.sanitizar(nombreUsuarioActivo).split(' ')[0], fecha_registro: new Date().toISOString() });
                 window.mostrarAlerta("Gasto reportado exitosamente."); window.cerrarModalJS('modalGasto'); window.cargarGastos();
             } catch(err) { window.mostrarAlerta("Error al reportar gasto.", true); }
-            btn.disabled = false; btn.innerHTML = 'Reportar Gasto';
+            finally { window.desbloquearBoton(e.submitter, btnOriginal); }
         };
 
-        window.cambiarEstadoGasto = async function(id, estado) { if (confirm(`¿Marcar este gasto como ${estado}?`)) { await updateDoc(doc(db, "gastos_caja_menor", id), { estado: estado }); window.cargarGastos(); } };
+        window.cambiarEstadoGasto = async function(id, estado) { if (rolUsuarioActivo === 'Administrador' && confirm(`¿Marcar este gasto como ${estado}?`)) { await updateDoc(doc(db, "gastos_caja_menor", id), { estado: estado }); window.cargarGastos(); } };
         window.eliminarGasto = async function(id, concepto, reporta) { if (confirm(`¿Está seguro de ELIMINAR el gasto de ${concepto} reportado por ${reporta}?`)) { await deleteDoc(doc(db, "gastos_caja_menor", id)); window.mostrarAlerta("Gasto eliminado."); window.cargarGastos(); } };
 
         document.getElementById('btnExportarGastos').addEventListener('click', () => {
@@ -2239,4 +2287,4 @@
         });
     </script>
 </body>
-</html>    
+</html>   
