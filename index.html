@@ -29,10 +29,10 @@
         }
         body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; height: 100vh; display: flex; flex-direction: column; overflow: hidden; margin: 0; }
         
-        /* Reducción de espacios muertos superiores */
-        .top-navbar { padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .top-navbar { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
         
-        .theme-toggle-container { padding: 5px 12px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
+        /* === BOTÓN TEMA (DÍA/NOCHE) - AHORA A LA IZQUIERDA === */
+        .theme-toggle-container { padding: 6px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; margin: 0; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.1rem; }
         .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.1rem; }
@@ -42,12 +42,41 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
 
-        /* Ajuste de Hero para subirlo en la pantalla */
+        /* === NUEVO BOTÓN INICIAR SESIÓN NEUMÓRFICO (BARRA SUPERIOR DERECHA) === */
+        .btn-login-nav {
+            padding: 8px 20px; 
+            border-radius: 50px; 
+            background-color: #e2e8f0; 
+            color: #0b3c36;
+            border: none;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.06), -4px -4px 10px rgba(255,255,255,0.8); 
+            transition: all 0.3s ease;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        [data-bs-theme="dark"] .btn-login-nav { 
+            background-color: #1e293b; 
+            color: #2dd4bf;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -2px -2px 8px rgba(255,255,255,0.02);
+        }
+        .btn-login-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 15px rgba(0,0,0,0.1), -6px -6px 15px rgba(255,255,255,1);
+        }
+        [data-bs-theme="dark"] .btn-login-nav:hover {
+            box-shadow: 6px 6px 15px rgba(0,0,0,0.5), -3px -3px 10px rgba(255,255,255,0.05);
+            background-color: #0f172a;
+        }
+
         .hero-section { text-align: center; padding: 2vh 20px; }
         .hero-title { font-size: clamp(3rem, 5vw, 4rem); font-weight: 800; margin-bottom: 5px; letter-spacing: 2px; }
         .hero-subtitle { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 400; margin-bottom: 10px; }
         .hero-description { color: var(--texto-muted); font-size: 1rem; margin-bottom: 20px; }
         
+        /* Botón central hero */
         .btn-accent { background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; padding: 10px 30px; border-radius: 50px; border: none; font-size: 1.1rem; transition: transform 0.2s, box-shadow 0.2s; }
         .btn-accent:hover { background-color: #25b5a3; color: #0f172a; transform: translateY(-2px); box-shadow: 0 4px 15px var(--sadafa-focus-ring); }
         [data-bs-theme="light"] .btn-accent { color: #ffffff; }
@@ -56,7 +85,6 @@
         
         .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 15px 0; opacity: 0.3; }
         
-        /* Ajuste de tarjetas para que quepan */
         .services-section { flex: 1; padding: 10px 40px; max-width: 1400px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
         .services-title { text-align: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; }
         .services-title span { color: var(--sadafa-accent); position: relative; }
@@ -73,17 +101,18 @@
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         @media (max-width: 768px) {
-            body { overflow: auto; } /* En móviles sí necesitamos scroll */
-            .top-navbar { padding: 10px 15px; }
+            body { overflow: auto; }
+            .top-navbar { padding: 15px 15px; }
             .hero-section { padding: 40px 15px 20px; }
             .services-section { padding: 10px 15px 40px; }
+            .btn-login-nav span { display: none; } /* Oculta el texto en móviles para que quepa bien */
         }
     </style>
 </head>
 <body>
 
     <header class="top-navbar">
-        <a href="#" class="navbar-brand-custom"></a>
+        <!-- IZQUIERDA: BOTÓN DINÁMICO DÍA/OSCURO -->
         <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
             <i class="bi bi-sun-fill theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
             <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
@@ -91,6 +120,11 @@
             </div>
             <i class="bi bi-moon-stars-fill theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
         </div>
+
+        <!-- DERECHA: BOTÓN INICIAR SESIÓN NEUMÓRFICO -->
+        <button class="btn-login-nav" data-bs-toggle="modal" data-bs-target="#modalLogin">
+            <i class="bi bi-person-circle fs-5"></i> <span>Iniciar Sesión</span>
+        </button>
     </header>
 
     <section class="hero-section">
@@ -98,7 +132,7 @@
         <h2 class="hero-subtitle">Servicios Integrales S.A.S.</h2>
         <p class="hero-description">Plataforma corporativa de gestión administrativa y supervisión operativa.</p>
         <button class="btn btn-accent shadow" data-bs-toggle="modal" data-bs-target="#modalLogin">
-            <i class="bi bi-shield-lock me-2"></i> Iniciar Sesión
+            <i class="bi bi-shield-lock me-2"></i> Ingresar al Panel
         </button>
     </section>
 
