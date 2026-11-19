@@ -254,16 +254,16 @@
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-md-5">
-                        <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
+                <!-- BLOQUE INFERIOR (LISTAS AGRUPADAS) -->
+                <div class="row g-2 mb-3 align-items-start">
+                    <div class="col-md-6">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
                             <div class="p-2 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <ul class="nav nav-pills nav-fill w-100 mb-0" role="tablist">
                                     <li class="nav-item" role="presentation"><button class="nav-link active small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-op">Alerta Personal <span class="badge border border-white ms-1" id="badgeVenceCount">0</span></button></li>
                                     <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
-                            <!-- TABLAS DEL DASHBOARD USAN table-scrollable-dash (250px max) -->
                             <div class="tab-content table-scrollable-dash">
                                 <div class="tab-pane fade show active" id="tab-vence-op">
                                     <table class="table table-hover align-middle mb-0 small">
@@ -280,22 +280,22 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
+                                <h6 class="fw-bold mb-0 small erp-color-amarillo"><i class="bi bi-shield-exclamation me-1"></i> Stock a Reponer</h6>
                             </div>
                             <div class="table-scrollable-dash">
                                 <table class="table table-hover align-middle mb-0 small">
                                     <thead class="table-light sticky-top"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
-                                    <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Seguro.</td></tr></tbody>
+                                    <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Stock seguro.</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-custom shadow-sm p-0 overflow-hidden h-100">
+                    <div class="col-md-3">
+                        <div class="card card-custom shadow-sm p-0 overflow-hidden">
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Legal Dotación</h6>
+                                <h6 class="fw-bold mb-0 small erp-color-morado"><i class="bi bi-exclamation-octagon me-1"></i> Operarios sin dotación</h6>
                             </div>
                             <div class="table-scrollable-dash">
                                 <table class="table table-hover align-middle mb-0 small">
@@ -347,7 +347,6 @@
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <!-- TABLAS DE BASE DE DATOS USAN table-scrollable (500px max) -->
                         <div class="tab-pane fade show active" id="contratos-activos">
                             <div class="table-responsive table-scrollable">
                                 <table class="table table-hover align-middle mb-0 small">
@@ -529,7 +528,7 @@
 
         </main>
     </div>
- <!-- ==================== TODOS LOS MODALES ==================== -->
+<!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1554,12 +1553,14 @@
             await window.cargarDotacionCache();
             const hoy = new Date(); const mesActual = hoy.getMonth() + 1; const mesStr = mesActual < 10 ? '0'+mesActual : ''+mesActual;
             
+            // 1. Alertas Operarios (30 dias)
             const vencimientosOp = window.cacheOperariosPDF.filter(o => {
                 if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
                 const diffDays = Math.ceil((new Date(o.fecha_fin) - hoy) / (1000 * 60 * 60 * 24));
                 o.dias_restantes = diffDays; return diffDays >= 0 && diffDays <= 30;
             });
             
+            // 2. Alertas Contratos B2B Clientes (45 dias - AGRUPADOS ACORDEÓN)
             const srvSnap = await getDocs(collection(db, "contratos_clientes"));
             let vencimientosCli = [];
             srvSnap.forEach(d => {
@@ -1573,11 +1574,13 @@
                 }
             });
             
+            // 3. Stock y Legal
             const stockBajo = window.dotacionGlobal.filter(d => d.cantidad <= 3);
             const alertasLegal = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.fecha_inicio).map(o => {
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
+            // 4. Cumpleañeros del Mes
             let txtCumples = "";
             const cumpleañeros = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.cumpleanos && o.cumpleanos.split('/')[1] === mesStr);
             if (cumpleañeros.length > 0) {
@@ -1585,6 +1588,7 @@
                 setTimeout(() => window.mostrarAlertaAmarilla(`🎉 Cumpleaños este mes: ${txtCumples}`), 1000);
             }
 
+            // RENDERIZADO DE TABLAS
             document.getElementById('dashVenceContratos').innerText = vencimientosOp.length;
             document.getElementById('badgeVenceCount').innerText = vencimientosOp.length;
             document.getElementById('dashVenceClientes').innerText = vencimientosCli.length;
@@ -1593,7 +1597,7 @@
 
             document.getElementById('tbodyDashVencimientos').innerHTML = vencimientosOp.length ? vencimientosOp.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.nombres_completos)} <br><small class="text-muted fw-normal">${v.fecha_fin}</small></td><td class="text-end pe-3"><span class="badge bg-danger">${v.dias_restantes} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr>';
             
-            // LÓGICA DE AGRUPACIÓN DE CLIENTES (ACORDEÓN SUAVE)
+            // LÓGICA DE AGRUPACIÓN DE CLIENTES EN ACORDEÓN
             let htmlCli = "";
             if (vencimientosCli.length > 0) {
                 const agrupados = vencimientosCli.reduce((acc, curr) => {
@@ -1607,7 +1611,7 @@
                     let collapseId = `collapseCli${i}`;
                     
                     htmlCli += `<tr data-bs-toggle="collapse" data-bs-target="#${collapseId}" class="cliente-acordeon-header bg-body-secondary">
-                        <td colspan="2" class="fw-bold ps-3 py-2 text-primary d-flex justify-content-between align-items-center">
+                        <td colspan="2" class="fw-bold ps-3 py-2 text-primary d-flex justify-content-between align-items-center border-bottom">
                             <span style="font-size: 0.85rem;"><i class="bi bi-building me-2"></i> ${window.sanitizar(cliente)}</span>
                             <span class="badge bg-primary rounded-pill">${agrupados[cliente].length}</span>
                         </td>
@@ -2242,4 +2246,4 @@
         });
     </script>
 </body>
-</html>   
+</html>    
