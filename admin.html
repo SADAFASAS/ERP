@@ -180,7 +180,7 @@
         <main class="main-content">
             
             <div class="d-flex justify-content-end align-items-center mb-4 border-bottom pb-2">
-                <span class="badge bg-secondary fs-6 shadow-sm py-2 px-3">
+                <span class="badge bg-secondary fs-6 shadow-sm py-2 px-3 text-capitalize">
                     <i class="bi bi-person-circle me-1"></i> <span id="nombreUI" class="fw-bold">Cargando...</span>
                     <span class="badge bg-light text-dark ms-2" id="rolUI"></span>
                 </span>
@@ -1404,10 +1404,6 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // USO DE localStorage
-        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
-        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
-
         // ==========================================
         // 🛡️ QA: SANITIZACIÓN XSS Y UTILIDADES
         // ==========================================
@@ -1553,14 +1549,12 @@
             await window.cargarDotacionCache();
             const hoy = new Date(); const mesActual = hoy.getMonth() + 1; const mesStr = mesActual < 10 ? '0'+mesActual : ''+mesActual;
             
-            // 1. Alertas Operarios (30 dias)
             const vencimientosOp = window.cacheOperariosPDF.filter(o => {
                 if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
                 const diffDays = Math.ceil((new Date(o.fecha_fin) - hoy) / (1000 * 60 * 60 * 24));
                 o.dias_restantes = diffDays; return diffDays >= 0 && diffDays <= 30;
             });
             
-            // 2. Alertas Contratos B2B Clientes (45 dias - AGRUPADOS ACORDEÓN)
             const srvSnap = await getDocs(collection(db, "contratos_clientes"));
             let vencimientosCli = [];
             srvSnap.forEach(d => {
@@ -1574,13 +1568,11 @@
                 }
             });
             
-            // 3. Stock y Legal
             const stockBajo = window.dotacionGlobal.filter(d => d.cantidad <= 3);
             const alertasLegal = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.fecha_inicio).map(o => {
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
-            // 4. Cumpleañeros del Mes
             let txtCumples = "";
             const cumpleañeros = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.cumpleanos && o.cumpleanos.split('/')[1] === mesStr);
             if (cumpleañeros.length > 0) {
@@ -1588,7 +1580,6 @@
                 setTimeout(() => window.mostrarAlertaAmarilla(`🎉 Cumpleaños este mes: ${txtCumples}`), 1000);
             }
 
-            // RENDERIZADO DE TABLAS
             document.getElementById('dashVenceContratos').innerText = vencimientosOp.length;
             document.getElementById('badgeVenceCount').innerText = vencimientosOp.length;
             document.getElementById('dashVenceClientes').innerText = vencimientosCli.length;
@@ -1597,7 +1588,7 @@
 
             document.getElementById('tbodyDashVencimientos').innerHTML = vencimientosOp.length ? vencimientosOp.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.nombres_completos)} <br><small class="text-muted fw-normal">${v.fecha_fin}</small></td><td class="text-end pe-3"><span class="badge bg-danger">${v.dias_restantes} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr>';
             
-            // LÓGICA DE AGRUPACIÓN DE CLIENTES EN ACORDEÓN
+            // LÓGICA DE AGRUPACIÓN DE CLIENTES (ACORDEÓN SUAVE)
             let htmlCli = "";
             if (vencimientosCli.length > 0) {
                 const agrupados = vencimientosCli.reduce((acc, curr) => {
@@ -1959,7 +1950,7 @@
             window.limpiarFormulario('modalAuditoria'); document.getElementById('audi_fecha').value = new Date().toISOString().split('T')[0];
             const selectSede = document.getElementById('audi_cliente'); if (selectSede) { selectSede.innerHTML = '<option value="">Seleccione sede...</option>' + window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo').map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
             document.getElementById('audi_lista_operarios').innerHTML = '<small class="text-muted">Seleccione una sede para ver los operarios...</small>';
-            document.getElementById('audi_evaluador').value = nombreUsuarioActivo; // Auto-asignar Evaluador
+            document.getElementById('audi_evaluador').value = window.sanitizar(nombreUsuarioActivo).split(' ')[0]; // Auto-asignar Evaluador (Solo el primer nombre)
         };
         
         window.cargarOperariosPorSedeAuditoria = function() {
@@ -2005,7 +1996,7 @@
             window.limpiarFormulario('modalNovedad'); document.getElementById('nov_fecha').value = new Date().toISOString().split('T')[0]; document.getElementById('div_nueva_sede').style.display = 'none'; document.getElementById('nov_sede_actual').value = '';
             const selectOp = document.getElementById('nov_operario'); if (selectOp) { selectOp.innerHTML = '<option value="">Seleccione operario...</option>' + window.cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo').map(o => `<option value="${o.id}">${window.sanitizar(o.nombres_completos)}</option>`).join(''); }
             const selectCli = document.getElementById('nov_nueva_sede'); if (selectCli) { selectCli.innerHTML = '<option value="">Seleccione la nueva sede...</option>' + window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo').map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
-            document.getElementById('nov_reporta').value = nombreUsuarioActivo; // Auto-asignar Reporta
+            document.getElementById('nov_reporta').value = window.sanitizar(nombreUsuarioActivo).split(' ')[0]; // Auto-asignar Reporta
         };
         
         window.cargarSedeNovedad = function() {
@@ -2053,7 +2044,7 @@
 
         window.cargarGastos = async function() {
             let q = collection(db, "gastos_caja_menor");
-            if (rolUsuarioActivo !== 'Administrador') { q = query(q, where("reportado_por", "==", nombreUsuarioActivo)); }
+            if (rolUsuarioActivo !== 'Administrador') { q = query(q, where("reportado_por", "==", window.sanitizar(nombreUsuarioActivo).split(' ')[0])); }
             const querySnapshot = await getDocs(q);
             window.gastosGlobales = []; querySnapshot.forEach(doc => window.gastosGlobales.push({ id: doc.id, ...doc.data() }));
             window.gastosGlobales.sort((a,b) => new Date(b.fecha_registro) - new Date(a.fecha_registro));
@@ -2092,7 +2083,7 @@
             btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Subiendo...';
             try {
                 let urlFoto = await subirImagenStorage(fileInput.files[0], 'gastos');
-                await addDoc(collection(db, "gastos_caja_menor"), { fecha_gasto: document.getElementById('gast_fecha').value, concepto: document.getElementById('gast_concepto').value, valor: parseFloat(document.getElementById('gast_valor').value), soporte_url: urlFoto, estado: 'Pendiente', reportado_por: nombreUsuarioActivo, fecha_registro: new Date().toISOString() });
+                await addDoc(collection(db, "gastos_caja_menor"), { fecha_gasto: document.getElementById('gast_fecha').value, concepto: document.getElementById('gast_concepto').value, valor: parseFloat(document.getElementById('gast_valor').value), soporte_url: urlFoto, estado: 'Pendiente', reportado_por: window.sanitizar(nombreUsuarioActivo).split(' ')[0], fecha_registro: new Date().toISOString() });
                 window.mostrarAlerta("Gasto reportado exitosamente."); window.cerrarModalJS('modalGasto'); window.cargarGastos();
             } catch(err) { window.mostrarAlerta("Error al reportar gasto.", true); }
             btn.disabled = false; btn.innerHTML = 'Reportar Gasto';
@@ -2109,7 +2100,7 @@
         });
 
         // ==========================================
-        // MOTOR PDF E IMPRESIÓN (AHORA HASTA 4 PERIODOS)
+        // MOTOR PDF E IMPRESIÓN 
         // ==========================================
         window.prepararDocumentosPDF = function(tipo) {
             const targetId = { 'carta': 'modalCarta', 'cert': 'modalCertificado', 'exam': 'modalExamen', 'cesan': 'modalCesantias', 'cta': 'modalCuenta' }[tipo];
@@ -2210,11 +2201,13 @@
         document.addEventListener('DOMContentLoaded', () => { 
             const token = localStorage.getItem('sadafa_token');
             const rol = localStorage.getItem('sadafa_rol');
+            const nombreCompleto = localStorage.getItem('sadafa_nombre') || 'Usuario';
             
             if (!token || !rol) { window.location.href = 'index.html'; return; }
             
-            // 1. TU NOMBRE EN EL ENCABEZADO
-            document.getElementById('nombreUI').innerText = window.sanitizar(nombreUsuarioActivo);
+            // 1. TU PRIMER NOMBRE EN EL ENCABEZADO
+            const primerNombre = window.sanitizar(nombreCompleto).split(' ')[0];
+            document.getElementById('nombreUI').innerText = primerNombre;
             document.getElementById('rolUI').innerText = window.sanitizar(rol);
             document.body.setAttribute('data-rol', rol);
 
