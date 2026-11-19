@@ -63,8 +63,8 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
-        .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; }
-        .sidebar.collapsed .theme-icon-sun, .sidebar.collapsed .theme-icon-moon { display: none !important; }
+        /* CORRECCIÓN: El botón de tema no debe desaparecer en celulares */
+        .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; display: flex !important; justify-content: center !important; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
@@ -199,7 +199,8 @@
                                 </div>
                                 <i class="bi bi-person-badge erp-color-rojo fs-1 opacity-50"></i>
                             </div>
-                            <div class="small mt-2 text-muted">Vencen en &le; 30 días</div>
+                            <!-- CORRECCIÓN 3: Texto de vencimiento -->
+                            <div class="small mt-2 text-muted">Vencen en menos de 30 días</div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -211,7 +212,7 @@
                                 </div>
                                 <i class="bi bi-building-check erp-color-naranja fs-1 opacity-50"></i>
                             </div>
-                            <div class="small mt-2 text-muted">Renovación en &le; 45 días</div>
+                            <div class="small mt-2 text-muted">Vencen en menos de 45 días</div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -313,8 +314,8 @@
                             <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                             <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
                         </div>
-                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios" title="Descargar base de datos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()" title="Crear Operario"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
                     </div>
                 </div>
                 
@@ -323,7 +324,7 @@
                         <h5 class="fw-bold mb-0 text-body" style="font-size: 1.1rem;"><i class="bi bi-people-fill me-2 opacity-50"></i> Personal Registrado</h5>
                         
                         <div class="dropdown d-inline-block">
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown"><i class="bi bi-file-earmark-pdf"></i> Generar Documento</button>
+                            <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown" title="Crear Certificados y Cartas"><i class="bi bi-file-earmark-pdf"></i> Generar Documento</button>
                             <ul class="dropdown-menu shadow-sm">
                                 <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCarta" onclick="prepararDocumentosPDF('carta')"><i class="bi bi-file-text text-primary me-2"></i> Carta Presentación</button></li>
                                 <li><button type="button" class="dropdown-item small fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCertificado" onclick="prepararDocumentosPDF('cert')"><i class="bi bi-award text-success me-2"></i> Certificado Laboral</button></li>
@@ -399,7 +400,7 @@
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()" title="Crear Cliente"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
@@ -420,7 +421,7 @@
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuarioAdmin" onclick="prepararNuevoUsuario()"><i class="bi bi-person-plus-fill"></i> Crear Usuario</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuarioAdmin" onclick="prepararNuevoUsuario()" title="Crear Credencial"><i class="bi bi-person-plus-fill"></i> Crear Usuario</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
@@ -437,7 +438,7 @@
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="prepararNuevoUnificado()"><i class="bi bi-plus-circle"></i> Nuevo Elemento</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="prepararNuevoUnificado()" title="Ingresar Stock"><i class="bi bi-plus-circle"></i> Nuevo Elemento</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
@@ -458,7 +459,7 @@
                         <p class="text-muted small mb-0">Inspecciones en puestos.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalAuditoria" onclick="prepararNuevaAuditoria()"><i class="bi bi-plus-circle"></i> Nueva Auditoría</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalAuditoria" onclick="prepararNuevaAuditoria()" title="Crear Auditoría"><i class="bi bi-plus-circle"></i> Nueva Auditoría</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
@@ -474,7 +475,7 @@
                         <p class="text-muted small mb-0">Registro operativo.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNovedad" onclick="prepararNuevaNovedad()" title="Reportar Novedad"><i class="bi bi-plus-circle"></i> Registrar Novedad</button>
                     </div>
                 </div>
                 <div class="card card-custom p-0 overflow-hidden shadow-sm">
@@ -490,8 +491,8 @@
                         <p class="text-muted small mb-0">Gestión de viáticos y reembolsos.</p>
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end flex-wrap">
-                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
-                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="prepararNuevoGasto()"><i class="bi bi-plus-circle"></i> Reportar Gasto</button>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm admin-only" id="btnExportarGastos" title="Descargar Libro Contable"><i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel</button>
+                        <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalGasto" onclick="prepararNuevoGasto()" title="Subir Factura"><i class="bi bi-plus-circle"></i> Reportar Gasto</button>
                     </div>
                 </div>
 
@@ -731,7 +732,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
-                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-briefcase me-2"></i> Contratos Comerciales</h5>
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-file-earmark-text me-2"></i> Contratos Comerciales</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -761,7 +762,7 @@
                                 <input type="date" id="srv_fin" class="form-control bg-body-tertiary" required title="Fecha de Fin">
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-success w-100 fw-bold">Agregar</button>
+                                <button type="submit" class="btn btn-success w-100 fw-bold" title="Agregar Servicio">Agregar</button>
                             </div>
                         </div>
                     </form>
@@ -917,7 +918,7 @@
         <div class="modal-dialog">
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
-                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-box-seam me-2"></i> Entregar Dotación a Operario</h5>
+                    <h5 class="modal-title fw-bold text-success"><i class="bi bi-person-lines-fill me-2"></i> Entregar Dotación a Operario</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1045,7 +1046,7 @@
                             <div class="col-md-5"><input type="text" id="mtto_detalle" class="form-control bg-body-tertiary" placeholder="Detalle (Ej: Cambio de bujía)" required></div>
                             <div class="col-md-4"><input type="number" id="mtto_costo" class="form-control bg-body-tertiary" placeholder="Costo ($)" min="0" required></div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 fw-bold py-1">Registrar Mantenimiento</button>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-1" title="Registrar Mantenimiento">Registrar</button>
                     </form>
                     
                     <div class="table-responsive">
@@ -1736,8 +1737,9 @@
             await window.cargarClientesCache();
             const activos = window.cacheClientesPDF.filter(c => c.estado_cliente !== 'Inactivo'); const inactivos = window.cacheClientesPDF.filter(c => c.estado_cliente === 'Inactivo');
             
-            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-warning btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalServiciosCliente" onclick="abrirServiciosCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-briefcase"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-archive"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
-            document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.ciudad)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="text-muted">${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
+            // SE AÑADIÓ: title="Texto" a los botones y se cambiaron los íconos (bi-file-earmark-text, bi-trash3)
+            document.getElementById('tablaClientesBody').innerHTML = activos.length ? activos.map(c => `<tr><td class="ps-4"><strong>${window.sanitizar(c.razon_social)}</strong></td><td>${window.sanitizar(c.ciudad)}</td><td>${window.sanitizar(c.direccion)}</td><td>${window.sanitizar(c.celular_cliente)}</td><td>${window.sanitizar(c.nombre_contacto_admin)}</td><td>${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-warning btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalServiciosCliente" onclick="abrirServiciosCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Gestionar Contratos Comerciales"><i class="bi bi-file-earmark-text"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="abrirModalClienteId('${c.id}')" title="Editar Cliente"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Archivar Cliente (Historial)"><i class="bi bi-trash3"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes activos.</td></tr>`;
+            document.getElementById('tablaClientesInactivosBody').innerHTML = inactivos.length ? inactivos.map(c => `<tr><td class="ps-4 text-muted"><strong>${window.sanitizar(c.razon_social)}</strong></td><td class="text-muted">${window.sanitizar(c.ciudad)}</td><td class="text-muted">${window.sanitizar(c.direccion)}</td><td class="text-muted">${window.sanitizar(c.celular_cliente)}</td><td class="text-muted">${window.sanitizar(c.nombre_contacto_admin)}</td><td class="text-muted">${window.sanitizar(c.celular_admin)}</td><td class="pe-4 text-end"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarCliente('${c.id}', '${window.eStr(c.razon_social)}')" title="Reactivar Cliente"><i class="bi bi-arrow-counterclockwise"></i></button></td></tr>`).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
         window.abrirModalClienteId = function(id) {
@@ -1784,7 +1786,7 @@
             document.getElementById('tbodyServiciosCliente').innerHTML = srvs.length ? srvs.map(s => {
                 const diff = Math.ceil((new Date(s.fecha_fin) - new Date()) / (1000 * 60 * 60 * 24));
                 const estado = diff < 0 ? '<span class="badge bg-danger">Vencido</span>' : (diff <= 45 ? `<span class="badge bg-warning text-dark">Vence en ${diff}d</span>` : '<span class="badge bg-success">Vigente</span>');
-                return `<tr><td class="ps-3 fw-bold">${window.sanitizar(s.servicio)}</td><td>${s.fecha_inicio}</td><td>${s.fecha_fin}</td><td>${estado}</td><td class="text-end pe-3"><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarServicioCliente('${s.id}', '${idCli}')"><i class="bi bi-trash"></i></button></td></tr>`;
+                return `<tr><td class="ps-3 fw-bold">${window.sanitizar(s.servicio)}</td><td>${s.fecha_inicio}</td><td>${s.fecha_fin}</td><td>${estado}</td><td class="text-end pe-3"><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarServicioCliente('${s.id}', '${idCli}')" title="Eliminar Servicio"><i class="bi bi-trash"></i></button></td></tr>`;
             }).join('') : `<tr><td colspan="5" class="text-center text-muted py-3">Sin servicios registrados.</td></tr>`;
         };
         
@@ -1819,8 +1821,10 @@
             if (opCliSel && window.cacheClientesPDF.length > 0) { opCliSel.innerHTML = '<option value="">-- Sin Cliente --</option>' + window.cacheClientesPDF.map(c => `<option value="${c.id}">${window.sanitizar(c.razon_social)}</option>`).join(''); }
             
             const activos = window.cacheOperariosPDF.filter(o => o.estado_operario !== 'Inactivo'); const inactivos = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Inactivo');
-            document.getElementById('tablaContratosBody').innerHTML = activos.length ? activos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="abrirEdicionOperarioId('${op.id}')" title="Editar"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-success btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEntregarDotacion" onclick="abrirModalEntregarDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-box-seam"></i></button><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalHistorialDotacion" onclick="abrirHistorialDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-clock-history"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-person-x"></i></button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap"><strong>${window.sanitizar(op.cliente_nombre)}</strong></td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap"><span class="badge bg-info-subtle text-info border">${window.sanitizar(op.especialidad)}</span></td><td class="text-nowrap">${op.fecha_inicio || ''}</td><td class="text-nowrap">${op.fecha_fin || ''}</td><td class="text-nowrap">${op.sueldo ? '$' + new Intl.NumberFormat('es-CO').format(op.sueldo) : ''}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td><td class="pe-4 text-nowrap">${window.sanitizar(op.correo_electronico)}</td></tr>`).join('') : `<tr><td colspan="12" class="text-center text-muted py-3">No hay contratos registrados.</td></tr>`;
-            document.getElementById('tablaOperariosInactivosBody').innerHTML = inactivos.length ? inactivos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')"><i class="bi bi-arrow-counterclockwise"></i> Reactivar</button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap">${window.sanitizar(op.cliente_nombre)}</td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap">${window.sanitizar(op.especialidad)}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td></tr>`).join('') : `<tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
+            
+            // SE AÑADIÓ: title="Texto" a los botones y se cambiaron los íconos (bi-person-lines-fill, bi-clock-history, bi-trash3)
+            document.getElementById('tablaContratosBody').innerHTML = activos.length ? activos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="abrirEdicionOperarioId('${op.id}')" title="Editar Ficha"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-success btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEntregarDotacion" onclick="abrirModalEntregarDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Entregar Dotación"><i class="bi bi-person-lines-fill"></i></button><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalHistorialDotacion" onclick="abrirHistorialDotacion('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Ver Historial de Dotación"><i class="bi bi-clock-history"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="desactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Archivar Empleado (Historial)"><i class="bi bi-trash3"></i></button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap"><strong>${window.sanitizar(op.cliente_nombre)}</strong></td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap"><span class="badge bg-info-subtle text-info border">${window.sanitizar(op.especialidad)}</span></td><td class="text-nowrap">${op.fecha_inicio || ''}</td><td class="text-nowrap">${op.fecha_fin || ''}</td><td class="text-nowrap">${op.sueldo ? '$' + new Intl.NumberFormat('es-CO').format(op.sueldo) : ''}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td><td class="pe-4 text-nowrap">${window.sanitizar(op.correo_electronico)}</td></tr>`).join('') : `<tr><td colspan="12" class="text-center text-muted py-3">No hay contratos registrados.</td></tr>`;
+            document.getElementById('tablaOperariosInactivosBody').innerHTML = inactivos.length ? inactivos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Reactivar Operario"><i class="bi bi-arrow-counterclockwise"></i> Reactivar</button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap">${window.sanitizar(op.cliente_nombre)}</td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap">${window.sanitizar(op.especialidad)}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td></tr>`).join('') : `<tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
         window.abrirEdicionOperarioId = function(id) {
@@ -1860,7 +1864,7 @@
         window.cargarUsuariosTabla = async function() { 
             await window.cargarUsuariosCache();
             const validUsers = window.cacheUsuariosPDF.filter(u => u.estado !== 'Inactivo');
-            document.getElementById('tablaUsuariosBody').innerHTML = validUsers.length ? validUsers.map(u => `<tr><td class="ps-4">${window.sanitizar(u.documento)}</td><td><strong>${window.sanitizar(u.nombre_completo) || 'Usuario'}</strong></td><td>${window.sanitizar(u.correo)}</td><td><span class="badge bg-secondary-subtle text-secondary border">${window.sanitizar(u.rol)}</span></td><td><span class="badge ${u.estado === 'Aprobado' ? 'bg-success-subtle text-success' : (u.estado === 'Rechazado' ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger')} border px-2 py-1">${u.estado}</span></td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 me-1" title="Editar Usuario" onclick="abrirEditarUsuario('${u.id}')"><i class="bi bi-pencil"></i></button>${u.estado !== 'Aprobado' ? `<button type="button" class="btn btn-success btn-sm py-0 px-2 fw-semibold" onclick="cambiarEstadoUsuario('${u.id}', 'Aprobado')"><i class="bi bi-check-lg"></i></button>` : ''}${u.estado !== 'Rechazado' ? `<button type="button" class="btn btn-outline-warning btn-sm py-0 px-2 ms-1" onclick="cambiarEstadoUsuario('${u.id}', 'Rechazado')"><i class="bi bi-x-lg"></i></button>` : ''}<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 ms-1" title="Desactivar Usuario" onclick="eliminarUsuario('${u.id}', '${window.eStr(u.correo)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="6" class="text-center text-danger py-3">Error al cargar datos.</td></tr>`; 
+            document.getElementById('tablaUsuariosBody').innerHTML = validUsers.length ? validUsers.map(u => `<tr><td class="ps-4">${window.sanitizar(u.documento)}</td><td><strong>${window.sanitizar(u.nombre_completo) || 'Usuario'}</strong></td><td>${window.sanitizar(u.correo)}</td><td><span class="badge bg-secondary-subtle text-secondary border">${window.sanitizar(u.rol)}</span></td><td><span class="badge ${u.estado === 'Aprobado' ? 'bg-success-subtle text-success' : (u.estado === 'Rechazado' ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger')} border px-2 py-1">${u.estado}</span></td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 px-2 me-1" title="Editar Usuario" onclick="abrirEditarUsuario('${u.id}')"><i class="bi bi-pencil"></i></button>${u.estado !== 'Aprobado' ? `<button type="button" class="btn btn-success btn-sm py-0 px-2 fw-semibold" title="Aprobar Acceso" onclick="cambiarEstadoUsuario('${u.id}', 'Aprobado')"><i class="bi bi-check-lg"></i></button>` : ''}${u.estado !== 'Rechazado' ? `<button type="button" class="btn btn-outline-warning btn-sm py-0 px-2 ms-1" title="Rechazar Acceso" onclick="cambiarEstadoUsuario('${u.id}', 'Rechazado')"><i class="bi bi-x-lg"></i></button>` : ''}<button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 ms-1" title="Desactivar Usuario" onclick="eliminarUsuario('${u.id}', '${window.eStr(u.correo)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="6" class="text-center text-danger py-3">Error al cargar datos.</td></tr>`; 
         };
 
         window.abrirEditarUsuario = function(id) {
@@ -1915,9 +1919,9 @@
             const insu = window.inventarioGlobal.filter(i => i.categoria === 'Insumo' && (!fTexto || String(i.nombre_elemento).toUpperCase().includes(fTexto) || String(i.serial_cantidad).toUpperCase().includes(fTexto) || String(i.responsable_sede).toUpperCase().includes(fTexto)));
             const dot = window.dotacionGlobal.filter(d => (!fTexto || String(d.tipo_prenda).toUpperCase().includes(fTexto) || String(d.talla).toUpperCase().includes(fTexto) || String(d.condicion).toUpperCase().includes(fTexto)));
 
-            document.getElementById('tbodyActivos').innerHTML = activos.length ? activos.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalMantenimientoActivo" onclick="abrirMantenimiento('${i.id}', '${window.eStr(i.nombre_elemento)}')" title="Mantenimiento"><i class="bi bi-tools"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
-            document.getElementById('tbodyInsumos').innerHTML = insu.length ? insu.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
-            document.getElementById('tbodyDotacionAdmin').innerHTML = dot.length ? dot.map(d => `<tr><td class="ps-4"><strong>${window.sanitizar(d.tipo_prenda)}</strong></td><td>${window.sanitizar(d.talla)}</td><td><span class="badge ${d.condicion === 'Nueva' ? 'bg-success' : 'bg-warning text-dark'}">${window.sanitizar(d.condicion)}</span></td><td class="text-center fw-bold">${d.cantidad}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarDotacionId('${d.id}')"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarDotacion('${d.id}', '${window.eStr(d.tipo_prenda)}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="5" class="text-center text-muted">No hay coincidencias</td></tr>`;
+            document.getElementById('tbodyActivos').innerHTML = activos.length ? activos.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-info btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalMantenimientoActivo" onclick="abrirMantenimiento('${i.id}', '${window.eStr(i.nombre_elemento)}')" title="Registrar Mantenimiento"><i class="bi bi-tools"></i></button><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')" title="Editar Activo"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')" title="Eliminar Activo"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
+            document.getElementById('tbodyInsumos').innerHTML = insu.length ? insu.map(i => `<tr><td class="ps-4"><strong>${window.sanitizar(i.nombre_elemento)}</strong></td><td>${window.sanitizar(i.serial_cantidad)}</td><td>${window.sanitizar(i.responsable_sede)}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarInventarioId('${i.id}')" title="Editar Insumo"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarInventario('${i.id}', '${window.eStr(i.nombre_elemento)}')" title="Eliminar Insumo"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="4" class="text-center text-muted">No hay coincidencias</td></tr>`;
+            document.getElementById('tbodyDotacionAdmin').innerHTML = dot.length ? dot.map(d => `<tr><td class="ps-4"><strong>${window.sanitizar(d.tipo_prenda)}</strong></td><td>${window.sanitizar(d.talla)}</td><td><span class="badge ${d.condicion === 'Nueva' ? 'bg-success' : 'bg-warning text-dark'}">${window.sanitizar(d.condicion)}</span></td><td class="text-center fw-bold">${d.cantidad}</td><td class="pe-4 text-end text-nowrap"><button type="button" class="btn btn-outline-primary btn-sm py-0 me-1" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="abrirEditarDotacionId('${d.id}')" title="Editar Dotación"><i class="bi bi-pencil"></i></button><button type="button" class="btn btn-outline-danger btn-sm py-0" onclick="eliminarDotacion('${d.id}', '${window.eStr(d.tipo_prenda)}')" title="Eliminar Dotación"><i class="bi bi-trash"></i></button></td></tr>`).join('') : `<tr><td colspan="5" class="text-center text-muted">No hay coincidencias</td></tr>`;
         };
 
         window.abrirEditarInventarioId = function(id) { window.limpiarFormulario('modalUnificado'); setTimeout(() => { const i = window.inventarioGlobal.find(x => x.id === id); if(i) { document.getElementById('tipoElemento').value = i.categoria === 'Herramienta' ? 'activo' : 'insumo'; document.getElementById('tipoElemento').disabled = true; window.toggleCamposUnificado(); document.getElementById('invId').value = i.id; document.getElementById('invNom').value = i.nombre_elemento; document.getElementById('invSer').value = i.serial_cantidad; document.getElementById('invRes').value = i.responsable_sede; } }, 50); };
@@ -2095,14 +2099,15 @@
             window.gastosGlobales = []; querySnapshot.forEach(doc => window.gastosGlobales.push({ id: doc.id, ...doc.data() }));
             window.gastosGlobales.sort((a,b) => new Date(b.fecha_registro) - new Date(a.fecha_registro));
 
+            // SE AÑADIÓ: title="..." en los botones de acciones de Caja Menor
             document.getElementById('tbodyGastos').innerHTML = window.gastosGlobales.length ? window.gastosGlobales.map(g => {
                 let colorEstado = g.estado === 'Aprobado' ? 'bg-info text-dark' : (g.estado === 'Pagado' ? 'bg-success' : (g.estado === 'Rechazado' ? 'bg-danger' : 'bg-secondary'));
-                let btnSoporte = g.soporte_url ? `<button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="verSoporte('${g.soporte_url}')" title="Ver Recibo"><i class="bi bi-eye"></i> Ver</button>` : `<span class="text-muted small">Sin archivo</span>`;
+                let btnSoporte = g.soporte_url ? `<button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="verSoporte('${g.soporte_url}')" title="Ver Recibo de Compra"><i class="bi bi-eye"></i> Ver</button>` : `<span class="text-muted small">Sin archivo</span>`;
                 let acciones = '';
                 if (rolUsuarioActivo === 'Administrador') {
                     if (g.estado !== 'Pagado' && g.estado !== 'Rechazado') acciones += `<button class="btn btn-sm btn-success py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Pagado')" title="Marcar como Pagado"><i class="bi bi-check-all"></i></button> <button class="btn btn-sm btn-outline-warning py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Rechazado')" title="Rechazar Gasto"><i class="bi bi-x-circle"></i></button>`;
-                    acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto"><i class="bi bi-trash"></i></button>`;
-                } else if (g.estado === 'Pendiente') { acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')"><i class="bi bi-trash"></i></button>`; }
+                    acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto del Registro"><i class="bi bi-trash"></i></button>`;
+                } else if (g.estado === 'Pendiente') { acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto"><i class="bi bi-trash"></i></button>`; }
                 return `<tr><td class="ps-4 text-nowrap">${g.fecha_gasto}</td><td><strong>${window.sanitizar(g.concepto)}</strong></td><td class="text-muted">${window.sanitizar(g.reportado_por)}</td><td class="text-end fw-bold text-success text-nowrap">$${new Intl.NumberFormat('es-CO').format(g.valor)}</td><td class="text-center">${btnSoporte}</td><td class="text-center"><span class="badge ${colorEstado}">${g.estado}</span></td><td class="pe-4 text-end text-nowrap">${acciones}</td></tr>`;
             }).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay gastos reportados.</td></tr>`;
 
