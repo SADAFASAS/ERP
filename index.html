@@ -28,25 +28,25 @@
             --texto-muted: #6c757d; 
         }
         
-        /* CERO SCROLL GLOBAL */
+        /* CERO SCROLL GLOBAL Y DISTRIBUCIÓN VERTICAL */
         body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; height: 100vh; display: flex; flex-direction: column; overflow: hidden; margin: 0; }
         
-        .top-navbar { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .top-navbar { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         
         /* === BOTÓN TEMA (DÍA/NOCHE) A LA IZQUIERDA === */
         .theme-toggle-container { padding: 6px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; margin: 0; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.1rem; }
-        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.1rem; }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.2rem; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.2rem; }
         [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
         [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
-        .theme-switch-input { width: 40px !important; height: 20px !important; margin: 0 8px !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input { width: 45px !important; height: 22px !important; margin: 0 10px !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
 
         /* === BOTÓN INICIAR SESIÓN (BARRA SUPERIOR DERECHA) === */
         .btn-login-nav {
-            padding: 8px 20px; 
+            padding: 8px 25px; 
             border-radius: 50px; 
             background-color: #e2e8f0; 
             color: #0b3c36;
@@ -57,7 +57,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
         [data-bs-theme="dark"] .btn-login-nav { 
             background-color: #1e293b; 
@@ -67,38 +67,42 @@
         .btn-login-nav:hover { transform: translateY(-2px); box-shadow: 6px 6px 15px rgba(0,0,0,0.1), -6px -6px 15px rgba(255,255,255,1); }
         [data-bs-theme="dark"] .btn-login-nav:hover { box-shadow: 6px 6px 15px rgba(0,0,0,0.5), -3px -3px 10px rgba(255,255,255,0.05); background-color: #0f172a; }
 
-        /* === HERO SECTION AJUSTADO === */
-        .hero-section { text-align: center; padding: 2vh 20px 0; }
-        .hero-title { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 800; margin-bottom: 0; letter-spacing: 2px; }
-        .hero-subtitle { font-size: clamp(1.2rem, 1.8vw, 1.5rem); font-weight: 400; margin-bottom: 5px; }
-        .hero-description { color: var(--texto-muted); font-size: 0.9rem; margin-bottom: 5px; }
+        /* === HERO SECTION === */
+        .hero-section { text-align: center; padding: 4vh 20px 0; flex-shrink: 0; }
+        .hero-title { font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 800; margin-bottom: 5px; letter-spacing: 2px; }
+        .hero-subtitle { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 400; margin-bottom: 10px; }
+        .hero-description { color: var(--texto-muted); font-size: 1.1rem; margin-bottom: 10px; }
         
-        /* === LÍNEA DIVISORIA MÁS ARRIBA === */
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 15px 0; opacity: 0.3; }
+        /* === LÍNEA DIVISORIA === */
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 3vh 0; opacity: 0.3; flex-shrink: 0; }
         
-        /* === CAJAS DE SERVICIOS COMPACTAS PARA ENCAJAR PERFECTO === */
-        .services-section { flex: 1; padding: 5px 30px; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .services-title { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; }
+        /* === CAJAS DE SERVICIOS AMPLIADAS === */
+        .services-section { flex: 1; padding: 0 40px 3vh; max-width: 1400px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .services-title { text-align: center; font-size: 1.6rem; font-weight: 700; margin-bottom: 4vh; flex-shrink: 0; }
         .services-title span { color: var(--sadafa-accent); position: relative; }
-        .services-title span::after { content: ''; position: absolute; width: 100%; height: 2px; background-color: var(--sadafa-accent); bottom: -4px; left: 0; border-radius: 2px; }
+        .services-title span::after { content: ''; position: absolute; width: 100%; height: 3px; background-color: var(--sadafa-accent); bottom: -8px; left: 0; border-radius: 2px; }
         
-        .service-card { background-color: var(--sadafa-card); border-radius: 10px; padding: 15px 10px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: center; }
-        [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04); }
-        .service-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); }
-        .service-icon { font-size: 1.8rem; color: var(--sadafa-accent); margin-bottom: 8px; }
-        .service-card h5 { font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; }
-        .service-card p { font-size: 0.75rem; color: var(--texto-muted); line-height: 1.3; margin: 0; }
+        .services-section .row { flex: 1; align-items: stretch; }
         
-        .footer { text-align: center; padding: 10px; background-color: rgba(0,0,0,0.2); font-size: 0.75rem; color: var(--texto-muted); }
+        .service-card { background-color: var(--sadafa-card); border-radius: 12px; padding: 3vh 20px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+        .service-icon { font-size: 2.8rem; color: var(--sadafa-accent); margin-bottom: 15px; }
+        .service-card h5 { font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
+        .service-card p { font-size: 0.95rem; color: var(--texto-muted); line-height: 1.5; margin: 0; }
+        
+        .footer { text-align: center; padding: 15px; background-color: rgba(0,0,0,0.2); font-size: 0.85rem; color: var(--texto-muted); flex-shrink: 0; }
         
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         @media (max-width: 768px) {
-            body { overflow: auto; } /* En móviles sí permitimos scroll natural */
-            .top-navbar { padding: 10px 15px; }
-            .hero-section { padding: 20px 15px 10px; }
-            .services-section { padding: 10px 15px 30px; }
-            .btn-login-nav span { display: none; } /* Oculta texto en celular */
+            body { overflow: auto; height: auto; } /* En móviles sí permitimos scroll natural */
+            .wrapper { height: auto; }
+            .top-navbar { padding: 15px 20px; }
+            .hero-section { padding: 40px 15px 20px; }
+            .services-section { padding: 20px 15px 40px; }
+            .btn-login-nav span { display: none; } /* Oculta texto en celular para ahorrar espacio */
+            .service-card { padding: 20px 15px; }
         }
     </style>
 </head>
@@ -130,7 +134,7 @@
 
     <section class="services-section">
         <h3 class="services-title"><span>Algunos De Nuestros Servicios</span></h3>
-        <div class="row g-2 mt-1">
+        <div class="row g-4">
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-stars service-icon"></i><h5>Operarios de Aseo</h5><p>Mantenimiento y limpieza integral para copropiedades y edificios.</p></div></div>
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-scissors service-icon"></i><h5>Guadañado y Jardinería</h5><p>Cuidado de zonas verdes, corte de césped y poda técnica.</p></div></div>
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-person-badge service-icon"></i><h5>Conserjería y Toderos</h5><p>Control de acceso, mantenimiento locativo menor e instalaciones.</p></div></div>
@@ -175,8 +179,7 @@
                             </div>
                         </div>
                         
-                        <!-- BOTÓN CONTINUAR EN EL MODAL DE LOGIN (MANTENIENDO EL ESTILO VERDE) -->
-                        <button type="submit" class="btn w-100 mb-3 shadow" id="btnLogin" style="background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; border-radius: 50px;">Continuar</button>
+                        <button type="submit" class="btn w-100 mb-3 shadow" id="btnLogin" style="background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; border-radius: 50px; padding: 10px;">Continuar</button>
                         
                         <a href="#" class="text-decoration-none small" style="color: var(--texto-muted);" data-bs-toggle="modal" data-bs-target="#modalRecuperar">¿Olvidaste tu contraseña?</a>
                     </form>
@@ -205,7 +208,7 @@
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn w-100 shadow" id="btnRecuperar" style="background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; border-radius: 50px;">Enviar Enlace</button>
+                        <button type="submit" class="btn w-100 shadow" id="btnRecuperar" style="background-color: var(--sadafa-accent); color: #0f172a; font-weight: 700; border-radius: 50px; padding: 10px;">Enviar Enlace</button>
                     </form>
                 </div>
             </div>
