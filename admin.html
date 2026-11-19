@@ -35,10 +35,16 @@
         
         body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
         .wrapper { display: flex; width: 100%; min-height: 100vh; overflow-x: hidden; }
-        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1030; position: relative; white-space: nowrap; }
+        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1030; position: relative; white-space: nowrap; display: flex; flex-direction: column; }
         .sidebar.collapsed { width: 75px; }
         .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
         .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
+        
+        /* SCROLL INTERNO PARA EL MENÚ LATERAL */
+        .sidebar-menu-scroll { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; }
+        .sidebar-menu-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-menu-scroll::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.2); }
+        
         .sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; padding: 12px 20px; border-radius: 6px; margin-bottom: 4px; font-weight: 500; overflow: hidden; }
         .sidebar a i { font-size: 1.2rem; margin-right: 12px; color: var(--sadafa-accent); min-width: 25px; text-align: center; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(45, 212, 191, 0.15); color: var(--sadafa-accent); font-weight: 600; }
@@ -46,7 +52,7 @@
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
         
-        /* BOTÓN DINÁMICO TEMA */
+        /* === BOTÓN TEMA (DÍA/NOCHE) CON ICONOS === */
         .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
@@ -57,13 +63,13 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
+        /* Ajuste cuando el menú está colapsado */
         .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; }
         .sidebar.collapsed .theme-icon-sun, .sidebar.collapsed .theme-icon-moon { display: none !important; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         
-        /* RESTAURADO A TAMAÑO NORMAL */
         .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
         .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
         
@@ -78,12 +84,21 @@
         .erp-color-morado { color: #8b5cf6 !important; }
         .erp-border-morado { border-left-color: #8b5cf6 !important; }
         
-        .table-scrollable { max-height: 250px; overflow-y: auto; }
+        /* SCROLL COMPACTO PARA TABLAS DEL DASHBOARD */
+        .table-scrollable-dash { max-height: 250px; overflow-y: auto; }
+        .table-scrollable-dash::-webkit-scrollbar { width: 6px; }
+        .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
+        [data-bs-theme="dark"] .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
+
+        /* SCROLL AMPLIO PARA TABLAS DE BASE DE DATOS */
+        .table-scrollable { max-height: 500px; overflow-y: auto; }
         .table-scrollable::-webkit-scrollbar { width: 6px; }
         .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
         [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
+        
         .text-muted { color: var(--texto-muted) !important; }
         
+        /* UNIFICACIÓN ESTILOS PESTAÑAS (TABS) */
         .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; border: 1px solid transparent; }
         .nav-pills .nav-link.active { background-color: var(--sadafa-accent) !important; color: #ffffff !important; border: 1px solid var(--sadafa-accent); }
 
@@ -95,6 +110,11 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
+        /* ESTILOS ACORDEÓN DE CLIENTES (SIN BORDES MOLESTOS) */
+        .cliente-acordeon-header { cursor: pointer; transition: background-color 0.2s; }
+        .cliente-acordeon-header:hover { background-color: var(--hover-casilla); }
+        
+        /* --- REPARACIÓN RESPONSIVE (MÓVILES) --- */
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
@@ -127,10 +147,11 @@
             <button class="btn-toggle-sidebar" onclick="document.getElementById('sidebar').classList.toggle('collapsed')" title="Expandir/Contraer Menú">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <div class="position-sticky">
-                <h4 class="brand">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
-                
-                <ul class="nav flex-column px-2">
+            
+            <h4 class="brand mt-2">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
+            
+            <div class="sidebar-menu-scroll px-2">
+                <ul class="nav flex-column">
                     <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
@@ -141,6 +162,7 @@
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
+                    <!-- BOTÓN DINÁMICO DÍA/OSCURO CON ICONOS -->
                     <li class="nav-item mt-4 mb-2 d-flex justify-content-center">
                         <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
                             <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
@@ -150,8 +172,7 @@
                             <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                         </div>
                     </li>
-
-                    <li class="nav-item mt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
+                    <li class="nav-item mt-1"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
                 </ul>
             </div>
         </nav>
@@ -242,7 +263,8 @@
                                     <li class="nav-item" role="presentation"><button class="nav-link small py-1 fw-bold" data-bs-toggle="pill" data-bs-target="#tab-vence-cli">Alerta Clientes <span class="badge border border-white ms-1" id="badgeVenceCliCount">0</span></button></li>
                                 </ul>
                             </div>
-                            <div class="tab-content table-scrollable">
+                            <!-- TABLAS DEL DASHBOARD USAN table-scrollable-dash (250px max) -->
+                            <div class="tab-content table-scrollable-dash">
                                 <div class="tab-pane fade show active" id="tab-vence-op">
                                     <table class="table table-hover align-middle mb-0 small">
                                         <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días</th></tr></thead>
@@ -250,7 +272,7 @@
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="tab-vence-cli">
-                                    <table class="table table-hover align-middle mb-0 small">
+                                    <table class="table align-middle mb-0 small">
                                         <tbody id="tbodyDashVencimientosCli"><tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr></tbody>
                                     </table>
                                 </div>
@@ -262,7 +284,7 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-amarillo"><i class="bi bi-shield-exclamation me-2"></i> Stock a Reponer</h6>
                             </div>
-                            <div class="table-scrollable">
+                            <div class="table-scrollable-dash">
                                 <table class="table table-hover align-middle mb-0 small">
                                     <thead class="table-light sticky-top"><tr><th class="ps-3">Prenda</th><th class="text-center pe-3">Und</th></tr></thead>
                                     <tbody id="tbodyDashStock"><tr><td colspan="2" class="text-center text-muted py-3">Seguro.</td></tr></tbody>
@@ -275,7 +297,7 @@
                             <div class="p-3 border-bottom bg-body-tertiary d-flex justify-content-between align-items-center">
                                 <h6 class="fw-bold mb-0 erp-color-morado"><i class="bi bi-exclamation-octagon me-2"></i> Legal Dotación</h6>
                             </div>
-                            <div class="table-scrollable">
+                            <div class="table-scrollable-dash">
                                 <table class="table table-hover align-middle mb-0 small">
                                     <thead class="table-light sticky-top"><tr><th class="ps-3">Operario</th><th class="text-end pe-3">Días sin dot.</th></tr></thead>
                                     <tbody id="tbodyDashLegal"><tr><td colspan="2" class="text-center text-muted py-3">Todo en regla.</td></tr></tbody>
@@ -286,12 +308,6 @@
                 </div>
             </div>
 
-            <!-- SOBREESCRIBIR TABLAS PESADAS PARA QUE TENGAN MÁS ESPACIO -->
-            <style>
-                #sec-empleado .table-scrollable, #sec-cliente .table-scrollable, #sec-usuario .table-scrollable, #sec-inventario .table-scrollable, #sec-auditoria .table-scrollable, #sec-bitacora .table-scrollable, #sec-caja .table-scrollable {
-                    max-height: 500px; 
-                }
-            </style>
             <!-- 1. PERSONAL OPERATIVO Y CONTRATOS -->
             <div id="sec-empleado" class="seccion-contenido" style="display: none;">
                 <div class="row mb-4 align-items-center">
@@ -331,6 +347,7 @@
                         </ul>
                     </div>
                     <div class="tab-content">
+                        <!-- TABLAS DE BASE DE DATOS USAN table-scrollable (500px max) -->
                         <div class="tab-pane fade show active" id="contratos-activos">
                             <div class="table-responsive table-scrollable">
                                 <table class="table table-hover align-middle mb-0 small">
@@ -512,8 +529,7 @@
 
         </main>
     </div>
-
-    <!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1389,7 +1405,7 @@
         window.inventarioGlobal = []; window.dotacionGlobal = []; window.cacheOperariosPDF = []; 
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
-        // USO DE localStorage (Fix Bucle)
+        // USO DE localStorage
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
         const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
@@ -1416,7 +1432,7 @@
 
         window.mostrarAlerta = function(mensaje, esError = false) {
             const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
-            toastEl.style.backgroundColor = ''; // Restablecer fondo
+            toastEl.style.backgroundColor = ''; 
             toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
             toastEl.classList.add(esError ? 'text-bg-danger' : 'text-bg-success');
             toastMsg.className = 'toast-body fw-semibold text-white';
@@ -1425,7 +1441,7 @@
         
         window.mostrarAlertaAmarilla = function(mensaje) {
             const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
-            toastEl.style.backgroundColor = ''; // Restablecer fondo
+            toastEl.style.backgroundColor = ''; 
             toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
             toastEl.classList.add('text-bg-warning');
             toastMsg.className = 'toast-body fw-semibold text-dark';
@@ -1435,7 +1451,7 @@
         window.mostrarAlertaNaranja = function(mensaje) {
             const toastEl = document.getElementById('notificacionToast'); const toastMsg = document.getElementById('notificacionMensaje');
             toastEl.classList.remove('text-bg-success', 'text-bg-danger', 'text-bg-warning'); 
-            toastEl.style.backgroundColor = '#ea580c'; // Naranja corporativo SADAFA
+            toastEl.style.backgroundColor = '#ea580c'; 
             toastMsg.className = 'toast-body fw-semibold text-white';
             toastMsg.innerText = mensaje; new bootstrap.Toast(toastEl, { delay: 6000 }).show();
         };
@@ -1461,7 +1477,6 @@
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
         
-        // Inicializar botón de tema con Iconos
         const switchEl = document.getElementById('modoOscuroSwitch');
         
         if(switchEl) { 
@@ -1508,7 +1523,7 @@
         };
 
         // ==========================================
-        // DASHBOARD Y CACHÉS (B2B y Cumpleaños Integrados)
+        // DASHBOARD Y CACHÉS
         // ==========================================
         window.cargarClientesCache = async function() {
             const querySnapshot = await getDocs(collection(db, "clientes"));
@@ -1539,14 +1554,12 @@
             await window.cargarDotacionCache();
             const hoy = new Date(); const mesActual = hoy.getMonth() + 1; const mesStr = mesActual < 10 ? '0'+mesActual : ''+mesActual;
             
-            // 1. Alertas Operarios (30 dias)
             const vencimientosOp = window.cacheOperariosPDF.filter(o => {
                 if(o.estado_operario === 'Inactivo' || !o.fecha_fin) return false;
                 const diffDays = Math.ceil((new Date(o.fecha_fin) - hoy) / (1000 * 60 * 60 * 24));
                 o.dias_restantes = diffDays; return diffDays >= 0 && diffDays <= 30;
             });
             
-            // 2. Alertas Contratos B2B Clientes (45 dias - AGRUPADOS)
             const srvSnap = await getDocs(collection(db, "contratos_clientes"));
             let vencimientosCli = [];
             srvSnap.forEach(d => {
@@ -1560,13 +1573,11 @@
                 }
             });
             
-            // 3. Stock y Legal
             const stockBajo = window.dotacionGlobal.filter(d => d.cantidad <= 3);
             const alertasLegal = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.fecha_inicio).map(o => {
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
-            // 4. Cumpleañeros del Mes (MUESTRA ALERTA INMEDIATAMENTE - SEGUNDO 1)
             let txtCumples = "";
             const cumpleañeros = window.cacheOperariosPDF.filter(o => o.estado_operario === 'Activo' && o.cumpleanos && o.cumpleanos.split('/')[1] === mesStr);
             if (cumpleañeros.length > 0) {
@@ -1574,7 +1585,6 @@
                 setTimeout(() => window.mostrarAlertaAmarilla(`🎉 Cumpleaños este mes: ${txtCumples}`), 1000);
             }
 
-            // RENDERIZADO DE TABLAS
             document.getElementById('dashVenceContratos').innerText = vencimientosOp.length;
             document.getElementById('badgeVenceCount').innerText = vencimientosOp.length;
             document.getElementById('dashVenceClientes').innerText = vencimientosCli.length;
@@ -1583,7 +1593,7 @@
 
             document.getElementById('tbodyDashVencimientos').innerHTML = vencimientosOp.length ? vencimientosOp.map(v => `<tr><td class="ps-3 fw-bold">${window.sanitizar(v.nombres_completos)} <br><small class="text-muted fw-normal">${v.fecha_fin}</small></td><td class="text-end pe-3"><span class="badge bg-danger">${v.dias_restantes} días</span></td></tr>`).join('') : '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas.</td></tr>';
             
-            // LÓGICA DE AGRUPACIÓN DE CLIENTES
+            // LÓGICA DE AGRUPACIÓN DE CLIENTES (ACORDEÓN SUAVE)
             let htmlCli = "";
             if (vencimientosCli.length > 0) {
                 const agrupados = vencimientosCli.reduce((acc, curr) => {
@@ -1592,11 +1602,28 @@
                     return acc;
                 }, {});
                 
+                let i = 0;
                 for (let cliente in agrupados) {
-                    htmlCli += `<tr class="bg-body-secondary"><td colspan="2" class="fw-bold ps-3 py-1 text-primary" style="font-size: 0.8rem;">${window.sanitizar(cliente)}</td></tr>`;
+                    let collapseId = `collapseCli${i}`;
+                    
+                    htmlCli += `<tr data-bs-toggle="collapse" data-bs-target="#${collapseId}" class="cliente-acordeon-header bg-body-secondary">
+                        <td colspan="2" class="fw-bold ps-3 py-2 text-primary d-flex justify-content-between align-items-center">
+                            <span style="font-size: 0.85rem;"><i class="bi bi-building me-2"></i> ${window.sanitizar(cliente)}</span>
+                            <span class="badge bg-primary rounded-pill">${agrupados[cliente].length}</span>
+                        </td>
+                    </tr>`;
+                    
+                    htmlCli += `<tr id="${collapseId}" class="collapse"><td colspan="2" class="p-0 border-0"><table class="table table-sm m-0 border-bottom"><tbody>`;
+                    
                     agrupados[cliente].forEach(v => {
-                        htmlCli += `<tr><td class="ps-4 text-muted"><i class="bi bi-arrow-return-right me-1"></i> ${window.sanitizar(v.servicio)} <br><small style="font-size: 0.7rem;">${v.fin}</small></td><td class="text-end pe-3"><span class="badge bg-warning text-dark">${v.dias} días</span></td></tr>`;
+                        htmlCli += `<tr>
+                            <td class="ps-4 text-muted border-0"><i class="bi bi-arrow-return-right me-1"></i> ${window.sanitizar(v.servicio)} <br><small style="font-size: 0.7rem;">${v.fin}</small></td>
+                            <td class="text-end pe-3 align-middle border-0"><span class="badge bg-warning text-dark">${v.dias} días</span></td>
+                        </tr>`;
                     });
+                    
+                    htmlCli += `</tbody></table></td></tr>`;
+                    i++;
                 }
             } else {
                 htmlCli = '<tr><td colspan="2" class="text-center text-muted py-3">Sin alertas comerciales.</td></tr>';
@@ -1622,7 +1649,7 @@
                     labels: ['Activos', 'Retirados'],
                     datasets: [{
                         data: [opsActivos, opsInactivos],
-                        backgroundColor: ['#10b981', '#f43f5e'], // Colores Vibrantes: Esmeralda y Carmesí
+                        backgroundColor: ['#10b981', '#f43f5e'],
                         borderWidth: 0,
                         hoverOffset: 6
                     }]
@@ -1668,7 +1695,6 @@
             });
         };
 
-        // ALERTAS EN CASCADA
         window.verificarMostrarAlertaVencimientos = function() {
             if (!window.cacheOperariosPDF || window.cacheOperariosPDF.length === 0) return;
             let proximos = window.cacheOperariosPDF.filter(o => {
@@ -1688,9 +1714,7 @@
                     if(diffDays >= 0 && diffDays <= 45) proximosCli++;
                 }
             });
-            if (proximosCli > 0) {
-                window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`);
-            }
+            if (proximosCli > 0) window.mostrarAlertaNaranja(`Alerta Comercial: ${proximosCli} contrato(s) con clientes por vencer.`);
         };
 
         // ==========================================
@@ -1722,7 +1746,7 @@
         window.desactivarCliente = async function(id, nombre) { if (confirm(`¿Enviar a ${nombre} al historial de inactivos?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Inactivo' }); window.cargarClientesTabla(); } };
         window.reactivarCliente = async function(id, nombre) { if (confirm(`¿Reactivar a ${nombre}?`)) { await updateDoc(doc(db, "clientes", id), { estado_cliente: 'Activo' }); window.cargarClientesTabla(); } };
 
-        // SERVICIOS B2B
+        // SERVICIOS B2B Y CAMPO "OTRO"
         window.toggleOtroServicio = function() {
             const select = document.getElementById('srv_tipo');
             const inputOtro = document.getElementById('srv_tipo_otro');
@@ -2185,7 +2209,7 @@
             
             if (!token || !rol) { window.location.href = 'index.html'; return; }
             
-            // 2. EL NOMBRE DE LA PERSONA EN LUGAR DE "Rol: Administrador"
+            // 1. TU NOMBRE EN EL ENCABEZADO
             document.getElementById('nombreUI').innerText = window.sanitizar(nombreUsuarioActivo);
             document.getElementById('rolUI').innerText = window.sanitizar(rol);
             document.body.setAttribute('data-rol', rol);
@@ -2218,4 +2242,4 @@
         });
     </script>
 </body>
-</html>
+</html>   
