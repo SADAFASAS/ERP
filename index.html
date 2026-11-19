@@ -28,25 +28,25 @@
             --texto-muted: #6c757d; 
         }
         
-        /* CERO SCROLL GLOBAL Y DISTRIBUCIÓN VERTICAL */
-        body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; height: 100vh; display: flex; flex-direction: column; overflow: hidden; margin: 0; }
+        /* CERO SCROLL GLOBAL: Distribución exacta del 100% de la pantalla */
+        body { background-color: var(--sadafa-dark); color: var(--texto-principal); font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; height: 100vh; display: flex; flex-direction: column; overflow: hidden; margin: 0; justify-content: space-between; }
         
-        .top-navbar { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .top-navbar { padding: 2vh 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; height: 10vh; }
         
         /* === BOTÓN TEMA (DÍA/NOCHE) A LA IZQUIERDA === */
-        .theme-toggle-container { padding: 6px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; margin: 0; }
+        .theme-toggle-container { padding: 4px 12px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transition: background-color 0.3s ease; margin: 0; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.2rem; }
-        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.2rem; }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; font-size: 1.1rem; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; font-size: 1.1rem; }
         [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
         [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
-        .theme-switch-input { width: 45px !important; height: 22px !important; margin: 0 10px !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        .theme-switch-input { width: 40px !important; height: 20px !important; margin: 0 8px !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
 
         /* === BOTÓN INICIAR SESIÓN (BARRA SUPERIOR DERECHA) === */
         .btn-login-nav {
-            padding: 8px 25px; 
+            padding: 6px 20px; 
             border-radius: 50px; 
             background-color: #e2e8f0; 
             color: #0b3c36;
@@ -57,7 +57,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
         [data-bs-theme="dark"] .btn-login-nav { 
             background-color: #1e293b; 
@@ -67,42 +67,43 @@
         .btn-login-nav:hover { transform: translateY(-2px); box-shadow: 6px 6px 15px rgba(0,0,0,0.1), -6px -6px 15px rgba(255,255,255,1); }
         [data-bs-theme="dark"] .btn-login-nav:hover { box-shadow: 6px 6px 15px rgba(0,0,0,0.5), -3px -3px 10px rgba(255,255,255,0.05); background-color: #0f172a; }
 
-        /* === HERO SECTION === */
-        .hero-section { text-align: center; padding: 4vh 20px 0; flex-shrink: 0; }
-        .hero-title { font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 800; margin-bottom: 5px; letter-spacing: 2px; }
-        .hero-subtitle { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 400; margin-bottom: 10px; }
-        .hero-description { color: var(--texto-muted); font-size: 1.1rem; margin-bottom: 10px; }
+        /* === HERO SECTION (15vh) === */
+        .hero-section { text-align: center; flex-shrink: 0; height: 15vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero-title { font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 800; margin-bottom: 0; letter-spacing: 2px; line-height: 1; }
+        .hero-subtitle { font-size: clamp(1.1rem, 1.8vw, 1.5rem); font-weight: 400; margin-bottom: 5px; }
+        .hero-description { color: var(--texto-muted); font-size: 0.9rem; margin-bottom: 0; }
         
-        /* === LÍNEA DIVISORIA === */
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 3vh 0; opacity: 0.3; flex-shrink: 0; }
+        /* === LÍNEA DIVISORIA (2vh) === */
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--sadafa-accent), transparent); margin: 1vh 0; opacity: 0.3; flex-shrink: 0; }
         
-        /* === CAJAS DE SERVICIOS AMPLIADAS === */
-        .services-section { flex: 1; padding: 0 40px 3vh; max-width: 1400px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .services-title { text-align: center; font-size: 1.6rem; font-weight: 700; margin-bottom: 4vh; flex-shrink: 0; }
+        /* === CAJAS DE SERVICIOS COMPACTAS (65vh) === */
+        .services-section { flex: 1; padding: 0 40px; max-width: 1400px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; height: 65vh; }
+        .services-title { text-align: center; font-size: 1.2rem; font-weight: 700; margin-bottom: 2vh; flex-shrink: 0; }
         .services-title span { color: var(--sadafa-accent); position: relative; }
-        .services-title span::after { content: ''; position: absolute; width: 100%; height: 3px; background-color: var(--sadafa-accent); bottom: -8px; left: 0; border-radius: 2px; }
+        .services-title span::after { content: ''; position: absolute; width: 100%; height: 2px; background-color: var(--sadafa-accent); bottom: -4px; left: 0; border-radius: 2px; }
         
-        .services-section .row { flex: 1; align-items: stretch; }
+        .services-section .row { flex: 1; align-items: stretch; margin-bottom: 1vh; }
         
-        .service-card { background-color: var(--sadafa-card); border-radius: 12px; padding: 3vh 20px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .service-card { background-color: var(--sadafa-card); border-radius: 12px; padding: 2vh 15px; text-align: center; height: 100%; border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         [data-bs-theme="light"] .service-card { border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
-        .service-icon { font-size: 2.8rem; color: var(--sadafa-accent); margin-bottom: 15px; }
-        .service-card h5 { font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
-        .service-card p { font-size: 0.95rem; color: var(--texto-muted); line-height: 1.5; margin: 0; }
+        .service-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+        .service-icon { font-size: 2.2rem; color: var(--sadafa-accent); margin-bottom: 1vh; }
+        .service-card h5 { font-weight: 700; font-size: 1rem; margin-bottom: 0.5vh; }
+        .service-card p { font-size: 0.85rem; color: var(--texto-muted); line-height: 1.3; margin: 0; }
         
-        .footer { text-align: center; padding: 15px; background-color: rgba(0,0,0,0.2); font-size: 0.85rem; color: var(--texto-muted); flex-shrink: 0; }
+        /* === FOOTER (8vh) === */
+        .footer { text-align: center; padding: 2vh 10px; background-color: rgba(0,0,0,0.2); font-size: 0.8rem; color: var(--texto-muted); flex-shrink: 0; height: 8vh; display: flex; flex-direction: column; justify-content: center; }
         
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         @media (max-width: 768px) {
             body { overflow: auto; height: auto; } /* En móviles sí permitimos scroll natural */
-            .wrapper { height: auto; }
-            .top-navbar { padding: 15px 20px; }
-            .hero-section { padding: 40px 15px 20px; }
-            .services-section { padding: 20px 15px 40px; }
+            .top-navbar { padding: 15px 20px; height: auto; }
+            .hero-section { padding: 30px 15px 20px; height: auto; }
+            .services-section { padding: 10px 15px 40px; height: auto; }
+            .footer { height: auto; padding: 20px 10px; }
             .btn-login-nav span { display: none; } /* Oculta texto en celular para ahorrar espacio */
-            .service-card { padding: 20px 15px; }
+            .service-card { padding: 20px 15px; min-height: 160px; }
         }
     </style>
 </head>
@@ -134,7 +135,7 @@
 
     <section class="services-section">
         <h3 class="services-title"><span>Algunos De Nuestros Servicios</span></h3>
-        <div class="row g-4">
+        <div class="row g-3 mt-1">
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-stars service-icon"></i><h5>Operarios de Aseo</h5><p>Mantenimiento y limpieza integral para copropiedades y edificios.</p></div></div>
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-scissors service-icon"></i><h5>Guadañado y Jardinería</h5><p>Cuidado de zonas verdes, corte de césped y poda técnica.</p></div></div>
             <div class="col-md-4 col-sm-6"><div class="service-card"><i class="bi bi-person-badge service-icon"></i><h5>Conserjería y Toderos</h5><p>Control de acceso, mantenimiento locativo menor e instalaciones.</p></div></div>
