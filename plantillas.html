@@ -5,6 +5,12 @@
     <title>Generador de Documentos SADAFA</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
+        /* === CORRECCIÓN ESTRICTA PARA EVITAR HOJA EXTRA EN PDF === */
+        @page {
+            size: A4;
+            margin: 0 !important; /* Anula los márgenes automáticos de la impresora */
+        }
+        
         body { 
             font-family: Arial, sans-serif; 
             background: #525659; 
@@ -14,14 +20,17 @@
             justify-content: center; 
         }
         
+        /* Contenedor que emula el tamaño físico A4 pero previene el desbordamiento */
         .page { 
             background: white; 
-            width: 21cm; 
-            min-height: 29.7cm; 
+            width: 210mm; 
+            height: 296mm; /* 1mm menos para evitar el desbordamiento a la siguiente página */
             position: relative; 
             box-sizing: border-box; 
             box-shadow: 0 0 10px rgba(0,0,0,0.5); 
-            overflow: hidden; 
+            overflow: hidden; /* Corta cualquier salto de página fantasma */
+            page-break-after: avoid;
+            page-break-inside: avoid;
         }
         
         /* Membrete SADAFA como marca de agua absoluta */
@@ -34,12 +43,12 @@
             z-index: 0; 
         }
         
-        /* Margen protector */
+        /* Margen protector del texto para no pisar el membrete */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 5cm 2.5cm 3.5cm 2.5cm; 
-            min-height: 29.7cm; 
+            padding: 50mm 25mm 35mm 25mm; /* Márgenes internos (Top, Right, Bottom, Left) */
+            height: 100%; 
             box-sizing: border-box; 
         }
         
@@ -96,7 +105,7 @@
         .lista-periodos { margin-top: 10px; margin-bottom: 15px; padding-left: 20px; }
         .lista-periodos li { margin-bottom: 5px; }
 
-        /* Firmas corporativas FIX: Ancho ampliado para que la razón social quede en un renglón */
+        /* Firmas corporativas */
         .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
         .signature-box { display: inline-block; margin-top: 15px; text-align: left; }
         .signature-box img { max-width: 200px; max-height: 85px; display: block; margin-bottom: -5px; }
@@ -106,8 +115,9 @@
         .print-btn:hover { background: #166c62; }
         
         @media print {
-            body { background: white; padding: 0; }
-            .page { box-shadow: none; width: 100%; height: auto; margin: 0; }
+            body { background: white; padding: 0; margin: 0; }
+            /* Se anula la sombra y los márgenes del body en impresión */
+            .page { box-shadow: none; width: 100%; height: 297mm; margin: 0; border: none; }
             .print-btn { display: none; }
         }
     </style>
@@ -122,7 +132,7 @@
         <div class="content-wrapper">
             
             <!-- ==============================================
-                 1. CARTA DE PRESENTACIÓN
+1. CARTA DE PRESENTACIÓN
                  ============================================== -->
             <div id="doc-carta" class="content" style="display: none;">
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
@@ -162,7 +172,7 @@
             </div>
 
             <!-- ==============================================
-                 2. CERTIFICADO LABORAL
+2. CERTIFICADO LABORAL
                  ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
                 <p class="bold mt-4 mb-4 text-center">A QUIEN INTERESE</p>
@@ -202,7 +212,7 @@
             </div>
 
             <!-- ==============================================
-                 3. EXAMEN MÉDICO
+3. EXAMEN MÉDICO
                  ============================================== -->
             <div id="doc-examen" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
@@ -235,7 +245,7 @@
             </div>
 
             <!-- ==============================================
-                 4. CESANTÍAS
+4. CESANTÍAS
                  ============================================== -->
             <div id="doc-cesantias" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
@@ -256,7 +266,7 @@
             </div>
 
             <!-- ==============================================
-                 5. CUENTA
+5. CUENTA
                  ============================================== -->
             <div id="doc-cuenta" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
