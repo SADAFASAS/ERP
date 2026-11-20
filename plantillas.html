@@ -5,10 +5,10 @@
     <title>Generador de Documentos SADAFA</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
-        /* === CORRECCIÓN ESTRICTA PARA EVITAR HOJA EXTRA EN PDF === */
+        /* === REGLAS ESTRICTAS DE IMPRESIÓN === */
         @page {
             size: A4;
-            margin: 0 !important; /* Anula los márgenes automáticos de la impresora */
+            margin: 0 !important;
         }
         
         body { 
@@ -18,36 +18,39 @@
             padding: 20px; 
             display: flex; 
             justify-content: center; 
+            -webkit-print-color-adjust: exact !important; /* Fuerza a imprimir los colores de fondo */
+            print-color-adjust: exact !important;
         }
         
-        /* Contenedor que emula el tamaño físico A4 pero previene el desbordamiento */
+        /* Contenedor A4 exacto */
         .page { 
             background: white; 
             width: 210mm; 
-            height: 296mm; /* 1mm menos para evitar el desbordamiento a la siguiente página */
+            height: 297mm; 
             position: relative; 
             box-sizing: border-box; 
             box-shadow: 0 0 10px rgba(0,0,0,0.5); 
-            overflow: hidden; /* Corta cualquier salto de página fantasma */
+            overflow: hidden; 
             page-break-after: avoid;
             page-break-inside: avoid;
         }
         
-        /* Membrete SADAFA como marca de agua absoluta */
+        /* FIX MEMBRETE: Ajuste para que no se corte */
         .header-bg { 
             position: absolute; 
             top: 0; 
             left: 0; 
             width: 100%; 
             height: 100%; 
+            object-fit: cover; /* Estira el membrete para cubrir toda la hoja sin deformarse */
             z-index: 0; 
         }
         
-        /* Margen protector del texto para no pisar el membrete */
+        /* Margen interno para el texto */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 50mm 25mm 35mm 25mm; /* Márgenes internos (Top, Right, Bottom, Left) */
+            padding: 45mm 25mm 35mm 25mm; /* Ajuste milimétrico de márgenes (Arriba, Der, Abajo, Izq) */
             height: 100%; 
             box-sizing: border-box; 
         }
@@ -59,7 +62,6 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
-        /* Caja de Perfil (Carta de presentación) */
         .perfil-box {
             display: flex;
             align-items: stretch;
@@ -71,41 +73,21 @@
             gap: 20px;
             page-break-inside: avoid;
         }
-        .perfil-foto {
-            flex: 0 0 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-right: 2px solid #0b3c36;
-            padding-right: 20px;
-        }
-        .perfil-foto img {
-            max-width: 100%;
-            max-height: 160px;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .perfil-datos {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+        .perfil-foto { flex: 0 0 130px; display: flex; align-items: center; justify-content: center; border-right: 2px solid #0b3c36; padding-right: 20px; }
+        .perfil-foto img { max-width: 100%; max-height: 160px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .perfil-datos { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .perfil-datos table { width: 100%; border-collapse: collapse; }
         .perfil-datos td { padding: 6px 0; font-size: 11pt; border-bottom: 1px dashed #ccc; }
         .perfil-datos tr:last-child td { border-bottom: none; }
         .perfil-datos td.label { font-weight: bold; color: #0b3c36; width: 40%; }
         
-        /* Tablas estandarizadas */
         .tabla-datos-sencilla { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
         .tabla-datos-sencilla td { padding: 4px 0; font-size: 11pt; }
         .tabla-datos-sencilla td.label { font-weight: bold; width: 40%; }
 
-        /* Lista de Periodos en Certificado */
         .lista-periodos { margin-top: 10px; margin-bottom: 15px; padding-left: 20px; }
         .lista-periodos li { margin-bottom: 5px; }
 
-        /* Firmas corporativas */
         .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
         .signature-box { display: inline-block; margin-top: 15px; text-align: left; }
         .signature-box img { max-width: 200px; max-height: 85px; display: block; margin-bottom: -5px; }
@@ -116,8 +98,7 @@
         
         @media print {
             body { background: white; padding: 0; margin: 0; }
-            /* Se anula la sombra y los márgenes del body en impresión */
-            .page { box-shadow: none; width: 100%; height: 297mm; margin: 0; border: none; }
+            .page { box-shadow: none; width: 210mm; height: 297mm; margin: 0; border: none; }
             .print-btn { display: none; }
         }
     </style>
