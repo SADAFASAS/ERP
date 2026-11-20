@@ -63,7 +63,6 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
-        /* CORRECCIÓN: El botón de tema no debe desaparecer en celulares */
         .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; display: flex !important; justify-content: center !important; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
@@ -108,9 +107,11 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* ESTILOS ACORDEÓN DE CLIENTES */
+        /* ESTILOS ACORDEÓN DE CLIENTES CON FLECHAS ROTATORIAS */
         .cliente-acordeon-header { cursor: pointer; transition: background-color 0.2s; }
         .cliente-acordeon-header:hover { background-color: var(--hover-casilla); }
+        .icon-acordeon { transition: transform 0.3s ease; display: inline-block; font-size: 0.9rem; }
+        .cliente-acordeon-header:not(.collapsed) .icon-acordeon { transform: rotate(180deg); }
         
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
@@ -221,8 +222,12 @@
                                     <div class="erp-color-azul fw-bold small mb-1" style="letter-spacing: 0.5px;">DOTACIÓN BAJA</div>
                                     <div class="fs-2 fw-bold erp-color-azul" id="dashStockCritico">0</div>
                                 </div>
-                                <!-- FIX ICONO DASHBOARD -->
-                                <svg viewBox="0 0 512 512" class="erp-color-azul opacity-50" width="35" height="35" fill="currentColor"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg>
+                                <!-- NUEVO ÍCONO SVG DE LA CAMISA PARA EL DASHBOARD -->
+                                <svg viewBox="0 0 24 24" class="erp-color-azul opacity-50" width="35" height="35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path>
+                                    <path d="M16 2l-4 4-4-4"></path>
+                                    <path d="M12 6v16"></path>
+                                </svg>
                             </div>
                             <div class="small mt-2 text-muted">Inventario menor a 3 Unidades</div>
                         </div>
@@ -522,7 +527,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -919,7 +924,11 @@
             <div class="modal-content card-custom p-4">
                 <div class="modal-header border-bottom bg-body-tertiary">
                     <h5 class="modal-title fw-bold text-success">
-                        <svg viewBox="0 0 512 512" width="22" height="22" fill="currentColor" class="me-2" style="vertical-align: text-bottom;"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg> 
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" style="vertical-align: text-bottom;">
+                            <path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path>
+                            <path d="M16 2l-4 4-4-4"></path>
+                            <path d="M12 6v16"></path>
+                        </svg> 
                         Entregar Dotación a Operario
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -962,7 +971,11 @@
                 <div class="modal-header border-bottom bg-body-tertiary">
                     <h5 class="modal-title fw-bold text-primary">
                         <span class="position-relative d-inline-block me-2">
-                            <svg viewBox="0 0 512 512" width="22" height="22" fill="currentColor"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg>
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path>
+                                <path d="M16 2l-4 4-4-4"></path>
+                                <path d="M12 6v16"></path>
+                            </svg>
                             <i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.85rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i>
                         </span>
                         Historial de Dotación Entregada
@@ -1413,7 +1426,11 @@
         window.cacheClientesPDF = []; window.cacheUsuariosPDF = []; window.gastosGlobales = [];
         
         // ICONOS SVG (Camisa y Camisa con reloj)
-        const svgCamisa = `<svg viewBox="0 0 512 512" width="16" height="16" fill="currentColor" style="vertical-align: text-bottom;"><path d="M256 96c38.4 0 73.7 13.5 101.3 36.1l-32.6 32.6c-18.4-18.4-43.8-29.8-71.8-29.8s-53.4 11.4-71.8 29.8L148.5 132C176.1 109.5 211.4 96 256 96zM116.5 164l64.1 64.1c4.5 4.5 10.6 7 17 7H314.5c6.4 0 12.5-2.5 17-7l64.1-64.1 68.3-68.3c15-15 39.4-15 54.4 0s15 39.4 0 54.4L454.1 214.3c-7.6 7.6-11.8 17.8-11.8 28.5V416c0 17.7-14.3 32-32 32H101.7c-17.7 0-32-14.3-32-32V242.8c0-10.7-4.2-20.9-11.8-28.5L25.3 150.2c-15-15-15-39.4 0-54.4s39.4-15 54.4 0l68.3 68.3z"/></svg>`;
+        const svgCamisa = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom;">
+            <path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path>
+            <path d="M16 2l-4 4-4-4"></path>
+            <path d="M12 6v16"></path>
+        </svg>`;
         const svgHistorial = `<span class="position-relative d-inline-block">${svgCamisa}<i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.65rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i></span>`;
 
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
@@ -1629,10 +1646,12 @@
                 for (let cliente in agrupados) {
                     let collapseId = `collapseCli${i}`;
                     
-                    htmlCli += `<tr data-bs-toggle="collapse" data-bs-target="#${collapseId}" class="cliente-acordeon-header bg-body-secondary">
-                        <td colspan="2" class="fw-bold ps-3 py-2 text-primary d-flex justify-content-between align-items-center border-bottom">
-                            <span style="font-size: 0.85rem;"><i class="bi bi-building me-2"></i> ${window.sanitizar(cliente)}</span>
-                            <span class="badge bg-primary rounded-pill">${agrupados[cliente].length}</span>
+                    htmlCli += `<tr data-bs-toggle="collapse" data-bs-target="#${collapseId}" class="cliente-acordeon-header bg-body-secondary collapsed">
+                        <td colspan="2" class="fw-bold ps-3 py-2 text-primary border-bottom">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div><i class="bi bi-building me-2"></i> ${window.sanitizar(cliente)}</div>
+                                <div><span class="badge bg-primary rounded-pill me-2">${agrupados[cliente].length}</span><i class="bi bi-chevron-down icon-acordeon"></i></div>
+                            </div>
                         </td>
                     </tr>`;
                     
@@ -2298,4 +2317,4 @@
         });
     </script>
 </body>
-</html>
+</html>   
