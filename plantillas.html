@@ -5,47 +5,41 @@
     <title>Generador de Documentos SADAFA</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
-        /* === REGLAS A4 SIN MÁRGENES === */
-        @page {
-            size: A4 portrait;
-            margin: 0 !important;
-        }
-        
-        body, html { 
+        body { 
             font-family: Arial, sans-serif; 
             background: #525659; 
-            margin: 0 !important; 
-            padding: 0 !important;
-            /* Instrucción vital para que Chrome imprima los fondos CSS */
-            -webkit-print-color-adjust: exact !important; 
-            print-color-adjust: exact !important;
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
         }
         
-        /* Contenedor principal convertido en el lienzo del membrete */
         .page { 
-            background-color: white; 
-            background-image: url('Membrete.png'); /* Membrete inyectado por CSS */
-            background-size: 100% 100% !important; /* Forzado milimétrico de esquina a esquina */
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            width: 210mm; 
-            height: 297mm; /* Alto exacto A4 */
+            background: white; 
+            width: 21cm; 
+            min-height: 29.7cm; 
             position: relative; 
-            margin: 20px auto; 
             box-sizing: border-box; 
-            box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); 
             overflow: hidden; 
-            page-break-after: avoid;
-            page-break-inside: avoid;
         }
         
-        /* Espacio de escritura ajustado para no pisar el diseño del fondo */
+        /* Membrete SADAFA como marca de agua absoluta */
+        .header-bg { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+        }
+        
+        /* Margen protector */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 45mm 25mm 35mm 25mm; /* Arriba, Derecha, Abajo, Izquierda */
-            height: 100%; 
-            width: 100%;
+            padding: 5cm 2.5cm 3.5cm 2.5cm; 
+            min-height: 29.7cm; 
             box-sizing: border-box; 
         }
         
@@ -56,6 +50,7 @@
         .mt-4 { margin-top: 2rem; }
         .mb-4 { margin-bottom: 2rem; }
         
+        /* Caja de Perfil (Carta de presentación) */
         .perfil-box {
             display: flex;
             align-items: stretch;
@@ -67,21 +62,41 @@
             gap: 20px;
             page-break-inside: avoid;
         }
-        .perfil-foto { flex: 0 0 130px; display: flex; align-items: center; justify-content: center; border-right: 2px solid #0b3c36; padding-right: 20px; }
-        .perfil-foto img { max-width: 100%; max-height: 160px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .perfil-datos { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .perfil-foto {
+            flex: 0 0 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid #0b3c36;
+            padding-right: 20px;
+        }
+        .perfil-foto img {
+            max-width: 100%;
+            max-height: 160px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .perfil-datos {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         .perfil-datos table { width: 100%; border-collapse: collapse; }
         .perfil-datos td { padding: 6px 0; font-size: 11pt; border-bottom: 1px dashed #ccc; }
         .perfil-datos tr:last-child td { border-bottom: none; }
         .perfil-datos td.label { font-weight: bold; color: #0b3c36; width: 40%; }
         
+        /* Tablas estandarizadas */
         .tabla-datos-sencilla { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
         .tabla-datos-sencilla td { padding: 4px 0; font-size: 11pt; }
         .tabla-datos-sencilla td.label { font-weight: bold; width: 40%; }
 
+        /* Lista de Periodos en Certificado */
         .lista-periodos { margin-top: 10px; margin-bottom: 15px; padding-left: 20px; }
         .lista-periodos li { margin-bottom: 5px; }
 
+        /* Firmas corporativas */
         .signature-container { margin-top: 50px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
         .signature-box { display: inline-block; margin-top: 15px; text-align: left; }
         .signature-box img { max-width: 200px; max-height: 85px; display: block; margin-bottom: -5px; }
@@ -90,28 +105,38 @@
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
         .print-btn:hover { background: #166c62; }
         
-        /* === ESTILOS EXCLUSIVOS AL MOMENTO DE IMPRIMIR === */
+        /* =======================================================
+           SOLUCIÓN EXACTA: Mantiene la escala original y 
+           fuerza al navegador a usar SOLO el tamaño de 1 pantalla (100vh)
+           ======================================================= */
         @media print {
-            body, html { 
-                background: white !important; 
+            body { 
+                background: white; 
+                padding: 0; 
+                margin: 0;
             }
             .page { 
-                margin: 0 !important; 
-                padding: 0 !important;
-                box-shadow: none !important; 
-                border: none !important; 
-                width: 210mm !important; 
-                height: 297mm !important; 
+                box-shadow: none; 
+                width: 100%; 
+                margin: 0; 
+                height: 100vh; /* Fuerza el alto a exactamente 1 hoja */
+                min-height: 0; /* Anula los 29.7cm que causaban el desbordamiento */
+                overflow: hidden; /* Corta la creación de la hoja 2 */
             }
-            .print-btn { display: none !important; }
+            .content-wrapper {
+                min-height: 0; /* Anula el desbordamiento de contenido */
+                height: 100vh;
+            }
+            .print-btn { display: none; }
         }
     </style>
 </head>
 <body>
     <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF / Guardar</button>
     
-    <!-- NOTA: Ya no hay etiqueta <img> aquí, el fondo está en el CSS de .page -->
     <div class="page">
+        <!-- CAPA DE FONDO (MEMBRETE SADAFA) -->
+        <img src="Membrete.png" alt="Membrete SADAFA" class="header-bg" onerror="this.style.display='none'">
         
         <div class="content-wrapper">
             
@@ -283,7 +308,6 @@
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
 
-        // Convierte la fecha del sistema a texto natural
         function formatearFechaTextoExacta(fechaIso) {
             if(!fechaIso) return '...';
             const partes = fechaIso.split('-');
@@ -295,7 +319,6 @@
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
         
-        // Fechas del día actual
         const dateObj = new Date();
         const dia = String(dateObj.getDate()).padStart(2, '0');
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
