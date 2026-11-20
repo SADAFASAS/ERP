@@ -5,26 +5,31 @@
     <title>Generador de Documentos SADAFA</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
-        /* === TAMAÑO EXACTO A4 === */
+        /* === REGLAS A4 SIN MÁRGENES === */
         @page {
-            size: A4;
+            size: A4 portrait;
             margin: 0 !important;
         }
         
         body, html { 
             font-family: Arial, sans-serif; 
             background: #525659; 
-            margin: 0; 
-            padding: 0;
+            margin: 0 !important; 
+            padding: 0 !important;
+            /* Instrucción vital para que Chrome imprima los fondos CSS */
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important;
         }
         
-        /* Contenedor principal: Medida estricta A4 */
+        /* Contenedor principal convertido en el lienzo del membrete */
         .page { 
-            background: white; 
+            background-color: white; 
+            background-image: url('Membrete.png'); /* Membrete inyectado por CSS */
+            background-size: 100% 100% !important; /* Forzado milimétrico de esquina a esquina */
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             width: 210mm; 
-            height: 297mm; 
+            height: 297mm; /* Alto exacto A4 */
             position: relative; 
             margin: 20px auto; 
             box-sizing: border-box; 
@@ -34,24 +39,13 @@
             page-break-inside: avoid;
         }
         
-        /* Imagen de fondo clavada a 210x297mm */
-        .header-bg { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 210mm; 
-            height: 297mm; 
-            z-index: 0; 
-            display: block;
-        }
-        
-        /* Espacio de escritura */
+        /* Espacio de escritura ajustado para no pisar el diseño del fondo */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
             padding: 45mm 25mm 35mm 25mm; /* Arriba, Derecha, Abajo, Izquierda */
-            height: 297mm; 
-            width: 210mm;
+            height: 100%; 
+            width: 100%;
             box-sizing: border-box; 
         }
         
@@ -96,15 +90,18 @@
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
         .print-btn:hover { background: #166c62; }
         
-        /* === IMPRESIÓN LIMPIA === */
+        /* === ESTILOS EXCLUSIVOS AL MOMENTO DE IMPRIMIR === */
         @media print {
             body, html { 
                 background: white !important; 
             }
             .page { 
                 margin: 0 !important; 
+                padding: 0 !important;
                 box-shadow: none !important; 
                 border: none !important; 
+                width: 210mm !important; 
+                height: 297mm !important; 
             }
             .print-btn { display: none !important; }
         }
@@ -113,9 +110,8 @@
 <body>
     <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF / Guardar</button>
     
+    <!-- NOTA: Ya no hay etiqueta <img> aquí, el fondo está en el CSS de .page -->
     <div class="page">
-        <!-- CAPA DE FONDO (MEMBRETE SADAFA) -->
-        <img src="Membrete.png" alt="Membrete SADAFA" class="header-bg" onerror="this.style.display='none'">
         
         <div class="content-wrapper">
             
@@ -287,6 +283,7 @@
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
 
+        // Convierte la fecha del sistema a texto natural
         function formatearFechaTextoExacta(fechaIso) {
             if(!fechaIso) return '...';
             const partes = fechaIso.split('-');
@@ -298,6 +295,7 @@
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
         
+        // Fechas del día actual
         const dateObj = new Date();
         const dia = String(dateObj.getDate()).padStart(2, '0');
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
