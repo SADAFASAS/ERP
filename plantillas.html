@@ -5,52 +5,54 @@
     <title>Generador de Documentos SADAFA</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <style>
-        /* === REGLAS ESTRICTAS DE IMPRESIÓN === */
+        /* === REGLAS ULTRABLINDADAS PARA IMPRESIÓN PDF === */
         @page {
-            size: A4;
-            margin: 0 !important;
+            size: A4 portrait;
+            margin: 0mm !important; /* Anula forzosamente los márgenes del navegador */
         }
         
-        body { 
+        body, html { 
             font-family: Arial, sans-serif; 
             background: #525659; 
             margin: 0; 
-            padding: 20px; 
+            padding: 0;
             display: flex; 
             justify-content: center; 
-            -webkit-print-color-adjust: exact !important; /* Fuerza a imprimir los colores de fondo */
+            align-items: flex-start;
+            -webkit-print-color-adjust: exact !important; /* Fuerza a imprimir los colores y fondos */
             print-color-adjust: exact !important;
         }
         
-        /* Contenedor A4 exacto */
+        /* Contenedor A4 milimétrico */
         .page { 
             background: white; 
             width: 210mm; 
-            height: 297mm; 
+            height: 296.5mm; /* Medio milímetro menos de 297mm para matar la "hoja extra" en blanco */
             position: relative; 
             box-sizing: border-box; 
             box-shadow: 0 0 10px rgba(0,0,0,0.5); 
             overflow: hidden; 
             page-break-after: avoid;
             page-break-inside: avoid;
+            margin-top: 20px;
         }
         
-        /* FIX MEMBRETE: Ajuste para que no se corte */
+        /* El membrete ahora se comporta como un tapiz inamovible */
         .header-bg { 
             position: absolute; 
             top: 0; 
             left: 0; 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; /* Estira el membrete para cubrir toda la hoja sin deformarse */
+            width: 210mm; 
+            height: 297mm; 
+            object-fit: fill !important; /* Lo estira al tamaño exacto de la hoja sin importar la resolución */
             z-index: 0; 
         }
         
-        /* Margen interno para el texto */
+        /* Espacio para que el texto no toque la imagen */
         .content-wrapper { 
             position: relative; 
             z-index: 1; 
-            padding: 45mm 25mm 35mm 25mm; /* Ajuste milimétrico de márgenes (Arriba, Der, Abajo, Izq) */
+            padding: 45mm 25mm 35mm 25mm; /* Arriba, Derecha, Abajo, Izquierda */
             height: 100%; 
             box-sizing: border-box; 
         }
@@ -96,9 +98,16 @@
         .print-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #0b3c36; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 100; }
         .print-btn:hover { background: #166c62; }
         
+        /* Ajustes EXCLUSIVOS de impresión física o PDF */
         @media print {
-            body { background: white; padding: 0; margin: 0; }
-            .page { box-shadow: none; width: 210mm; height: 297mm; margin: 0; border: none; }
+            body, html { display: block; background: white; margin: 0; padding: 0; }
+            .page { 
+                margin: 0; 
+                box-shadow: none; 
+                border: none; 
+                height: 296.5mm; 
+                width: 210mm;
+            }
             .print-btn { display: none; }
         }
     </style>
@@ -113,7 +122,7 @@
         <div class="content-wrapper">
             
             <!-- ==============================================
-1. CARTA DE PRESENTACIÓN
+                 1. CARTA DE PRESENTACIÓN
                  ============================================== -->
             <div id="doc-carta" class="content" style="display: none;">
                 <p class="text-right mb-4">Manizales, <span id="fecha_actual_carta"></span></p>
@@ -153,7 +162,7 @@
             </div>
 
             <!-- ==============================================
-2. CERTIFICADO LABORAL
+                 2. CERTIFICADO LABORAL
                  ============================================== -->
             <div id="doc-certificado" class="content" style="display: none;">
                 <p class="bold mt-4 mb-4 text-center">A QUIEN INTERESE</p>
@@ -193,7 +202,7 @@
             </div>
 
             <!-- ==============================================
-3. EXAMEN MÉDICO
+                 3. EXAMEN MÉDICO
                  ============================================== -->
             <div id="doc-examen" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_exam"></span></p>
@@ -226,7 +235,7 @@
             </div>
 
             <!-- ==============================================
-4. CESANTÍAS
+                 4. CESANTÍAS
                  ============================================== -->
             <div id="doc-cesantias" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cesan"></span></p>
@@ -247,7 +256,7 @@
             </div>
 
             <!-- ==============================================
-5. CUENTA
+                 5. CUENTA
                  ============================================== -->
             <div id="doc-cuenta" class="content" style="display: none;">
                 <p class="text-right">Manizales, <span id="fecha_actual_cta"></span></p>
@@ -280,7 +289,6 @@
             return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valor); 
         }
 
-        // Convierte la fecha del sistema a texto natural
         function formatearFechaTextoExacta(fechaIso) {
             if(!fechaIso) return '...';
             const partes = fechaIso.split('-');
@@ -292,7 +300,6 @@
         const params = new URLSearchParams(window.location.search);
         const tipo = params.get('tipo');
         
-        // Fechas del día actual
         const dateObj = new Date();
         const dia = String(dateObj.getDate()).padStart(2, '0');
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -317,7 +324,6 @@
                 document.getElementById('lbl_arl').innerText = String(params.get('arl') || '').toUpperCase();
                 document.getElementById('lbl_rh').innerText = String(params.get('rh') || '').toUpperCase();
                 
-                // MÁGIA DE FOTO: Activa la caja corporativa
                 const fotoTemp = localStorage.getItem('sadafa_temp_foto_carta');
                 const imgEl = document.getElementById('foto_empleado');
                 const contFoto = document.getElementById('contenedor_foto_empleado');
@@ -336,7 +342,6 @@
                 document.getElementById('lbl_cargo_cert').innerText = String(params.get('cargo') || '').toUpperCase();
                 document.getElementById('lbl_salario').innerText = formatearMoneda(params.get('salario'));
                 
-                // Lógica de Múltiples Periodos
                 let listHTML = "";
                 const inicio1 = formatearFechaTextoExacta(params.get('fecha_inicio'));
                 const fin1Text = params.get('fecha_fin') ? `el ${formatearFechaTextoExacta(params.get('fecha_fin'))}` : 'la fecha';
@@ -351,7 +356,6 @@
                 
                 document.getElementById('ul_periodos').innerHTML = listHTML;
                 
-                // Motivo de retiro
                 const motivo = params.get('motivo');
                 if (motivo && motivo !== 'ACTIVO') {
                     document.getElementById('tr_motivo_retiro').style.display = 'table-row';
