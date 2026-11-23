@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,50 +16,110 @@
             --sadafa-accent: #2dd4bf;
             --bg-dark: #0f172a;
             --card-dark: #1e293b;
+            --bg-principal: #f4f6f9;
+            --texto-principal: #222533;
+            --texto-muted: #6c757d;
+            --bg-tarjeta: #ffffff;
+            --borde-tarjeta: #e2e8f0;
+            --titulo-servicios: #0b3c36;
+            --icon-bg: rgba(11, 60, 54, 0.1);
+            --icon-color: #0b3c36;
+        }
+        [data-bs-theme="dark"] {
+            --bg-principal: #0f172a;
+            --texto-principal: #f8fafc;
+            --texto-muted: #cbd5e1;
+            --bg-tarjeta: #1e293b;
+            --borde-tarjeta: #334155;
+            --titulo-servicios: #2dd4bf;
+            --icon-bg: rgba(45, 212, 191, 0.15);
+            --icon-color: #2dd4bf;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            color: #222533;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .text-muted {
+            color: var(--texto-muted) !important;
         }
         .navbar-sadafa {
             background-color: var(--bg-dark);
             border-bottom: 2px solid var(--sadafa-accent);
         }
         .brand-logo-nav {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             object-fit: cover;
             border-radius: 50%;
             border: 2px solid var(--sadafa-accent);
         }
+        /* === BOTÓN TEMA (DÍA/NOCHE) IDÉNTICO AL ADMIN === */
+        .theme-toggle-container {
+            padding: 5px 10px;
+            border-radius: 50px;
+            background-color: #e2e8f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        [data-bs-theme="dark"] .theme-toggle-container {
+            background-color: #1e293b;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+        }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
+        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
+        .theme-switch-input {
+            width: 42px !important;
+            height: 22px !important;
+            margin-left: 0 !important;
+            margin-top: 0 !important;
+            cursor: pointer;
+            background-color: #cbd5e1;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
+            transition: all 0.3s ease;
+        }
+        .theme-switch-input:focus { box-shadow: none !important; }
+        .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
+
         .hero-section {
             background: linear-gradient(135deg, #0f172a 0%, #0b3c36 100%);
             color: #ffffff;
-            padding: 80px 0 70px 0;
+            padding: 75px 0 65px 0;
         }
         .hero-badge {
             background-color: rgba(45, 212, 191, 0.15);
             color: var(--sadafa-accent);
             border: 1px solid rgba(45, 212, 191, 0.4);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
         }
         .service-card {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--borde-tarjeta);
             border-radius: 12px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            background: #ffffff;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+            background: var(--bg-tarjeta);
+            color: var(--texto-principal);
         }
         .service-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(11, 60, 54, 0.12);
-            border-color: var(--sadafa-dark);
+            box-shadow: 0 12px 24px rgba(11, 60, 54, 0.15);
+            border-color: var(--sadafa-accent);
         }
         .service-icon {
             width: 56px;
             height: 56px;
             border-radius: 12px;
-            background-color: rgba(11, 60, 54, 0.1);
-            color: var(--sadafa-dark);
+            background-color: var(--icon-bg);
+            color: var(--icon-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -86,7 +146,6 @@
             background-color: #14b8a6;
             color: #ffffff;
         }
-        /* Estilos Modal Login */
         .modal-login-content {
             background-color: var(--card-dark);
             color: #f8fafc;
@@ -106,33 +165,32 @@
             background-color: var(--bg-dark);
             color: #94a3b8;
         }
+        @media (max-width: 576px) {
+            .theme-toggle-container { padding: 4px 8px; }
+            .theme-switch-input { width: 34px !important; height: 18px !important; }
+            .theme-icon-sun, .theme-icon-moon { font-size: 0.95rem !important; }
+        }
     </style>
 </head>
 <body>
 
     <!-- BARRA DE NAVEGACIÓN -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-sadafa sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
-                <img src="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg" alt="SADAFA" class="brand-logo-nav me-2" onerror="this.style.display='none'">
-                <div>
-                    <span style="color: #2dd4bf; letter-spacing: 0.5px;">SADAFA</span>
-                    <small class="d-block text-light opacity-75" style="font-size: 0.7rem; margin-top: -4px;">Servicios Integrales S.A.S.</small>
-                </div>
+    <nav class="navbar navbar-dark navbar-sadafa sticky-top shadow-sm">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center p-0 m-0" href="#">
+                <img src="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg" alt="SADAFA" class="brand-logo-nav" onerror="this.style.display='none'">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3 mt-3 mt-lg-0">
-                    <li class="nav-item"><a class="nav-link text-light" href="#servicios">Nuestros Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link text-light" href="#contacto">Contacto</a></li>
-                    <li class="nav-item">
-                        <button type="button" id="btnAbrirERP" class="btn btn-erp btn-sm px-3 py-2 rounded-pill shadow-sm">
-                            <i class="bi bi-shield-lock-fill me-1"></i> Acceso ERP
-                        </button>
-                    </li>
-                </ul>
+            <div class="d-flex align-items-center gap-2 gap-sm-3">
+                <div class="theme-toggle-container gap-2" title="Cambiar Tema">
+                    <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                    <div class="theme-switch-wrapper form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
+                        <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
+                    </div>
+                    <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                </div>
+                <button type="button" id="btnAbrirERP" class="btn btn-erp btn-sm px-3 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Iniciar Sesión
+                </button>
             </div>
         </div>
     </nav>
@@ -140,17 +198,11 @@
     <!-- PORTADA / HERO -->
     <section class="hero-section">
         <div class="container text-center">
-            <span class="badge hero-badge rounded-pill px-3 py-2 mb-3">Manizales &amp; Pereira</span>
+            <span class="badge hero-badge rounded-pill px-4 py-2 mb-3 fw-bold">SADAFA Servicios Integrales S.A.S.</span>
             <h1 class="display-5 fw-bold mb-3">Soluciones Integrales para Copropiedades y Empresas</h1>
-            <p class="lead opacity-75 mx-auto mb-4" style="max-width: 680px;">
+            <p class="lead opacity-75 mx-auto mb-0" style="max-width: 680px;">
                 Personal capacitado, supervisión constante y respaldo administrativo para garantizar el mantenimiento, la limpieza y la tranquilidad de sus instalaciones.
             </p>
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="#servicios" class="btn btn-erp px-4 py-2 rounded-pill">Ver Servicios</a>
-                <button type="button" id="btnAbrirERPHero" class="btn btn-outline-light px-4 py-2 rounded-pill">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar al Sistema
-                </button>
-            </div>
         </div>
     </section>
 
@@ -158,7 +210,7 @@
     <section id="servicios" class="py-5">
         <div class="container py-3">
             <div class="text-center mb-5">
-                <h2 class="fw-bold" style="color: var(--sadafa-dark);">Nuestros Servicios</h2>
+                <h2 class="fw-bold" style="color: var(--titulo-servicios);">Nuestros Servicios</h2>
                 <p class="text-muted">Cobertura operativa adaptada a las necesidades de cada cliente.</p>
             </div>
 
@@ -276,10 +328,22 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // === SINCRONIZACIÓN DE TEMA (DÍA/NOCHE) ===
+        const temaGuardado = localStorage.getItem('sadafa_theme') || 'dark';
+        document.documentElement.setAttribute('data-bs-theme', temaGuardado);
+        const switchEl = document.getElementById('modoOscuroSwitch');
+        if (switchEl) {
+            switchEl.checked = (temaGuardado === 'dark');
+            switchEl.addEventListener('change', () => {
+                const nuevoTema = switchEl.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-bs-theme', nuevoTema);
+                localStorage.setItem('sadafa_theme', nuevoTema);
+            });
+        }
+
         const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
         const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginERP'));
 
-        // Al hacer clic en "Acceso ERP": si la sesión sigue vigente entra directo, si no abre el modal
         function manejarAccesoERP() {
             const tokenActivo = localStorage.getItem('sadafa_token');
             const ultimaActividad = localStorage.getItem('sadafa_last_activity');
@@ -297,7 +361,6 @@
         }
 
         document.getElementById('btnAbrirERP').addEventListener('click', manejarAccesoERP);
-        document.getElementById('btnAbrirERPHero').addEventListener('click', manejarAccesoERP);
 
         // Mostrar / ocultar contraseña
         document.getElementById('btnVerPass').addEventListener('click', () => {
