@@ -33,9 +33,13 @@
             --hover-casilla: #334155; 
         }
         
-        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
-        .wrapper { display: flex; width: 100%; min-height: 100vh; overflow-x: hidden; }
-        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1030; position: relative; white-space: nowrap; display: flex; flex-direction: column; }
+        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; }
+        
+        /* FIX: Asegura que el contenedor principal ocupe toda la pantalla sin cortar la barra lateral */
+        .wrapper { display: flex; width: 100%; min-height: 100vh; position: relative; }
+        
+        /* FIX: z-index alto y min-height para que la barra no se corte */
+        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1040; position: relative; white-space: nowrap; display: flex; flex-direction: column; min-height: 100vh; }
         .sidebar.collapsed { width: 75px; }
         .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
         .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
@@ -68,7 +72,8 @@
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         
-        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; }
+        /* FIX: Flex-grow asegura que el contenido no aplaste el resto de la página */
+        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; position: relative; z-index: 1; }
         .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
         
         .erp-color-rojo { color: #e63946 !important; }
@@ -1784,7 +1789,9 @@
 
         window.isKickedOut = false; 
         let temporizadorInactividad;
-        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
+        
+        // SESIÓN AJUSTADA A 10 MINUTOS
+        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; 
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
