@@ -1452,7 +1452,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- LÓGICA MODULAR DE FIREBASE Y SESIÓN A 10 MINUTOS -->
+    <!-- LÓGICA MODULAR DE FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1486,9 +1486,9 @@
         const svgCamisa = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom;"><path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path><path d="M16 2l-4 4-4-4"></path><path d="M12 6v16"></path></svg>`;
         const svgHistorial = `<span class="position-relative d-inline-block">${svgCamisa}<i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.65rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i></span>`;
 
-        // LECTURA DE SEGURIDAD: Usando sessionStorage
-        const rolUsuarioActivo = sessionStorage.getItem('sadafa_rol');
-        const nombreUsuarioActivo = sessionStorage.getItem('sadafa_nombre');
+        // LECTURA DE SEGURIDAD DESDE LOCALSTORAGE
+        const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
+        const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
         window.sanitizar = function(str) {
             if (str === null || str === undefined) return '';
@@ -1539,24 +1539,21 @@
         }
 
         // ===============================================
-        // FIX: CERRADO DE SESIÓN (ROMPER EL BUCLE)
+        // FIX: BOTÓN CERRAR SESIÓN SEGURO (Rompe el bucle)
         // ===============================================
         document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => { 
             e.preventDefault(); 
-            // 1. PRIMERO quemamos la memoria para evitar que index.html nos devuelva
-            sessionStorage.clear(); 
-            localStorage.removeItem('sadafa_token'); // Limpieza extra por si había rastros
+            // Destruimos la memoria PRIMERO
+            localStorage.removeItem('sadafa_token');
             localStorage.removeItem('sadafa_rol');
             localStorage.removeItem('sadafa_nombre');
-            
-            // 2. LUEGO cerramos Firebase
+            localStorage.removeItem('sadafa_last_activity');
+            // Cerramos Firebase
             await signOut(auth); 
-            
-            // 3. Redirigimos bloqueando el botón "Atrás"
+            // Redirigimos anulando el historial para que no se devuelvan
             window.location.replace('index.html'); 
         });
         
-        // El tema visual sí se queda en localStorage
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
         const switchEl = document.getElementById('modoOscuroSwitch');
@@ -1867,18 +1864,27 @@
         // CERRADO DE SESIÓN POR INACTIVIDAD - 10 MIN
         // ==========================================
         window.isKickedOut = false; 
-        let temporizadorInactividad;
-        
         const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; 
 
-        function reiniciarTemporizador() {
-            clearTimeout(temporizadorInactividad);
-            temporizadorInactividad = setTimeout(cerrarSesionPorInactividad, TIEMPO_LIMITE_INACTIVIDAD);
+        function actualizarTiempo() {
+            localStorage.setItem('sadafa_last_activity', Date.now());
         }
+
+        // El sistema vigila cada 10 segundos el reloj de actividad
+        setInterval(() => {
+            const ultimaActividad = localStorage.getItem('sadafa_last_activity');
+            if (ultimaActividad && (Date.now() - parseInt(ultimaActividad) > TIEMPO_LIMITE_INACTIVIDAD)) {
+                if(!window.isKickedOut) cerrarSesionPorInactividad();
+            }
+        }, 10000); 
 
         async function cerrarSesionPorInactividad() {
             window.isKickedOut = true; 
-            sessionStorage.clear(); // Limpiar memoria PRIMERO
+            localStorage.removeItem('sadafa_token');
+            localStorage.removeItem('sadafa_rol');
+            localStorage.removeItem('sadafa_nombre');
+            localStorage.removeItem('sadafa_last_activity');
+            
             await signOut(auth); 
             
             document.querySelectorAll('.modal.show').forEach(m => { 
@@ -1889,24 +1895,10 @@
             modalInact.show();
         }
 
-        // MONITOREO DE 2DO PLANO PARA CELULARES
-        document.addEventListener("visibilitychange", () => {
-            if (document.visibilityState === 'hidden') {
-                sessionStorage.setItem('sadafa_last_seen', Date.now());
-            } else if (document.visibilityState === 'visible') {
-                const lastSeen = sessionStorage.getItem('sadafa_last_seen');
-                if (lastSeen && (Date.now() - parseInt(lastSeen) > TIEMPO_LIMITE_INACTIVIDAD)) {
-                    cerrarSesionPorInactividad();
-                } else {
-                    reiniciarTemporizador();
-                }
-            }
-        });
-
         document.addEventListener('DOMContentLoaded', () => { 
-            const token = sessionStorage.getItem('sadafa_token'); 
-            const rol = sessionStorage.getItem('sadafa_rol'); 
-            const nombreCompleto = sessionStorage.getItem('sadafa_nombre') || 'Usuario';
+            const token = localStorage.getItem('sadafa_token'); 
+            const rol = localStorage.getItem('sadafa_rol'); 
+            const nombreCompleto = localStorage.getItem('sadafa_nombre') || 'Usuario';
             
             if (!token || !rol) { window.location.replace('index.html'); return; }
             
@@ -1915,12 +1907,12 @@
             document.getElementById('rolUI').innerText = window.sanitizar(rol);
             document.body.setAttribute('data-rol', rol);
 
-            window.onload = reiniciarTemporizador; 
-            document.onmousemove = reiniciarTemporizador; 
-            document.onkeypress = reiniciarTemporizador; 
-            document.onclick = reiniciarTemporizador; 
-            document.onscroll = reiniciarTemporizador;
-            document.ontouchstart = reiniciarTemporizador; 
+            window.onload = actualizarTiempo; 
+            document.onmousemove = actualizarTiempo; 
+            document.onkeypress = actualizarTiempo; 
+            document.onclick = actualizarTiempo; 
+            document.onscroll = actualizarTiempo;
+            document.ontouchstart = actualizarTiempo;
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -1930,7 +1922,7 @@
                     setTimeout(() => { window.verificarMostrarAlertaClientes(); }, 13000);
                 } else { 
                     if (!window.isKickedOut) { 
-                        sessionStorage.clear(); // Garantía anti-bucles
+                        localStorage.removeItem('sadafa_token'); 
                         window.location.replace('index.html'); 
                     } 
                 }
