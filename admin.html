@@ -33,31 +33,84 @@
             --hover-casilla: #334155; 
         }
         
-        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; }
+        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
         
-        /* FIX: Asegura que el contenedor principal ocupe toda la pantalla sin cortar la barra lateral */
+        /* === ESTRUCTURA PRINCIPAL BLINDADA === */
         .wrapper { display: flex; width: 100%; min-height: 100vh; position: relative; }
         
-        /* FIX: z-index alto y min-height para que la barra no se corte */
-        .sidebar { width: 260px; flex-shrink: 0; border-right: 1px solid var(--borde-tarjeta); background-color: var(--bg-sidebar); transition: width 0.3s ease; padding-top: 20px; z-index: 1040; position: relative; white-space: nowrap; display: flex; flex-direction: column; min-height: 100vh; }
-        .sidebar.collapsed { width: 75px; }
-        .sidebar .brand { font-weight: 800; color: var(--sadafa-accent); text-align: center; margin-bottom: 2rem; letter-spacing: 0.5px; font-size: 1.1rem; transition: opacity 0.2s ease; overflow: hidden; }
-        .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
+        .sidebar { 
+            width: 260px; 
+            flex-shrink: 0; 
+            border-right: 1px solid var(--borde-tarjeta); 
+            background-color: var(--bg-sidebar); 
+            transition: width 0.3s ease; 
+            padding-top: 20px; 
+            z-index: 1040; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+        }
+        .sidebar.collapsed { width: 80px; }
         
-        /* SCROLL INTERNO PARA EL MENÚ LATERAL */
-        .sidebar-menu-scroll { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; }
+        .sidebar .brand { 
+            font-weight: 800; 
+            color: var(--sadafa-accent); 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            letter-spacing: 0.5px; 
+            font-size: 1.1rem; 
+            transition: all 0.3s ease; 
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        /* Oculta completamente el título para no deformar el menú */
+        .sidebar.collapsed .brand { 
+            opacity: 0; 
+            pointer-events: none; 
+            height: 0; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        /* Contenedor de scroll interno apegado al 100% del ancho disponible */
+        .sidebar-menu-scroll { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            padding-bottom: 20px; 
+            width: 100%; 
+        }
         .sidebar-menu-scroll::-webkit-scrollbar { width: 4px; }
         .sidebar-menu-scroll::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.2); }
         
-        .sidebar a { color: var(--texto-principal); text-decoration: none; display: flex; align-items: center; padding: 12px 20px; border-radius: 6px; margin-bottom: 4px; font-weight: 500; overflow: hidden; }
+        /* Forzar a los enlaces a respetar la caja */
+        .sidebar a { 
+            color: var(--texto-principal); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
+            margin-bottom: 4px; 
+            font-weight: 500; 
+            white-space: nowrap; 
+            width: 100%; 
+            box-sizing: border-box;
+            overflow: hidden;
+            transition: background-color 0.2s;
+        }
         .sidebar a i { font-size: 1.2rem; margin-right: 12px; color: var(--sadafa-accent); min-width: 25px; text-align: center; }
         .sidebar a:hover, .sidebar a.active { background-color: rgba(45, 212, 191, 0.15); color: var(--sadafa-accent); font-weight: 600; }
+        
+        /* Centrado matemático de íconos en modo colapsado */
         .sidebar.collapsed a { justify-content: center; padding: 12px 0; }
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
         
         /* === BOTÓN TEMA (DÍA/NOCHE) CON ICONOS === */
-        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; }
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
         .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
@@ -67,13 +120,14 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
         
-        .sidebar.collapsed .theme-toggle-container { padding: 8px; margin: 0; background: transparent; box-shadow: none; display: flex !important; justify-content: center !important; }
+        .sidebar.collapsed .theme-toggle-container { padding: 8px 0; margin: 0; background: transparent; box-shadow: none; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
         
-        /* FIX: Flex-grow asegura que el contenido no aplaste el resto de la página */
-        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; width: calc(100% - 260px); min-width: 0; position: relative; z-index: 1; }
+        /* FIX: El main-content ahora cede y rellena el espacio automáticamente sin aplastar la barra lateral */
+        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; min-width: 0; }
+        
         .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
         
         .erp-color-rojo { color: #e63946 !important; }
@@ -87,13 +141,11 @@
         .erp-color-morado { color: #8b5cf6 !important; }
         .erp-border-morado { border-left-color: #8b5cf6 !important; }
         
-        /* SCROLL COMPACTO PARA TABLAS DEL DASHBOARD */
         .table-scrollable-dash { max-height: 250px; overflow-y: auto; }
         .table-scrollable-dash::-webkit-scrollbar { width: 6px; }
         .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
         [data-bs-theme="dark"] .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
 
-        /* SCROLL AMPLIO PARA TABLAS DE BASE DE DATOS */
         .table-scrollable { max-height: 500px; overflow-y: auto; }
         .table-scrollable::-webkit-scrollbar { width: 6px; }
         .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
@@ -112,7 +164,6 @@
         .modal { z-index: 1080 !important; }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
-        /* ESTILOS ACORDEÓN DE CLIENTES CON FLECHAS ROTATORIAS */
         .cliente-acordeon-header { cursor: pointer; transition: background-color 0.2s; }
         .cliente-acordeon-header:hover { background-color: var(--hover-casilla); }
         .icon-acordeon { transition: transform 0.3s ease; display: inline-block; font-size: 0.9rem; }
@@ -125,7 +176,7 @@
             .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
             .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
-            .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; }
+            .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; height: auto; margin-bottom: 2rem; }
             .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
@@ -152,19 +203,19 @@
             <h4 class="brand mt-2">SADAFA <br><span class="small text-muted fs-6">Servicios Integrales S.A.S.</span></h4>
             
             <div class="sidebar-menu-scroll px-2">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
+                <ul class="nav flex-column w-100">
+                    <li class="nav-item w-100"><a href="#" class="active" onclick="cambiarSeccion('dashboard', event)" title="Panel Principal"><i class="bi bi-speedometer2"></i> <span class="nav-text">Panel Principal</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('empleado', event)" title="Personal y Contratos"><i class="bi bi-person-gear"></i> <span class="nav-text">Personal y Contratos</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('cliente', event)" title="Gestión de Clientes"><i class="bi bi-building"></i> <span class="nav-text">Gestión de Clientes</span></a></li>
                     
-                    <li class="nav-item admin-only"><a href="#" onclick="cambiarSeccion('usuario', event)" title="Control de Usuarios"><i class="bi bi-shield-lock"></i> <span class="nav-text">Control de Usuarios</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('inventario', event)" title="Inventario y Dotación"><i class="bi bi-box-seam"></i> <span class="nav-text">Inventario y Dotación</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('auditoria', event)" title="Auditorías en Sede"><i class="bi bi-clipboard-check"></i> <span class="nav-text">Auditorías en Sede</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
-                    <li class="nav-item"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
+                    <li class="nav-item w-100 admin-only"><a href="#" onclick="cambiarSeccion('usuario', event)" title="Control de Usuarios"><i class="bi bi-shield-lock"></i> <span class="nav-text">Control de Usuarios</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('inventario', event)" title="Inventario y Dotación"><i class="bi bi-box-seam"></i> <span class="nav-text">Inventario y Dotación</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('auditoria', event)" title="Auditorías en Sede"><i class="bi bi-clipboard-check"></i> <span class="nav-text">Auditorías en Sede</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
+                    <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
-                    <li class="nav-item mt-4 mb-2 d-flex justify-content-center">
-                        <div class="d-flex align-items-center justify-content-center theme-toggle-container gap-2" title="Cambiar Tema">
+                    <li class="nav-item w-100 mt-4 mb-2 d-flex justify-content-center">
+                        <div class="theme-toggle-container gap-2" title="Cambiar Tema">
                             <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                             <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
                                 <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
@@ -172,7 +223,7 @@
                             <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                         </div>
                     </li>
-                    <li class="nav-item mt-1"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
+                    <li class="nav-item w-100 mt-1"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
                 </ul>
             </div>
         </nav>
@@ -1789,9 +1840,7 @@
 
         window.isKickedOut = false; 
         let temporizadorInactividad;
-        
-        // SESIÓN AJUSTADA A 10 MINUTOS
-        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; 
+        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
 
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
