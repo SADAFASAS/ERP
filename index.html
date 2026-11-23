@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SADAFA - Acceso ERP</title>
-    <!-- ICONOS PARA NAVEGADOR Y ACCESO DIRECTO EN CELULARES -->
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <meta name="apple-mobile-web-app-title" content="SADAFA ERP">
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -22,7 +21,6 @@
         .btn-login:hover { background-color: #2dd4bf; color: #0b3c36; }
         .text-muted { color: #64748b !important; }
         
-        /* Círculos de fondo decorativos */
         .bg-circle-1 { position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(45,212,191,0.1) 0%, rgba(15,23,42,0) 70%); top: -100px; left: -100px; z-index: 1; border-radius: 50%; }
         .bg-circle-2 { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(11,60,54,0.15) 0%, rgba(15,23,42,0) 70%); bottom: -150px; right: -150px; z-index: 1; border-radius: 50%; }
     </style>
@@ -36,7 +34,6 @@
         <h1 class="brand-title">SADAFA <i class="bi bi-shield-lock ms-2"></i></h1>
         <p class="brand-subtitle">Servicios Integrales S.A.S.</p>
 
-        <!-- ALERTA DE ERRORES OCULTA POR DEFECTO -->
         <div id="errorAlert" class="alert alert-danger d-none small py-2" role="alert"></div>
 
         <form id="loginForm">
@@ -54,10 +51,10 @@
         </form>
     </div>
 
-    <!-- LÓGICA DE FIREBASE -->
+    <!-- LÓGICA DE FIREBASE Y VERIFICACIÓN DE INACTIVIDAD -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -73,9 +70,25 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Si ya hay sesión activa (sessionStorage), saltar directo al admin
-        if (sessionStorage.getItem('sadafa_token')) {
-            window.location.href = 'admin.html';
+        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
+
+        // 1. VERIFICACIÓN INTELIGENTE DE SESIÓN AL ENTRAR (Evita pedir correo si estás activo)
+        const tokenActivo = localStorage.getItem('sadafa_token');
+        const ultimaActividad = localStorage.getItem('sadafa_last_activity');
+
+        if (tokenActivo && ultimaActividad) {
+            const tiempoInactivo = Date.now() - parseInt(ultimaActividad);
+            if (tiempoInactivo < TIEMPO_LIMITE_INACTIVIDAD) {
+                // La sesión es válida y reciente, entra directo sin pedir login
+                window.location.replace('admin.html');
+            } else {
+                // Pasaron más de 10 minutos (celular bloqueado, app cerrada). Destruimos sesión
+                localStorage.removeItem('sadafa_token');
+                localStorage.removeItem('sadafa_rol');
+                localStorage.removeItem('sadafa_nombre');
+                localStorage.removeItem('sadafa_last_activity');
+                signOut(auth);
+            }
         }
 
         const loginForm = document.getElementById('loginForm');
@@ -99,15 +112,13 @@
             const password = document.getElementById('password').value;
 
             try {
-                // 1. Validar Firebase Auth
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // 2. Buscar en Firestore el Rol y Nombre del usuario
                 const q = query(collection(db, "usuarios"), where("correo", "==", email));
                 const querySnapshot = await getDocs(q);
 
-                let rolUsuario = 'Supervisor'; // Rol por defecto si hay fallo
+                let rolUsuario = 'Supervisor'; 
                 let estadoUsuario = 'Aprobado';
                 let nombreUsuario = 'Usuario';
 
@@ -118,21 +129,20 @@
                     nombreUsuario = userData.nombre_completo || 'Usuario';
                 }
 
-                // 3. Bloqueo de seguridad si está desactivado
                 if (estadoUsuario !== 'Aprobado') {
-                    await auth.signOut();
+                    await signOut(auth);
                     mostrarError("Tu cuenta ha sido desactivada o rechazada.");
                     return;
                 }
 
-                // 4. Guardar token y credenciales en SESSION STORAGE (Muere al cerrar navegador)
+                // 2. CREACIÓN DE SESIÓN PERSISTENTE
                 const token = await user.getIdToken();
-                sessionStorage.setItem('sadafa_token', token);
-                sessionStorage.setItem('sadafa_rol', rolUsuario);
-                sessionStorage.setItem('sadafa_nombre', nombreUsuario);
+                localStorage.setItem('sadafa_token', token);
+                localStorage.setItem('sadafa_rol', rolUsuario);
+                localStorage.setItem('sadafa_nombre', nombreUsuario);
+                localStorage.setItem('sadafa_last_activity', Date.now()); // Marca de tiempo inicial
                 
-                // 5. Redirección exitosa
-                window.location.href = 'admin.html';
+                window.location.replace('admin.html');
 
             } catch (error) {
                 console.error("Error Auth:", error.code);
