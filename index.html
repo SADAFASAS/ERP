@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SADAFA</title>
+    <title>SADAFA Servicios Integrales S.A.S.</title>
     <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <meta name="apple-mobile-web-app-title" content="SADAFA ERP">
@@ -165,6 +165,18 @@
             background-color: var(--bg-dark);
             color: #94a3b8;
         }
+
+        /* === CENTRADO DE ICONOS Y TARJETAS EN CELULARES / PANTALLAS PEQUEÑAS === */
+        @media (max-width: 768px) {
+            .service-card {
+                text-align: center;
+                align-items: center;
+            }
+            .service-icon {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
         @media (max-width: 576px) {
             .theme-toggle-container { padding: 4px 8px; }
             .theme-switch-input { width: 34px !important; height: 18px !important; }
@@ -198,8 +210,8 @@
     <!-- PORTADA / HERO -->
     <section class="hero-section">
         <div class="container text-center">
-            <h1 class="display-5 fw-bold mb-3">SADAFA Servicios Integrales S.A.S.</h1>
-            <h2 class="fw-bold" style="color: var(--titulo-servicios);">Soluciones Integrales para Copropiedades y Empresas</h2>
+            <span class="badge hero-badge rounded-pill px-4 py-2 mb-3 fw-bold">SADAFA Servicios Integrales S.A.S.</span>
+            <h1 class="display-5 fw-bold mb-3">Soluciones Integrales para Copropiedades y Empresas</h1>
             <p class="lead opacity-75 mx-auto mb-0" style="max-width: 680px;">
                 Personal capacitado, supervisión constante y respaldo administrativo para garantizar el mantenimiento, la limpieza y la tranquilidad de sus instalaciones.
             </p>
@@ -264,7 +276,8 @@
     <!-- CONTACTO / PIE DE PÁGINA -->
     <footer id="contacto" class="py-4 mt-5">
         <div class="container text-center">
-            <p class="small mb-2">NIT 901.262.796-6 &bull; calle 53c #27-85, La Arboleda - Manizales</p>
+            <h6 class="fw-bold text-white mb-2">SADAFA SERVICIOS INTEGRALES S.A.S.</h6>
+            <p class="small mb-2">NIT 901.262.796-6 &bull; Manizales y Pereira, Colombia</p>
             <p class="small mb-0">
                 <i class="bi bi-envelope me-1" style="color: #2dd4bf;"></i> info@sadafa.com.co
             </p>
@@ -287,8 +300,8 @@
 
                     <form id="loginForm" autocomplete="on">
                         <div class="mb-3">
-                            <label for="usuarioInput" class="form-label text-secondary small fw-bold">Documento</label>
-                            <input type="text" id="usuarioInput" class="form-control" placeholder="Número de cédula" required>
+                            <label for="usuarioInput" class="form-label text-secondary small fw-bold">Documento o Correo</label>
+                            <input type="text" id="usuarioInput" class="form-control" placeholder="Número de cédula o correo" required>
                         </div>
 
                         <div class="mb-4">
