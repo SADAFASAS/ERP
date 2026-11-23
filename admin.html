@@ -57,7 +57,7 @@
             font-weight: 800; 
             color: var(--sadafa-accent); 
             text-align: center; 
-            margin-bottom: 1.5rem; 
+            margin-bottom: 2rem; 
             letter-spacing: 0.5px; 
             font-size: 1.1rem; 
             transition: all 0.3s ease; 
@@ -109,18 +109,8 @@
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
         
-        /* === BOTÓN TEMA (DÍA/NOCHE) CON ICONOS REUBICADO === */
-        .theme-toggle-container { 
-            padding: 6px 12px; 
-            border-radius: 50px; 
-            background-color: #e2e8f0; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
-            transition: all 0.3s ease; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-        }
+        /* === BOTÓN TEMA (DÍA/NOCHE) CON ICONOS === */
+        .theme-toggle-container { padding: 8px 15px; border-radius: 50px; background-color: #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin: 0 10px; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
         .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
         .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
@@ -129,6 +119,8 @@
         .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
+        
+        .sidebar.collapsed .theme-toggle-container { padding: 8px 0; margin: 0; background: transparent; box-shadow: none; }
         
         .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
@@ -184,7 +176,7 @@
             .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
             .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
-            .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; height: auto; margin-bottom: 1.5rem; }
+            .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; height: auto; margin-bottom: 2rem; }
             .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
@@ -222,24 +214,23 @@
                     <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('bitacora', event)" title="Bitácora Novedades"><i class="bi bi-journal-text"></i> <span class="nav-text">Bitácora Novedades</span></a></li>
                     <li class="nav-item w-100"><a href="#" onclick="cambiarSeccion('caja', event)" title="Caja Menor y Gastos"><i class="bi bi-wallet2"></i> <span class="nav-text">Caja Menor y Gastos</span></a></li>
                     
-                    <li class="nav-item w-100 mt-4 border-top pt-2"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
+                    <li class="nav-item w-100 mt-4 mb-2 d-flex justify-content-center">
+                        <div class="theme-toggle-container gap-2" title="Cambiar Tema">
+                            <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                            <div class="form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
+                                <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
+                            </div>
+                            <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                        </div>
+                    </li>
+                    <li class="nav-item w-100 mt-1"><a href="#" id="btnCerrarSesion" class="text-danger" title="Cerrar Sesión"><i class="bi bi-box-arrow-right text-danger"></i> <span class="nav-text">Cerrar Sesión</span></a></li>
                 </ul>
             </div>
         </nav>
 
         <main class="main-content">
             
-            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                <!-- NUEVA UBICACIÓN: BOTÓN TEMA ALINEADO A LA IZQUIERDA -->
-                <div class="theme-toggle-container gap-2" title="Cambiar Tema">
-                    <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
-                    <div class="theme-switch-wrapper form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
-                        <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
-                    </div>
-                    <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
-                </div>
-                
-                <!-- USUARIO ALINEADO A LA DERECHA -->
+            <div class="d-flex justify-content-end align-items-center mb-4 border-bottom pb-2">
                 <span class="badge bg-secondary fs-6 shadow-sm py-2 px-3 text-capitalize">
                     <i class="bi bi-person-circle me-1"></i> <span id="nombreUI" class="fw-bold">Cargando...</span>
                     <span class="badge bg-light text-dark ms-2" id="rolUI"></span>
@@ -591,7 +582,7 @@
 
         </main>
     </div>
-<!-- ==================== TODOS LOS MODALES ==================== -->
+ <!-- ==================== TODOS LOS MODALES ==================== -->
     
     <!-- MODAL: CAJA MENOR Y GASTOS -->
     <div class="modal fade" id="modalGasto" tabindex="-1" aria-hidden="true">
@@ -1452,7 +1443,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- LÓGICA MODULAR DE FIREBASE -->
+    <!-- LÓGICA MODULAR DE FIREBASE Y SESIÓN A 10 MINUTOS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1486,7 +1477,6 @@
         const svgCamisa = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom;"><path d="M20.38 3.46L16 2a8.59 8.59 0 0 0-8 0L3.62 3.46a2 2 0 0 0-1.28 1.98l.5 8a2 2 0 0 0 1.99 1.87h1.49v6.19c0 1.38 1.12 2.5 2.5 2.5h6.36c1.38 0 2.5-1.12 2.5-2.5v-6.19h1.49a2 2 0 0 0 1.99-1.87l.5-8a2 2 0 0 0-1.28-1.98z"></path><path d="M16 2l-4 4-4-4"></path><path d="M12 6v16"></path></svg>`;
         const svgHistorial = `<span class="position-relative d-inline-block">${svgCamisa}<i class="bi bi-clock-fill text-info position-absolute" style="font-size: 0.65rem; bottom: -5px; right: -5px; background: var(--bg-casilla); border-radius: 50%;"></i></span>`;
 
-        // LECTURA DE SEGURIDAD DESDE LOCALSTORAGE
         const rolUsuarioActivo = localStorage.getItem('sadafa_rol');
         const nombreUsuarioActivo = localStorage.getItem('sadafa_nombre');
 
@@ -1538,22 +1528,7 @@
             await uploadBytes(fileRef, file); return await getDownloadURL(fileRef);
         }
 
-        // ===============================================
-        // FIX: BOTÓN CERRAR SESIÓN SEGURO (Rompe el bucle)
-        // ===============================================
-        document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => { 
-            e.preventDefault(); 
-            // Destruimos la memoria PRIMERO
-            localStorage.removeItem('sadafa_token');
-            localStorage.removeItem('sadafa_rol');
-            localStorage.removeItem('sadafa_nombre');
-            localStorage.removeItem('sadafa_last_activity');
-            // Cerramos Firebase
-            await signOut(auth); 
-            // Redirigimos anulando el historial para que no se devuelvan
-            window.location.replace('index.html'); 
-        });
-        
+        document.getElementById('btnCerrarSesion').addEventListener('click', async (e) => { e.preventDefault(); await signOut(auth); localStorage.clear(); window.location.href = 'index.html'; });
         const tema = localStorage.getItem('sadafa_theme') || 'dark';
         document.documentElement.setAttribute('data-bs-theme', tema);
         const switchEl = document.getElementById('modoOscuroSwitch');
@@ -1634,6 +1609,9 @@
                 const diff = Math.ceil((hoy - new Date(o.fecha_inicio)) / (1000 * 60 * 60 * 24)); return { ...o, dias_sin_dotacion: diff };
             }).filter(o => o.dias_sin_dotacion >= 120);
             
+            // ===============================================
+            // LÓGICA DE CUMPLEAÑOS (Cuenta regresiva 7 días)
+            // ===============================================
             let alertasCumples = [];
             window.cacheOperariosPDF.forEach(o => {
                 if (o.estado_operario === 'Activo' && o.cumpleanos) {
@@ -1860,74 +1838,40 @@
         window.generarPDF = function(e, tipo) { e.preventDefault(); const nombre = document.getElementById(tipo + '_nombre').value; const cedula = document.getElementById(tipo + '_cedula').value; let params = new URLSearchParams(); let tipoFormato = tipo; if(tipo === 'cert') tipoFormato = 'certificado'; if(tipo === 'exam') tipoFormato = 'examen'; if(tipo === 'cesan') tipoFormato = 'cesantias'; if(tipo === 'cta') tipoFormato = 'cuenta'; params.append('tipo', tipoFormato); params.append('nombre', nombre); params.append('cedula', cedula); if (tipo === 'carta') { params.append('cliente', document.getElementById('carta_cliente').value); params.append('cargo', document.getElementById('carta_cargo').value); params.append('rh', document.getElementById('carta_rh').value); params.append('eps', document.getElementById('carta_eps').value); params.append('arl', document.getElementById('carta_arl').value); params.append('ciudad_cedula', document.getElementById('carta_ciudad_exp').value); const selectCliente = document.getElementById('carta_cliente'); if(selectCliente.selectedIndex > 0) { const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); const ciudadCli = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-ciudad'); if(admin) params.append('admin', admin); if(ciudadCli) params.append('cliente_ciudad', ciudadCli); } const fileInput = document.getElementById('carta_foto'); if (fileInput && fileInput.files.length > 0) { if (fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto es muy pesada. Límite 3MB.", true); const reader = new FileReader(); reader.onload = function(evt) { localStorage.setItem('sadafa_temp_foto_carta', evt.target.result); window.abrirPlantilla(params, 'modalCarta'); }; reader.readAsDataURL(fileInput.files[0]); return; } window.abrirPlantilla(params, 'modalCarta'); } else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('inicio2', document.getElementById('cert_inicio2').value); params.append('fin2', document.getElementById('cert_fin2').value); params.append('inicio3', document.getElementById('cert_inicio3').value); params.append('fin3', document.getElementById('cert_fin3').value); params.append('inicio4', document.getElementById('cert_inicio4').value); params.append('fin4', document.getElementById('cert_fin4').value); params.append('motivo', document.getElementById('cert_motivo').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); params.append('cargo', document.getElementById('cert_cargo').value); window.abrirPlantilla(params, 'modalCertificado'); } else if (tipo === 'exam') { params.append('tipo_examen', document.getElementById('exam_tipo').value); params.append('laboratorio', document.getElementById('exam_lab').value); params.append('ciudad_cedula', document.getElementById('exam_ciudad_exp').value); window.abrirPlantilla(params, 'modalExamen'); } else if (tipo === 'cesan') { params.append('fecha_inicio', document.getElementById('cesan_inicio').value); params.append('fecha_fin', document.getElementById('cesan_fin').value); params.append('ciudad_cedula', document.getElementById('cesan_ciudad').value); window.abrirPlantilla(params, 'modalCesantias'); } else if (tipo === 'cta') { params.append('sede', document.getElementById('cta_sede_op').value); params.append('ciudad_cedula', document.getElementById('cta_ciudad').value); window.abrirPlantilla(params, 'modalCuenta'); } };
         window.abrirPlantilla = function(params, modalIdActual) { const urlFinal = 'plantillas.html?' + params.toString(); if (modalIdActual) window.cerrarModalJS(modalIdActual); const enlace = document.createElement('a'); enlace.href = urlFinal; enlace.target = '_blank'; document.body.appendChild(enlace); enlace.click(); enlace.remove(); };
 
-        // ==========================================
-        // CERRADO DE SESIÓN POR INACTIVIDAD - 10 MIN
-        // ==========================================
         window.isKickedOut = false; 
-        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; 
+        let temporizadorInactividad;
+        const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
 
-        function actualizarTiempo() {
-            localStorage.setItem('sadafa_last_activity', Date.now());
+        function reiniciarTemporizador() {
+            clearTimeout(temporizadorInactividad);
+            temporizadorInactividad = setTimeout(cerrarSesionPorInactividad, TIEMPO_LIMITE_INACTIVIDAD);
         }
 
-        // El sistema vigila cada 10 segundos el reloj de actividad
-        setInterval(() => {
-            const ultimaActividad = localStorage.getItem('sadafa_last_activity');
-            if (ultimaActividad && (Date.now() - parseInt(ultimaActividad) > TIEMPO_LIMITE_INACTIVIDAD)) {
-                if(!window.isKickedOut) cerrarSesionPorInactividad();
-            }
-        }, 10000); 
-
         async function cerrarSesionPorInactividad() {
-            window.isKickedOut = true; 
-            localStorage.removeItem('sadafa_token');
-            localStorage.removeItem('sadafa_rol');
-            localStorage.removeItem('sadafa_nombre');
-            localStorage.removeItem('sadafa_last_activity');
-            
-            await signOut(auth); 
-            
-            document.querySelectorAll('.modal.show').forEach(m => { 
-                const modalInstance = bootstrap.Modal.getInstance(m); 
-                if (modalInstance) modalInstance.hide(); 
-            });
-            const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad')); 
-            modalInact.show();
+            window.isKickedOut = true; await signOut(auth); localStorage.clear();
+            document.querySelectorAll('.modal.show').forEach(m => { const modalInstance = bootstrap.Modal.getInstance(m); if (modalInstance) modalInstance.hide(); });
+            const modalInact = new bootstrap.Modal(document.getElementById('modalInactividad')); modalInact.show();
         }
 
         document.addEventListener('DOMContentLoaded', () => { 
-            const token = localStorage.getItem('sadafa_token'); 
-            const rol = localStorage.getItem('sadafa_rol'); 
-            const nombreCompleto = localStorage.getItem('sadafa_nombre') || 'Usuario';
-            
-            if (!token || !rol) { window.location.replace('index.html'); return; }
+            const token = localStorage.getItem('sadafa_token'); const rol = localStorage.getItem('sadafa_rol'); const nombreCompleto = localStorage.getItem('sadafa_nombre') || 'Usuario';
+            if (!token || !rol) { window.location.href = 'index.html'; return; }
             
             const primerNombre = window.sanitizar(nombreCompleto).split(' ')[0];
             document.getElementById('nombreUI').innerText = primerNombre;
             document.getElementById('rolUI').innerText = window.sanitizar(rol);
             document.body.setAttribute('data-rol', rol);
 
-            window.onload = actualizarTiempo; 
-            document.onmousemove = actualizarTiempo; 
-            document.onkeypress = actualizarTiempo; 
-            document.onclick = actualizarTiempo; 
-            document.onscroll = actualizarTiempo;
-            document.ontouchstart = actualizarTiempo;
+            window.onload = reiniciarTemporizador; document.onmousemove = reiniciarTemporizador; document.onkeypress = reiniciarTemporizador; document.onclick = reiniciarTemporizador; document.onscroll = reiniciarTemporizador;
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    await window.cargarDashboardResumen(); 
-                    window.cargarOperarioTabla(); 
+                    await window.cargarDashboardResumen(); window.cargarOperarioTabla(); 
                     setTimeout(() => { window.verificarMostrarAlertaVencimientos(); }, 7000);
                     setTimeout(() => { window.verificarMostrarAlertaClientes(); }, 13000);
-                } else { 
-                    if (!window.isKickedOut) { 
-                        localStorage.removeItem('sadafa_token'); 
-                        window.location.replace('index.html'); 
-                    } 
-                }
+                } else { if (!window.isKickedOut) { window.location.href = 'index.html'; } }
             });
         });
     </script>
 </body>
-</html>
+</html>   
