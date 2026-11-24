@@ -24,6 +24,12 @@
             --titulo-servicios: #0b3c36;
             --icon-bg: rgba(11, 60, 54, 0.1);
             --icon-color: #0b3c36;
+            /* Variables Portada (Modo Día) */
+            --hero-bg: linear-gradient(135deg, #e6f2f0 0%, #f8fafc 100%);
+            --hero-title: #0b3c36;
+            --hero-subtitle: #1e293b;
+            --hero-text: #475569;
+            --hero-border: #d8dde6;
         }
         [data-bs-theme="dark"] {
             --bg-principal: #0f172a;
@@ -34,6 +40,12 @@
             --titulo-servicios: #2dd4bf;
             --icon-bg: rgba(45, 212, 191, 0.15);
             --icon-color: #2dd4bf;
+            /* Variables Portada (Modo Noche) */
+            --hero-bg: linear-gradient(135deg, #0f172a 0%, #0b3c36 100%);
+            --hero-title: #ffffff;
+            --hero-subtitle: #2dd4bf;
+            --hero-text: #cbd5e1;
+            --hero-border: #334155;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -90,24 +102,36 @@
         .theme-switch-input:focus { box-shadow: none !important; }
         .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
 
+        /* === PORTADA ADAPTABLE AL TEMA === */
         .hero-section {
-            background: linear-gradient(135deg, #0f172a 0%, #0b3c36 100%);
-            color: #ffffff;
+            background: var(--hero-bg);
+            color: var(--hero-title);
+            border-bottom: 1px solid var(--hero-border);
             padding: 75px 0 65px 0;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
-        .hero-badge {
-            background-color: rgba(45, 212, 191, 0.15);
-            color: var(--sadafa-accent);
-            border: 1px solid rgba(45, 212, 191, 0.4);
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
+        .hero-section h1 {
+            color: var(--hero-title);
+            transition: color 0.3s ease;
         }
+        .hero-section h5 {
+            color: var(--hero-subtitle);
+            transition: color 0.3s ease;
+        }
+        .hero-section p {
+            color: var(--hero-text);
+            transition: color 0.3s ease;
+        }
+
+        /* === TARJETAS DE SERVICIOS CENTRADAS === */
         .service-card {
             border: 1px solid var(--borde-tarjeta);
             border-radius: 12px;
             transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
             background: var(--bg-tarjeta);
             color: var(--texto-principal);
+            text-align: center;
+            align-items: center;
         }
         .service-card:hover {
             transform: translateY(-5px);
@@ -124,7 +148,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.6rem;
-            margin-bottom: 1rem;
+            margin: 0 auto 1rem auto;
         }
         .btn-sadafa {
             background-color: var(--sadafa-dark);
@@ -165,18 +189,6 @@
             background-color: var(--bg-dark);
             color: #94a3b8;
         }
-
-        /* === CENTRADO DE ICONOS Y TARJETAS EN CELULARES / PANTALLAS PEQUEÑAS === */
-        @media (max-width: 768px) {
-            .service-card {
-                text-align: center;
-                align-items: center;
-            }
-            .service-icon {
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
         @media (max-width: 576px) {
             .theme-toggle-container { padding: 4px 8px; }
             .theme-switch-input { width: 34px !important; height: 18px !important; }
@@ -211,8 +223,8 @@
     <section class="hero-section">
         <div class="container text-center">
             <h1 class="display-5 fw-bold mb-3">SADAFA Servicios Integrales S.A.S.</h1>
-            <h5 class="fw-bold">Soluciones Integrales para Copropiedades y Empresas</h5>
-            <p class="lead opacity-75 mx-auto mb-0" style="max-width: 680px;">
+            <h5 class="fw-bold mb-3">Soluciones Integrales para Copropiedades y Empresas</h5>
+            <p class="lead mx-auto mb-0" style="max-width: 680px;">
                 Personal capacitado, supervisión constante y respaldo administrativo para garantizar el mantenimiento, la limpieza y la tranquilidad de sus instalaciones.
             </p>
         </div>
