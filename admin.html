@@ -9,185 +9,409 @@
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <meta name="apple-mobile-web-app-title" content="SADAFA ERP">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        :root { 
-            --sadafa-accent: #0b3c36; 
-            --bg-principal: #f4f6f9; 
-            --bg-sidebar: #ffffff; 
-            --texto-principal: #222533; 
-            --texto-muted: #6c757d; 
-            --borde-tarjeta: #d8dde6; 
-            --bg-casilla: #ffffff; 
-            --hover-casilla: #eef3f2; 
+        /* === PALETA OFICIAL DE MARCA SADAFA (UNIFICADA CON SADAFA.COM.CO) === */
+        :root {
+            --sadafa-primary: #059669;
+            --sadafa-primary-hover: #047857;
+            --sadafa-primary-dark: #065f46;
+            --sadafa-secondary: #0284c7;
+            --sadafa-secondary-hover: #0369a1;
+            --sadafa-amber: #f59e0b;
+
+            /* Modo Día (Idéntico a sadafa.com.co) */
+            --sadafa-accent: #059669;
+            --bg-principal: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --bg-topbar: rgba(255, 255, 255, 0.96);
+            --texto-principal: #0f172a;
+            --texto-muted: #475569;
+            --borde-tarjeta: #d1fae5;
+            --borde-suave: #e2e8f0;
+            --bg-casilla: #ffffff;
+            --hover-casilla: #ecfdf5;
+            --sombra-tarjeta: 0 10px 25px rgba(5, 150, 105, 0.07);
+            --pill-bg: #e2e8f0;
+            --pill-border: #cbd5e1;
+            --thead-bg: #ecfdf5;
+            --thead-text: #065f46;
         }
-        [data-bs-theme="dark"] { 
-            --sadafa-accent: #2dd4bf; 
-            --bg-principal: #0f172a; 
-            --bg-sidebar: #1e293b; 
-            --texto-principal: #f8fafc; 
-            --texto-muted: #cbd5e1; 
-            --borde-tarjeta: #334155; 
-            --bg-casilla: #1e293b; 
-            --hover-casilla: #334155; 
+
+        [data-bs-theme="dark"] {
+            /* Modo Oscuro (Idéntico a sadafa.com.co) */
+            --sadafa-accent: #34d399;
+            --bg-principal: #111827;
+            --bg-sidebar: #1e293b;
+            --bg-topbar: rgba(30, 41, 59, 0.95);
+            --texto-principal: #f8fafc;
+            --texto-muted: #cbd5e1;
+            --borde-tarjeta: #334155;
+            --borde-suave: #334155;
+            --bg-casilla: #1e293b;
+            --hover-casilla: rgba(52, 211, 153, 0.12);
+            --sombra-tarjeta: 0 10px 26px rgba(0, 0, 0, 0.32);
+            --pill-bg: #111827;
+            --pill-border: #475569;
+            --thead-bg: #0f172a;
+            --thead-text: #34d399;
         }
-        
-        body { background-color: var(--bg-principal); color: var(--texto-principal); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
-        
+
+        body {
+            font-family: 'Open Sans', 'Segoe UI', sans-serif;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .brand, .sidebar a, .btn, .nav-pills .nav-link, thead th {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        /* === HOMOLOGACIÓN DE BOTONES Y COLORES BOOTSTRAP A MARCA SADAFA === */
+        .btn-success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
+        }
+        .btn-success:hover, .btn-success:focus {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+            border-color: #047857 !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-success {
+            color: var(--sadafa-accent) !important;
+            border-color: var(--sadafa-accent) !important;
+        }
+        .btn-outline-success:hover {
+            background-color: #059669 !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background: linear-gradient(135deg, #0369a1 0%, #075985 100%) !important;
+            border-color: #0369a1 !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-primary {
+            color: #0284c7 !important;
+            border-color: #0284c7 !important;
+        }
+        [data-bs-theme="dark"] .btn-outline-primary {
+            color: #38bdf8 !important;
+            border-color: #38bdf8 !important;
+        }
+        .btn-outline-primary:hover {
+            background-color: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        .text-success { color: #059669 !important; }
+        [data-bs-theme="dark"] .text-success { color: #34d399 !important; }
+        .text-primary { color: #0284c7 !important; }
+        [data-bs-theme="dark"] .text-primary { color: #38bdf8 !important; }
+
         /* === ESTRUCTURA PRINCIPAL BLINDADA === */
         .wrapper { display: flex; width: 100%; min-height: 100vh; position: relative; }
-        
-        .sidebar { 
-            width: 260px; 
-            flex-shrink: 0; 
-            border-right: 1px solid var(--borde-tarjeta); 
-            background-color: var(--bg-sidebar); 
-            transition: width 0.3s ease; 
-            padding-top: 20px; 
-            z-index: 1040; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
+
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            border-right: 2px solid var(--borde-tarjeta);
+            background-color: var(--bg-sidebar);
+            transition: width 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            padding-top: 20px;
+            z-index: 1040;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-shadow: 4px 0 20px rgba(2, 132, 199, 0.05);
         }
         .sidebar.collapsed { width: 80px; }
-        
-        .sidebar .brand { 
-            font-weight: 800; 
-            color: var(--sadafa-accent); 
-            text-align: center; 
-            margin-bottom: 1.5rem; 
-            letter-spacing: 0.5px; 
-            font-size: 1.1rem; 
-            transition: all 0.3s ease; 
+
+        .sidebar .brand {
+            font-weight: 800;
+            color: var(--sadafa-accent);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.4px;
+            font-size: 1.15rem;
+            transition: all 0.3s ease;
             white-space: nowrap;
             overflow: hidden;
         }
-        
-        .sidebar.collapsed .brand { 
-            opacity: 0; 
-            pointer-events: none; 
-            height: 0; 
-            margin: 0; 
-            padding: 0; 
+
+        .sidebar.collapsed .brand {
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            margin: 0;
+            padding: 0;
         }
-        
-        .sidebar-menu-scroll { 
-            flex-grow: 1; 
-            overflow-y: auto; 
-            overflow-x: hidden; 
-            padding-bottom: 20px; 
-            width: 100%; 
+
+        .sidebar-menu-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+            width: 100%;
         }
         .sidebar-menu-scroll::-webkit-scrollbar { width: 4px; }
-        .sidebar-menu-scroll::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.2); }
-        
-        .sidebar a { 
-            color: var(--texto-principal); 
-            text-decoration: none; 
-            display: flex; 
-            align-items: center; 
-            padding: 12px 20px; 
-            border-radius: 6px; 
-            margin-bottom: 4px; 
-            font-weight: 500; 
-            white-space: nowrap; 
-            width: 100%; 
+        .sidebar-menu-scroll::-webkit-scrollbar-thumb { background-color: rgba(5, 150, 105, 0.25); border-radius: 4px; }
+
+        .sidebar a {
+            color: var(--texto-principal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 11px 18px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            width: 100%;
             box-sizing: border-box;
             overflow: hidden;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
         .sidebar a i { font-size: 1.2rem; margin-right: 12px; color: var(--sadafa-accent); min-width: 25px; text-align: center; }
-        .sidebar a:hover, .sidebar a.active { background-color: rgba(45, 212, 191, 0.15); color: var(--sadafa-accent); font-weight: 600; }
-        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: rgba(5, 150, 105, 0.11);
+            color: var(--sadafa-accent);
+            font-weight: 700;
+        }
+        [data-bs-theme="dark"] .sidebar a:hover,
+        [data-bs-theme="dark"] .sidebar a.active {
+            background-color: rgba(52, 211, 153, 0.15);
+        }
+
         .sidebar.collapsed a { justify-content: center; padding: 12px 0; }
         .sidebar.collapsed a i { margin-right: 0; font-size: 1.4rem; }
         .sidebar.collapsed .nav-text { display: none !important; }
-        
-        /* === BOTÓN TEMA (DÍA/NOCHE) === */
-        .theme-toggle-container { 
-            padding: 6px 12px; 
-            border-radius: 50px; 
-            background-color: #e2e8f0; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); 
-            transition: all 0.3s ease; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
+
+        /* === BARRA SUPERIOR E INTERRUPTOR TEMA (ESTILO SADAFA.COM.CO) === */
+        .header-top-bar {
+            background: var(--bg-topbar);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--borde-tarjeta) !important;
+            border-bottom: 2px solid var(--borde-tarjeta) !important;
+            border-radius: 14px;
+            padding: 10px 18px !important;
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.06);
         }
-        [data-bs-theme="dark"] .theme-toggle-container { background-color: #0f172a; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
-        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
-        [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
-        [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
-        .theme-switch-input { width: 45px !important; height: 24px !important; margin-left: 0 !important; margin-top: 0 !important; cursor: pointer; background-color: #cbd5e1; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; transition: all 0.3s ease; }
+        [data-bs-theme="dark"] .header-top-bar {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .sadafa-user-pill {
+            background: linear-gradient(135deg, #059669 0%, #0284c7 100%) !important;
+            color: #ffffff !important;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem !important;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
+        }
+
+        .theme-toggle-container {
+            padding: 5px 11px;
+            border-radius: 50px;
+            background-color: var(--pill-bg);
+            border: 1px solid var(--pill-border);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .theme-toggle-container:hover { border-color: #059669; }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.25s ease; opacity: 1; }
+        .theme-icon-moon { color: #64748b; transition: all 0.25s ease; opacity: 0.45; }
+        [data-bs-theme="dark"] .theme-icon-sun { color: #64748b; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-moon { color: #34d399; opacity: 1; }
+        .theme-switch-input {
+            width: 42px !important;
+            height: 22px !important;
+            margin-left: 0 !important;
+            margin-top: 0 !important;
+            cursor: pointer;
+            background-color: #94a3b8;
+            border: none;
+            transition: all 0.25s ease;
+        }
         .theme-switch-input:focus { box-shadow: none !important; }
-        .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
-        
-        .btn-toggle-sidebar { position: absolute; top: 15px; right: -15px; background-color: var(--sadafa-accent); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1050; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
+        .theme-switch-input:checked {
+            background-color: #059669 !important;
+            border-color: #059669 !important;
+        }
+
+        .btn-toggle-sidebar {
+            position: absolute;
+            top: 18px;
+            right: -15px;
+            background: linear-gradient(135deg, #059669 0%, #0284c7 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1050;
+            box-shadow: 0 3px 10px rgba(5, 150, 105, 0.35);
+            transition: transform 0.3s ease;
+        }
         .sidebar.collapsed .btn-toggle-sidebar { transform: rotate(180deg); right: -15px; }
-        
-        .main-content { flex-grow: 1; padding: 20px 30px; transition: all 0.3s ease; min-width: 0; }
-        
-        .card-custom { background-color: var(--bg-casilla); border: 1px solid var(--borde-tarjeta); border-radius: 10px; overflow: visible !important; }
-        
-        .erp-color-rojo { color: #e63946 !important; }
-        .erp-border-rojo { border-left-color: #e63946 !important; }
+
+        .main-content { flex-grow: 1; padding: 20px 28px; transition: all 0.3s ease; min-width: 0; }
+
+        /* === TARJETAS, BUSCADORES Y TABLAS CON IDENTIDAD SADAFA === */
+        .card-custom {
+            background-color: var(--bg-casilla);
+            border: 1px solid var(--borde-tarjeta);
+            border-radius: 16px;
+            box-shadow: var(--sombra-tarjeta);
+            overflow: visible !important;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .sadafa-search-addon {
+            background-color: var(--bg-casilla) !important;
+            border-color: var(--borde-suave) !important;
+            color: var(--sadafa-accent) !important;
+        }
+        .input-group .form-control {
+            background-color: var(--bg-casilla);
+            border-color: var(--borde-suave);
+            color: var(--texto-principal);
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--sadafa-accent) !important;
+            box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.18) !important;
+        }
+
+        thead.table-light th,
+        .table > thead.table-light > tr > th {
+            background-color: var(--thead-bg) !important;
+            color: var(--thead-text) !important;
+            border-bottom: 2px solid var(--borde-tarjeta) !important;
+            font-weight: 700;
+        }
+
+        .erp-color-rojo { color: #e11d48 !important; }
+        [data-bs-theme="dark"] .erp-color-rojo { color: #fb7185 !important; }
+        .erp-border-rojo { border-left-color: #e11d48 !important; }
+
         .erp-color-azul { color: #0284c7 !important; }
+        [data-bs-theme="dark"] .erp-color-azul { color: #38bdf8 !important; }
         .erp-border-azul { border-left-color: #0284c7 !important; }
-        .erp-color-naranja { color: #ea580c !important; }
-        .erp-border-naranja { border-left-color: #ea580c !important; }
-        .erp-color-amarillo { color: #ffb703 !important; }
-        .erp-border-amarillo { border-left-color: #ffb703 !important; }
-        .erp-color-morado { color: #8b5cf6 !important; }
-        .erp-border-morado { border-left-color: #8b5cf6 !important; }
-        
+        .erp-bg-azul { background-color: #0284c7 !important; color: #ffffff !important; }
+
+        .erp-color-naranja { color: #d97706 !important; }
+        [data-bs-theme="dark"] .erp-color-naranja { color: #fbbf24 !important; }
+        .erp-border-naranja { border-left-color: #f59e0b !important; }
+
+        .erp-color-amarillo { color: #d97706 !important; }
+        [data-bs-theme="dark"] .erp-color-amarillo { color: #fbbf24 !important; }
+        .erp-border-amarillo { border-left-color: #fbbf24 !important; }
+
+        .erp-color-morado { color: #4f46e5 !important; }
+        [data-bs-theme="dark"] .erp-color-morado { color: #a5b4fc !important; }
+        .erp-border-morado { border-left-color: #4f46e5 !important; }
+
         .table-scrollable-dash { max-height: 250px; overflow-y: auto; }
         .table-scrollable-dash::-webkit-scrollbar { width: 6px; }
-        .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
-        [data-bs-theme="dark"] .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
+        .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(5, 150, 105, 0.3); border-radius: 4px; }
+        [data-bs-theme="dark"] .table-scrollable-dash::-webkit-scrollbar-thumb { background-color: rgba(52, 211, 153, 0.3); }
 
         .table-scrollable { max-height: 500px; overflow-y: auto; }
         .table-scrollable::-webkit-scrollbar { width: 6px; }
-        .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(11, 60, 54, 0.3); border-radius: 4px; }
-        [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(45, 212, 191, 0.3); }
-        
+        .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(5, 150, 105, 0.3); border-radius: 4px; }
+        [data-bs-theme="dark"] .table-scrollable::-webkit-scrollbar-thumb { background-color: rgba(52, 211, 153, 0.3); }
+
         .text-muted { color: var(--texto-muted) !important; }
-        
-        .nav-pills .nav-link { color: var(--texto-principal); font-weight: 600; background-color: transparent; border: 1px solid transparent; }
-        .nav-pills .nav-link.active { background-color: var(--sadafa-accent) !important; color: #ffffff !important; border: 1px solid var(--sadafa-accent); }
+
+        .nav-pills .nav-link {
+            color: var(--texto-principal);
+            font-weight: 600;
+            border-radius: 10px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .nav-pills .nav-link:hover {
+            background-color: rgba(5, 150, 105, 0.08);
+            color: var(--sadafa-accent);
+        }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid #059669;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
+        }
 
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        .metric-card { border-left: 4px solid var(--sadafa-accent); border-radius: 8px; }
-        .dropdown-menu { z-index: 1055 !important; }
+        .metric-card {
+            border-left: 5px solid var(--sadafa-accent);
+            border-radius: 16px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+        }
+        .dropdown-menu {
+            z-index: 1055 !important;
+            border-color: var(--borde-tarjeta);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
         .sticky-top { z-index: 10 !important; }
         .modal { z-index: 1080 !important; }
+        .modal-content.card-custom {
+            border-top: 4px solid var(--sadafa-accent) !important;
+        }
         body[data-rol="Supervisor"] .admin-only { display: none !important; }
 
         .cliente-acordeon-header { cursor: pointer; transition: background-color 0.2s; }
         .cliente-acordeon-header:hover { background-color: var(--hover-casilla); }
         .icon-acordeon { transition: transform 0.3s ease; display: inline-block; font-size: 0.9rem; }
         .cliente-acordeon-header:not(.collapsed) .icon-acordeon { transform: rotate(180deg); }
-        
+
         /* === CORRECCIÓN RESPONSIVE CELULARES === */
         @media (max-width: 768px) {
             .wrapper { overflow-x: hidden !important; position: relative !important; }
             .sidebar { position: fixed !important; left: -260px !important; height: 100vh !important; z-index: 1050 !important; width: 260px !important; box-shadow: 4px 0 15px rgba(0,0,0,0.5) !important; transition: left 0.3s ease !important; }
             .sidebar.collapsed { left: 0 !important; }
             .main-content { width: 100% !important; margin-left: 0 !important; padding: 15px 10px !important; }
-            
-            .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.9 !important; display: flex !important; }
+
+            .btn-toggle-sidebar { right: -40px !important; top: 15px !important; transform: rotate(180deg) !important; width: 40px !important; height: 40px !important; border-radius: 0 50% 50% 0 !important; opacity: 0.95 !important; display: flex !important; }
             .sidebar.collapsed .btn-toggle-sidebar { right: 15px !important; transform: rotate(0deg) !important; width: 30px !important; height: 30px !important; border-radius: 50% !important; }
-            
+
             .sidebar.collapsed .brand { opacity: 1 !important; pointer-events: auto !important; height: auto; margin-bottom: 1.5rem; }
             .sidebar.collapsed .nav-text { display: inline-block !important; }
             .sidebar.collapsed a { justify-content: flex-start !important; padding: 12px 20px !important; }
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
-            
-            .header-top-bar { padding-left: 45px !important; }
+
+            .header-top-bar { padding-left: 48px !important; }
             .theme-toggle-container { padding: 4px 8px !important; }
             .theme-switch-input { width: 35px !important; height: 18px !important; }
             .theme-icon-sun, .theme-icon-moon { font-size: 1rem !important; }
@@ -242,7 +466,7 @@
                     <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
                 </div>
                 
-                <span class="badge bg-secondary fs-6 shadow-sm py-2 px-3 text-capitalize">
+                <span class="badge sadafa-user-pill fs-6 py-2 px-3 text-capitalize">
                     <i class="bi bi-person-circle me-1"></i> <span id="nombreUI" class="fw-bold">Cargando...</span>
                     <span class="badge bg-light text-dark ms-2" id="rolUI"></span>
                 </span>
@@ -382,7 +606,7 @@
                     </div>
                     <div class="col-md-8 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;">
-                            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                            <span class="input-group-text sadafa-search-addon"><i class="bi bi-search"></i></span>
                             <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
                         </div>
                         <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios" title="Descargar base de datos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
@@ -471,7 +695,7 @@
                         <p class="text-muted small mb-0">Directorio, sedes y contratos comerciales.</p>
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
-                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text sadafa-search-addon"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
                         <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarClientes" title="Descargar directorio de clientes"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
                         <button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm" onclick="abrirModalImportacion('clientes')" title="Subir clientes masivamente desde Excel o CSV"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Importar Excel</button>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()" title="Crear Cliente"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
@@ -494,7 +718,7 @@
                         <p class="text-muted small mb-0">Gestión de credenciales.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
-                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text sadafa-search-addon"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarUsuarioInput" placeholder="Buscar usuario..." onkeyup="filtrarTabla('buscarUsuarioInput', 'tablaUsuariosBody')"></div>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCrearUsuarioAdmin" onclick="prepararNuevoUsuario()" title="Crear Credencial"><i class="bi bi-person-plus-fill"></i> Crear Usuario</button>
                     </div>
                 </div>
@@ -511,7 +735,7 @@
                         <p class="text-muted small mb-0">Control de insumos, herramientas y dotación.</p>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
-                        <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
+                        <div class="input-group input-group-sm shadow-sm" style="max-width: 300px;"><span class="input-group-text sadafa-search-addon"><i class="bi bi-search"></i></span><input type="text" id="filtroTextoInventario" class="form-control border-start-0" placeholder="Buscar dotación, activo..." onkeyup="aplicarFiltrosInventario()"></div>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalUnificado" onclick="prepararNuevoUnificado()" title="Ingresar Stock"><i class="bi bi-plus-circle"></i> Nuevo Elemento</button>
                     </div>
                 </div>
@@ -1649,11 +1873,27 @@
             window.location.replace('index.html'); 
         });
         
-        const tema = localStorage.getItem('sadafa_theme') || 'dark';
+        const tema = localStorage.getItem('sadafa_theme') || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
         document.documentElement.setAttribute('data-bs-theme', tema);
         const switchEl = document.getElementById('modoOscuroSwitch');
         if(switchEl) { switchEl.checked = (tema === 'dark'); }
-        switchEl.addEventListener('change', () => { const nuevoTema = switchEl.checked ? 'dark' : 'light'; document.documentElement.setAttribute('data-bs-theme', nuevoTema); localStorage.setItem('sadafa_theme', nuevoTema); });
+        switchEl.addEventListener('change', () => {
+            const nuevoTema = switchEl.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-bs-theme', nuevoTema);
+            localStorage.setItem('sadafa_theme', nuevoTema);
+            const cTexto = nuevoTema === 'dark' ? '#cbd5e1' : '#475569';
+            const cGrilla = nuevoTema === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)';
+            if (window.miGraficoOps) {
+                window.miGraficoOps.options.plugins.legend.labels.color = cTexto;
+                window.miGraficoOps.update();
+            }
+            if (window.miGraficoCli) {
+                window.miGraficoCli.options.scales.x.ticks.color = cTexto;
+                window.miGraficoCli.options.scales.y.ticks.color = cTexto;
+                window.miGraficoCli.options.scales.y.grid.color = cGrilla;
+                window.miGraficoCli.update();
+            }
+        });
 
         document.addEventListener('input', function (e) {
             if (e.target.matches('input[type="text"], textarea')) {
@@ -1801,11 +2041,11 @@
             
             if(window.miGraficoOps) window.miGraficoOps.destroy();
             const ctxOps = document.getElementById('chartOperarios').getContext('2d');
-            window.miGraficoOps = new Chart(ctxOps, { type: 'doughnut', data: { labels: ['Activos', 'Retirados'], datasets: [{ data: [opsActivos, opsInactivos], backgroundColor: ['#10b981', '#f43f5e'], borderWidth: 0, hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: colorTexto, font: {weight: 'bold'} } } }, cutout: '65%' } });
+            window.miGraficoOps = new Chart(ctxOps, { type: 'doughnut', data: { labels: ['Activos', 'Retirados'], datasets: [{ data: [opsActivos, opsInactivos], backgroundColor: ['#059669', '#e11d48'], borderWidth: 0, hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: colorTexto, font: {weight: 'bold'} } } }, cutout: '65%' } });
 
             let conteoServicios = {};
             srvSnap.forEach(d => { let serv = d.data().servicio; if(conteoServicios[serv] === undefined) conteoServicios[serv] = 1; else conteoServicios[serv]++; });
-            const paletaVibrante = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#06b6d4', '#10b981', '#f43f5e', '#f59e0b', '#6366f1', '#14b8a6'];
+            const paletaVibrante = ['#059669', '#0284c7', '#f59e0b', '#0891b2', '#16a34a', '#4f46e5', '#d97706', '#0d9488', '#0369a1', '#10b981'];
             const coloresAsignados = Object.keys(conteoServicios).map((_, i) => paletaVibrante[i % paletaVibrante.length]);
 
             if(window.miGraficoCli) window.miGraficoCli.destroy();
@@ -1958,7 +2198,7 @@
         window.guardarNovedad = async function(e) { e.preventDefault(); const btnOriginal = window.bloquearBoton(e.submitter); const fileInput = document.getElementById('nov_foto'); if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("La evidencia excede los 3MB.", true); } const trasladar = document.getElementById('chk_traslado').checked; const idNuevaSede = trasladar ? document.getElementById('nov_nueva_sede').value : null; if (trasladar && !idNuevaSede) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("Debes seleccionar la nueva sede.", true); } try { let urlFoto = await subirImagenStorage(fileInput.files[0], 'novedades'); await addDoc(collection(db, "bitacora_novedades"), { id_operario: document.getElementById('nov_operario').value, fecha_novedad: document.getElementById('nov_fecha').value, tipo_novedad: document.getElementById('nov_tipo').value, descripcion: document.getElementById('nov_desc').value, reportado_por: document.getElementById('nov_reporta').value, url_evidencia: urlFoto || '', fecha_registro: new Date().toISOString() }); if (trasladar) { await updateDoc(doc(db, "operarios", document.getElementById('nov_operario').value), { id_cliente_asignado: idNuevaSede }); await window.cargarOperariosCache(); } window.mostrarAlerta("Novedad registrada."); window.cerrarModalJS('modalNovedad'); window.cargarNovedades(); } catch(err) { window.mostrarAlerta("Error al registrar.", true); } finally { window.desbloquearBoton(e.submitter, btnOriginal); } };
 
         window.prepararNuevoGasto = function() { window.limpiarFormulario('modalGasto'); document.getElementById('gast_fecha').value = new Date().toISOString().split('T')[0]; };
-        window.cargarGastos = async function() { let q = collection(db, "gastos_caja_menor"); if (rolUsuarioActivo !== 'Administrador') { q = query(q, where("reportado_por", "==", window.sanitizar(nombreUsuarioActivo).split(' ')[0])); } const querySnapshot = await getDocs(q); window.gastosGlobales = []; querySnapshot.forEach(doc => window.gastosGlobales.push({ id: doc.id, ...doc.data() })); window.gastosGlobales.sort((a,b) => new Date(b.fecha_registro) - new Date(a.fecha_registro)); document.getElementById('tbodyGastos').innerHTML = window.gastosGlobales.length ? window.gastosGlobales.map(g => { let colorEstado = g.estado === 'Aprobado' ? 'bg-info text-dark' : (g.estado === 'Pagado' ? 'bg-success' : (g.estado === 'Rechazado' ? 'bg-danger' : 'bg-secondary')); let btnSoporte = g.soporte_url ? `<button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="verSoporte('${g.soporte_url}')" title="Ver Recibo de Compra"><i class="bi bi-eye"></i> Ver</button>` : `<span class="text-muted small">Sin archivo</span>`; let acciones = ''; if (rolUsuarioActivo === 'Administrador') { if (g.estado !== 'Pagado' && g.estado !== 'Rechazado') acciones += `<button class="btn btn-sm btn-success py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Pagado')" title="Marcar como Pagado"><i class="bi bi-check-all"></i></button> <button class="btn btn-sm btn-outline-warning py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Rechazado')" title="Rechazar Gasto"><i class="bi bi-x-circle"></i></button>`; acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto del Registro"><i class="bi bi-trash"></i></button>`; } else if (g.estado === 'Pendiente') { acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto"><i class="bi bi-trash"></i></button>`; } return `<tr><td class="ps-4 text-nowrap">${g.fecha_gasto}</td><td><strong>${window.sanitizar(g.concepto)}</strong></td><td class="text-muted">${window.sanitizar(g.reportado_por)}</td><td class="text-end fw-bold text-success text-nowrap">$${new Intl.NumberFormat('es-CO').format(g.valor)}</td><td class="text-center">${btnSoporte}</td><td class="text-center"><span class="badge ${colorEstado}">${g.estado}</span></td><td class="pe-4 text-end text-nowrap">${acciones}</td></tr>`; }).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay gastos reportados.</td></tr>`; if (rolUsuarioActivo === 'Administrador') { let totales = {}; window.gastosGlobales.forEach(g => { if (g.estado !== 'Rechazado') { if (!totales[g.reportado_por]) { totales[g.reportado_por] = { pendiente: 0, pagado: 0, total: 0 }; } let val = parseFloat(g.valor); totales[g.reportado_por].total += val; if (g.estado === 'Pagado') totales[g.reportado_por].pagado += val; else totales[g.reportado_por].pendiente += val; } }); let htmlRes = `<div class="col-12"><div class="card card-custom p-3 shadow-sm border-success border-opacity-50"><h6 class="fw-bold text-success mb-3"><i class="bi bi-calculator me-2"></i>Cuadro Resumen de Gastos por Usuario (No rechazados)</h6><div class="row g-3">`; for (let user in totales) { htmlRes += `<div class="col-md-3"><div class="border rounded p-2 bg-body-tertiary shadow-sm"><div class="small fw-bold text-truncate text-secondary mb-1" title="${window.sanitizar(user)}"><i class="bi bi-person-fill me-1"></i>${window.sanitizar(user)}</div><div class="d-flex justify-content-between small"><span class="text-muted">Pendientes:</span><span class="text-warning-emphasis fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pendiente)}</span></div><div class="d-flex justify-content-between small"><span class="text-muted">Pagados:</span><span class="text-success fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pagado)}</span></div><div class="d-flex justify-content-between small mt-1 pt-1 border-top"><span class="fw-bold">Total:</span><span class="fw-bold text-dark">$${new Intl.NumberFormat('es-CO').format(totales[user].total)}</span></div></div></div>`; } htmlRes += `</div></div></div>`; document.getElementById('contenedorResumenGastos').innerHTML = htmlRes; document.getElementById('contenedorResumenGastos').style.display = 'flex'; } };
+        window.cargarGastos = async function() { let q = collection(db, "gastos_caja_menor"); if (rolUsuarioActivo !== 'Administrador') { q = query(q, where("reportado_por", "==", window.sanitizar(nombreUsuarioActivo).split(' ')[0])); } const querySnapshot = await getDocs(q); window.gastosGlobales = []; querySnapshot.forEach(doc => window.gastosGlobales.push({ id: doc.id, ...doc.data() })); window.gastosGlobales.sort((a,b) => new Date(b.fecha_registro) - new Date(a.fecha_registro)); document.getElementById('tbodyGastos').innerHTML = window.gastosGlobales.length ? window.gastosGlobales.map(g => { let colorEstado = g.estado === 'Aprobado' ? 'bg-info text-dark' : (g.estado === 'Pagado' ? 'bg-success' : (g.estado === 'Rechazado' ? 'bg-danger' : 'bg-secondary')); let btnSoporte = g.soporte_url ? `<button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="verSoporte('${g.soporte_url}')" title="Ver Recibo de Compra"><i class="bi bi-eye"></i> Ver</button>` : `<span class="text-muted small">Sin archivo</span>`; let acciones = ''; if (rolUsuarioActivo === 'Administrador') { if (g.estado !== 'Pagado' && g.estado !== 'Rechazado') acciones += `<button class="btn btn-sm btn-success py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Pagado')" title="Marcar como Pagado"><i class="bi bi-check-all"></i></button> <button class="btn btn-sm btn-outline-warning py-0 me-1" onclick="cambiarEstadoGasto('${g.id}', 'Rechazado')" title="Rechazar Gasto"><i class="bi bi-x-circle"></i></button>`; acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto del Registro"><i class="bi bi-trash"></i></button>`; } else if (g.estado === 'Pendiente') { acciones += `<button class="btn btn-sm btn-outline-danger py-0" onclick="eliminarGasto('${g.id}', '${window.eStr(g.concepto)}', '${window.eStr(g.reportado_por)}')" title="Eliminar Gasto"><i class="bi bi-trash"></i></button>`; } return `<tr><td class="ps-4 text-nowrap">${g.fecha_gasto}</td><td><strong>${window.sanitizar(g.concepto)}</strong></td><td class="text-muted">${window.sanitizar(g.reportado_por)}</td><td class="text-end fw-bold text-success text-nowrap">$${new Intl.NumberFormat('es-CO').format(g.valor)}</td><td class="text-center">${btnSoporte}</td><td class="text-center"><span class="badge ${colorEstado}">${g.estado}</span></td><td class="pe-4 text-end text-nowrap">${acciones}</td></tr>`; }).join('') : `<tr><td colspan="7" class="text-center text-muted py-3">No hay gastos reportados.</td></tr>`; if (rolUsuarioActivo === 'Administrador') { let totales = {}; window.gastosGlobales.forEach(g => { if (g.estado !== 'Rechazado') { if (!totales[g.reportado_por]) { totales[g.reportado_por] = { pendiente: 0, pagado: 0, total: 0 }; } let val = parseFloat(g.valor); totales[g.reportado_por].total += val; if (g.estado === 'Pagado') totales[g.reportado_por].pagado += val; else totales[g.reportado_por].pendiente += val; } }); let htmlRes = `<div class="col-12"><div class="card card-custom p-3 shadow-sm border-success border-opacity-50"><h6 class="fw-bold text-success mb-3"><i class="bi bi-calculator me-2"></i>Cuadro Resumen de Gastos por Usuario (No rechazados)</h6><div class="row g-3">`; for (let user in totales) { htmlRes += `<div class="col-md-3"><div class="border rounded p-2 bg-body-tertiary shadow-sm"><div class="small fw-bold text-truncate text-secondary mb-1" title="${window.sanitizar(user)}"><i class="bi bi-person-fill me-1"></i>${window.sanitizar(user)}</div><div class="d-flex justify-content-between small"><span class="text-muted">Pendientes:</span><span class="text-warning-emphasis fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pendiente)}</span></div><div class="d-flex justify-content-between small"><span class="text-muted">Pagados:</span><span class="text-success fw-semibold">$${new Intl.NumberFormat('es-CO').format(totales[user].pagado)}</span></div><div class="d-flex justify-content-between small mt-1 pt-1 border-top"><span class="fw-bold">Total:</span><span class="fw-bold text-body">$${new Intl.NumberFormat('es-CO').format(totales[user].total)}</span></div></div></div>`; } htmlRes += `</div></div></div>`; document.getElementById('contenedorResumenGastos').innerHTML = htmlRes; document.getElementById('contenedorResumenGastos').style.display = 'flex'; } };
         window.verSoporte = function(url) { document.getElementById('imgSoporte').src = url; new bootstrap.Modal(document.getElementById('modalVerSoporte')).show(); };
         window.guardarGasto = async function(e) { e.preventDefault(); const btnOriginal = window.bloquearBoton(e.submitter); const fileInput = document.getElementById('gast_soporte'); if (fileInput.files.length > 0 && fileInput.files[0].size > 3 * 1024 * 1024) { window.desbloquearBoton(e.submitter, btnOriginal); return window.mostrarAlerta("La foto excede los 3MB. Comprímela e intenta de nuevo.", true); } try { let urlFoto = await subirImagenStorage(fileInput.files[0], 'gastos'); await addDoc(collection(db, "gastos_caja_menor"), { fecha_gasto: document.getElementById('gast_fecha').value, concepto: document.getElementById('gast_concepto').value, valor: parseFloat(document.getElementById('gast_valor').value), soporte_url: urlFoto, estado: 'Pendiente', reportado_por: window.sanitizar(nombreUsuarioActivo).split(' ')[0], fecha_registro: new Date().toISOString() }); window.mostrarAlerta("Gasto reportado exitosamente."); window.cerrarModalJS('modalGasto'); window.cargarGastos(); } catch(err) { window.mostrarAlerta("Error al reportar gasto.", true); } finally { window.desbloquearBoton(e.submitter, btnOriginal); } };
         window.cambiarEstadoGasto = async function(id, estado) { if (rolUsuarioActivo === 'Administrador' && confirm(`¿Marcar este gasto como ${estado}?`)) { await updateDoc(doc(db, "gastos_caja_menor", id), { estado: estado }); window.cargarGastos(); } };
@@ -2777,4 +3017,4 @@
         });
     </script>
 </body>
-</html>
+</html>    
