@@ -194,6 +194,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body spellcheck="true" data-rol="">
 
@@ -385,6 +386,7 @@
                             <input type="text" class="form-control border-start-0" id="buscarOperarioInput" placeholder="Buscar empleado..." onkeyup="filtrarTabla('buscarOperarioInput', 'tablaContratosBody')">
                         </div>
                         <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarOperarios" title="Descargar base de datos"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm" onclick="abrirModalImportacion('operarios')" title="Subir empleados masivamente desde Excel o CSV"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Importar Excel</button>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalOperario" onclick="prepararNuevoOperario()" title="Crear Operario"><i class="bi bi-person-plus me-1"></i> Nuevo Empleado</button>
                     </div>
                 </div>
@@ -470,6 +472,8 @@
                     </div>
                     <div class="col-md-7 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
                         <div class="input-group input-group-sm shadow-sm" style="max-width: 250px;"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input type="text" class="form-control border-start-0" id="buscarClienteInput" placeholder="Buscar cliente..." onkeyup="filtrarTabla('buscarClienteInput', 'tablaClientesBody')"></div>
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold shadow-sm" id="btnExportarClientes" title="Descargar directorio de clientes"><i class="bi bi-file-earmark-excel me-1"></i> Exportar Excel</button>
+                        <button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm" onclick="abrirModalImportacion('clientes')" title="Subir clientes masivamente desde Excel o CSV"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Importar Excel</button>
                         <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCliente" onclick="prepararNuevoCliente()" title="Crear Cliente"><i class="bi bi-plus-circle"></i> Nuevo Cliente</button>
                     </div>
                 </div>
@@ -1437,6 +1441,99 @@
         </div>
     </div>
 
+    <!-- MODAL: IMPORTACIÓN MASIVA DE CLIENTES Y EMPLEADOS -->
+    <div class="modal fade" id="modalImportacionMasiva" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content card-custom p-3 p-md-4">
+                <div class="modal-header border-bottom bg-body-tertiary">
+                    <div>
+                        <h5 class="modal-title fw-bold text-primary mb-0"><i class="bi bi-cloud-arrow-up-fill me-2"></i>Carga Masiva a Firebase (Excel / CSV)</h5>
+                        <small class="text-muted">Importa o actualiza múltiples registros en segundos sin duplicar NIT ni cédulas.</small>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" id="btnCerrarModalMasivo"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Selector de módulo -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 p-2 rounded bg-body-tertiary border">
+                        <div class="btn-group" role="group" aria-label="Tipo de importación">
+                            <button type="button" class="btn btn-sm fw-bold btn-primary" id="btnTabImpClientes" onclick="cambiarTipoImportacion('clientes')">
+                                <i class="bi bi-building me-1"></i> 1. Clientes / Sedes
+                            </button>
+                            <button type="button" class="btn btn-sm fw-bold btn-outline-primary" id="btnTabImpOperarios" onclick="cambiarTipoImportacion('operarios')">
+                                <i class="bi bi-people-fill me-1"></i> 2. Empleados y Contratos
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-success fw-bold" onclick="descargarPlantillaMasiva()">
+                            <i class="bi bi-download me-1"></i> Descargar Plantilla Excel (.xlsx)
+                        </button>
+                    </div>
+
+                    <div class="alert alert-info py-2 small mb-3 border-0" id="infoColumnasMasivo"></div>
+
+                    <!-- Configuración y selección de archivo -->
+                    <div class="row g-3 mb-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="small fw-bold text-muted mb-1"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Seleccionar archivo (.xlsx, .xls o .csv)</label>
+                            <input type="file" id="inputArchivoMasivo" class="form-control form-control-sm bg-body-tertiary" accept=".xlsx,.xls,.csv" onchange="procesarVistaPreviaMasiva(event)">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="small fw-bold text-muted mb-1">Si el NIT o Cédula ya existe en Firebase</label>
+                            <select id="modoDuplicadosImport" class="form-select form-select-sm bg-body-tertiary" onchange="recalcularEstadoMasivo()">
+                                <option value="actualizar" selected>Actualizar datos existentes y crear nuevos</option>
+                                <option value="omitir">Solo crear nuevos (omitir existentes)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3" id="wrapAutoCrearCliente" style="display: none;">
+                            <div class="form-check border rounded p-2 bg-body-tertiary small">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" id="chkAutoCrearClienteImport" checked onchange="recalcularEstadoMasivo()">
+                                <label class="form-check-label fw-semibold" for="chkAutoCrearClienteImport" style="font-size: 0.78rem;">
+                                    Crear sede si el cliente aún no existe
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen validación -->
+                    <div id="resumenImportacionMasiva" class="d-none mb-3">
+                        <div class="d-flex flex-wrap gap-2 mb-2" id="badgesResumenMasivo"></div>
+                        <div id="alertasImportacionMasiva" class="small"></div>
+                    </div>
+
+                    <!-- Barra de progreso -->
+                    <div id="progresoImportacionWrap" class="d-none mb-3 p-3 border rounded bg-body-tertiary">
+                        <div class="d-flex justify-content-between small fw-bold mb-1">
+                            <span id="textoProgresoImportacion">Subiendo registros a Firebase...</span>
+                            <span id="porcentajeProgresoImportacion">0%</span>
+                        </div>
+                        <div class="progress" style="height: 12px;">
+                            <div id="barraProgresoImportacion" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de vista previa -->
+                    <div id="contenedorPreviewMasivo" class="d-none border rounded overflow-hidden">
+                        <div class="bg-body-tertiary px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+                            <span class="small fw-bold"><i class="bi bi-eye me-1"></i>Vista previa de registros detectados</span>
+                            <small class="text-muted" id="notaLimitePreview"></small>
+                        </div>
+                        <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+                            <table class="table table-sm table-hover align-middle mb-0 small">
+                                <thead class="table-light sticky-top" id="theadPreviewMasivo"></thead>
+                                <tbody id="tbodyPreviewMasivo"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-body-tertiary">
+                    <button type="button" class="btn btn-outline-secondary btn-sm fw-bold" data-bs-dismiss="modal" id="btnCancelarMasivo">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm fw-bold px-4" id="btnEjecutarImportacionMasiva" onclick="ejecutarSubidaMasivaFirebase()" disabled>
+                        <i class="bi bi-cloud-check-fill me-1"></i> Confirmar y Subir a Firebase
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL CORPORATIVO: CIERRE POR INACTIVIDAD -->
     <div class="modal fade" id="modalInactividad" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -1457,7 +1554,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, enableIndexedDbPersistence, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -1785,7 +1882,22 @@
             document.getElementById('tablaOperariosInactivosBody').innerHTML = inactivos.length ? inactivos.map(op => `<tr><td class="ps-4 text-nowrap"><button type="button" class="btn btn-outline-success btn-sm py-0" onclick="reactivarOperario('${op.id}', '${window.eStr(op.nombres_completos)}')" title="Reactivar Operario"><i class="bi bi-arrow-counterclockwise"></i> Reactivar</button></td><td class="text-nowrap">${window.sanitizar(op.ciudad)}</td><td class="text-nowrap">${window.sanitizar(op.cliente_nombre)}</td><td class="text-wrap" style="min-width: 220px;"><strong>${window.sanitizar(op.nombres_completos)}</strong></td><td class="text-nowrap">${window.sanitizar(op.cedula)}</td><td class="text-nowrap">${window.sanitizar(op.tipo_contrato)}</td><td class="text-nowrap">${window.sanitizar(op.especialidad)}</td><td class="text-nowrap">${window.sanitizar(op.celular)}</td></tr>`).join('') : `<tr><td colspan="8" class="text-center text-muted py-3">El historial está vacío.</td></tr>`;
         };
 
-        window.abrirEdicionOperarioId = function(id) { window.limpiarFormulario('modalOperario'); setTimeout(() => { const op = window.cacheOperariosPDF.find(o => o.id === id); if(op) { document.getElementById('op_id').value = op.id; document.getElementById('op_ciudad').value = op.ciudad || 'Manizales'; document.getElementById('op_doc').value = op.cedula || ''; document.getElementById('op_ciudad_expedicion').value = op.ciudad_expedicion || ''; document.getElementById('op_nom').value = op.nombres_completos || ''; document.getElementById('op_cliente').value = op.id_cliente_asignado || ''; document.getElementById('op_esp').value = op.especialidad || ''; document.getElementById('op_sueldo').value = op.sueldo || ''; document.getElementById('op_tipocontrato').value = op.tipo_contrato || 'Fijo'; document.getElementById('op_termino').value = op.termino_contrato || ''; document.getElementById('op_inicio').value = op.fecha_inicio || ''; document.getElementById('op_fin').value = op.fecha_fin || ''; document.getElementById('op_cel').value = op.celular || ''; document.getElementById('op_correo').value = op.correo_electronico || ''; document.getElementById('op_direccion').value = op.direccion_residencia || ''; document.getElementById('op_eps').value = op.eps || ''; document.getElementById('op_arl').value = op.arl || ''; document.getElementById('op_rh').value = op.rh || ''; document.getElementById('op_contacto').value = op.contacto_emergencia || ''; document.getElementById('op_num_emergencia').value = op.numero_emergencia || ''; document.getElementById('op_obs').value = op.observaciones || ''; document.getElementById('op_anot').value = op.anotaciones || ''; document.getElementById('op_cumpleanos').value = op.cumpleanos || ''; } }, 50); };
+        window.asignarSelectConRespaldo = function(selectId, valor, esMoneda = false) {
+            const sel = document.getElementById(selectId);
+            if (!sel) return;
+            const valStr = String(valor ?? '').trim();
+            if (!valStr) { sel.value = ''; return; }
+            const existe = Array.from(sel.options).some(opt => opt.value === valStr || opt.text === valStr);
+            if (!existe) {
+                const opt = document.createElement('option');
+                opt.value = valStr;
+                opt.text = esMoneda && !isNaN(Number(valStr)) ? ('$ ' + new Intl.NumberFormat('es-CO').format(Number(valStr))) : valStr;
+                opt.setAttribute('data-custom-import', '1');
+                sel.appendChild(opt);
+            }
+            sel.value = valStr;
+        };
+        window.abrirEdicionOperarioId = function(id) { window.limpiarFormulario('modalOperario'); document.querySelectorAll('#modalOperario option[data-custom-import="1"]').forEach(o => o.remove()); setTimeout(() => { const op = window.cacheOperariosPDF.find(o => o.id === id); if(op) { document.getElementById('op_id').value = op.id; window.asignarSelectConRespaldo('op_ciudad', op.ciudad || 'Manizales'); document.getElementById('op_doc').value = op.cedula || ''; document.getElementById('op_ciudad_expedicion').value = op.ciudad_expedicion || ''; document.getElementById('op_nom').value = op.nombres_completos || ''; document.getElementById('op_cliente').value = op.id_cliente_asignado || ''; window.asignarSelectConRespaldo('op_esp', op.especialidad || ''); window.asignarSelectConRespaldo('op_sueldo', op.sueldo || '', true); window.asignarSelectConRespaldo('op_tipocontrato', op.tipo_contrato || 'Fijo'); window.asignarSelectConRespaldo('op_termino', op.termino_contrato || ''); document.getElementById('op_inicio').value = op.fecha_inicio || ''; document.getElementById('op_fin').value = op.fecha_fin || ''; document.getElementById('op_cel').value = op.celular || ''; document.getElementById('op_correo').value = op.correo_electronico || ''; document.getElementById('op_direccion').value = op.direccion_residencia || ''; document.getElementById('op_eps').value = op.eps || ''; document.getElementById('op_arl').value = op.arl || ''; document.getElementById('op_rh').value = op.rh || ''; document.getElementById('op_contacto').value = op.contacto_emergencia || ''; document.getElementById('op_num_emergencia').value = op.numero_emergencia || ''; document.getElementById('op_obs').value = op.observaciones || ''; document.getElementById('op_anot').value = op.anotaciones || ''; document.getElementById('op_cumpleanos').value = op.cumpleanos || ''; } }, 50); };
 
         window.guardarOperarioAdmin = async function(e) { 
             e.preventDefault(); const btnOriginal = window.bloquearBoton(e.submitter); const id = document.getElementById('op_id').value; 
@@ -1858,6 +1970,743 @@
         window.generarPDF = function(e, tipo) { e.preventDefault(); const nombre = document.getElementById(tipo + '_nombre').value; const cedula = document.getElementById(tipo + '_cedula').value; let params = new URLSearchParams(); let tipoFormato = tipo; if(tipo === 'cert') tipoFormato = 'certificado'; if(tipo === 'exam') tipoFormato = 'examen'; if(tipo === 'cesan') tipoFormato = 'cesantias'; if(tipo === 'cta') tipoFormato = 'cuenta'; params.append('tipo', tipoFormato); params.append('nombre', nombre); params.append('cedula', cedula); if (tipo === 'carta') { params.append('cliente', document.getElementById('carta_cliente').value); params.append('cargo', document.getElementById('carta_cargo').value); params.append('rh', document.getElementById('carta_rh').value); params.append('eps', document.getElementById('carta_eps').value); params.append('arl', document.getElementById('carta_arl').value); params.append('ciudad_cedula', document.getElementById('carta_ciudad_exp').value); const selectCliente = document.getElementById('carta_cliente'); if(selectCliente.selectedIndex > 0) { const admin = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-admin'); const ciudadCli = selectCliente.options[selectCliente.selectedIndex].getAttribute('data-ciudad'); if(admin) params.append('admin', admin); if(ciudadCli) params.append('cliente_ciudad', ciudadCli); } const fileInput = document.getElementById('carta_foto'); if (fileInput && fileInput.files.length > 0) { if (fileInput.files[0].size > 3 * 1024 * 1024) return window.mostrarAlerta("La foto es muy pesada. Límite 3MB.", true); const reader = new FileReader(); reader.onload = function(evt) { localStorage.setItem('sadafa_temp_foto_carta', evt.target.result); window.abrirPlantilla(params, 'modalCarta'); }; reader.readAsDataURL(fileInput.files[0]); return; } window.abrirPlantilla(params, 'modalCarta'); } else if (tipo === 'cert') { params.append('fecha_inicio', document.getElementById('cert_ingreso').value); params.append('fecha_fin', document.getElementById('cert_egreso').value); params.append('inicio2', document.getElementById('cert_inicio2').value); params.append('fin2', document.getElementById('cert_fin2').value); params.append('inicio3', document.getElementById('cert_inicio3').value); params.append('fin3', document.getElementById('cert_fin3').value); params.append('inicio4', document.getElementById('cert_inicio4').value); params.append('fin4', document.getElementById('cert_fin4').value); params.append('motivo', document.getElementById('cert_motivo').value); params.append('contrato', document.getElementById('cert_contrato').value); params.append('salario', document.getElementById('cert_salario').value); params.append('ciudad_cedula', document.getElementById('cert_ciudad').value); params.append('cargo', document.getElementById('cert_cargo').value); window.abrirPlantilla(params, 'modalCertificado'); } else if (tipo === 'exam') { params.append('tipo_examen', document.getElementById('exam_tipo').value); params.append('laboratorio', document.getElementById('exam_lab').value); params.append('ciudad_cedula', document.getElementById('exam_ciudad_exp').value); window.abrirPlantilla(params, 'modalExamen'); } else if (tipo === 'cesan') { params.append('fecha_inicio', document.getElementById('cesan_inicio').value); params.append('fecha_fin', document.getElementById('cesan_fin').value); params.append('ciudad_cedula', document.getElementById('cesan_ciudad').value); window.abrirPlantilla(params, 'modalCesantias'); } else if (tipo === 'cta') { params.append('sede', document.getElementById('cta_sede_op').value); params.append('ciudad_cedula', document.getElementById('cta_ciudad').value); window.abrirPlantilla(params, 'modalCuenta'); } };
         window.abrirPlantilla = function(params, modalIdActual) { const urlFinal = 'plantillas.html?' + params.toString(); if (modalIdActual) window.cerrarModalJS(modalIdActual); const enlace = document.createElement('a'); enlace.href = urlFinal; enlace.target = '_blank'; document.body.appendChild(enlace); enlace.click(); enlace.remove(); };
 
+        // =========================================================
+        // EXPORTAR CLIENTES E IMPORTACIÓN MASIVA (EXCEL / CSV)
+        // =========================================================
+        document.getElementById('btnExportarClientes')?.addEventListener('click', async () => {
+            await window.cargarClientesCache();
+            if (!window.cacheClientesPDF.length) return window.mostrarAlerta("No hay clientes para exportar.", true);
+            let csvContent = "\uFEFFRazón Social;NIT / Cédula;Ciudad;Dirección;Celular Cliente;Correo Cliente;Nombre Admin;Celular Admin;Correo Admin;Estado\r\n";
+            window.cacheClientesPDF.forEach(c => {
+                csvContent += `"${c.razon_social||''}";"${c.nit_cedula||''}";"${c.ciudad||''}";"${c.direccion||''}";"${c.celular_cliente||''}";"${c.correo_cliente||''}";"${c.nombre_contacto_admin||''}";"${c.celular_admin||''}";"${c.correo_admin||''}";"${c.estado_cliente||'Activo'}"\r\n`;
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", `SADAFA_Clientes_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        window.estadoMasivo = {
+            tipo: 'clientes',
+            filasCrudas: [],
+            registrosProcesados: []
+        };
+
+        function normalizarClaveColumna(txt) {
+            return String(txt || '')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+        }
+
+        function normalizarTextoComparacion(txt) {
+            return String(txt || '')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toUpperCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function limpiarIdentificador(val) {
+            return String(val ?? '').trim().replace(/\s+/g, '').replace(/\./g, '').toUpperCase();
+        }
+
+        function limpiarSoloDigitosCedula(val) {
+            const raw = String(val ?? '').trim();
+            if (!raw) return '';
+            const sinDecimales = raw.replace(/\.0+$/, '');
+            const digitos = sinDecimales.replace(/[^0-9]/g, '');
+            return digitos || limpiarIdentificador(sinDecimales);
+        }
+
+        function limpiarSueldoCOP(val) {
+            if (val === null || val === undefined || val === '') return '';
+            if (typeof val === 'number') return String(Math.round(val));
+            let s = String(val).trim().replace(/\$/g, '').replace(/\s+/g, '');
+            s = s.replace(/,[0]{1,2}$/, '').replace(/\.[0]{1,2}$/, '');
+            const digits = s.replace(/[^0-9]/g, '');
+            return digits || '';
+        }
+
+        function formatearFechaISO(val) {
+            if (val === null || val === undefined || val === '') return '';
+            if (typeof val === 'number' && val > 20000 && val < 80000 && window.XLSX && XLSX.SSF) {
+                const d = XLSX.SSF.parse_date_code(val);
+                if (d && d.y && d.m && d.d) {
+                    return `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`;
+                }
+            }
+            if (val instanceof Date && !isNaN(val.getTime())) {
+                return `${val.getUTCFullYear()}-${String(val.getUTCMonth() + 1).padStart(2, '0')}-${String(val.getUTCDate()).padStart(2, '0')}`;
+            }
+            const s = String(val).trim();
+            if (!s) return '';
+            let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+            if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+            m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+            if (m) {
+                let yr = m[3];
+                if (yr.length === 2) yr = (parseInt(yr, 10) > 40 ? '19' : '20') + yr;
+                return `${yr}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+            }
+            return '';
+        }
+
+        function formatearCumpleanos(val) {
+            if (val === null || val === undefined || val === '') return '';
+            if (typeof val === 'number' && val > 1000 && window.XLSX && XLSX.SSF) {
+                const d = XLSX.SSF.parse_date_code(val);
+                if (d && d.d && d.m) return `${String(d.d).padStart(2, '0')}/${String(d.m).padStart(2, '0')}`;
+            }
+            const s = String(val).trim();
+            let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})(?:[\/\-]\d{2,4})?$/);
+            if (m) return `${m[1].padStart(2, '0')}/${m[2].padStart(2, '0')}`;
+            m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+            if (m) return `${m[3].padStart(2, '0')}/${m[2].padStart(2, '0')}`;
+            return s.slice(0, 5);
+        }
+
+        function normalizarCargoERP(val) {
+            const limpio = String(val || '').trim();
+            if (!limpio) return 'Operario (a) de aseo';
+            const catalogo = [
+                'Operario (a) de aseo y mantenimiento',
+                'Operario (a) de aseo',
+                'Conserje',
+                'Guadañador',
+                'Todero',
+                'Supernumerario',
+                'Administrativo',
+                'Supervisor',
+                'Salvavidas',
+                'Jardinero',
+                'Community Manager'
+            ];
+            const clave = normalizarTextoComparacion(limpio);
+            for (const c of catalogo) {
+                if (normalizarTextoComparacion(c) === clave) return c;
+            }
+            if (clave.includes('ASEO') && clave.includes('MANTENIMIENTO')) return 'Operario (a) de aseo y mantenimiento';
+            if (clave.includes('OPERARIA DE ASEO') || clave.includes('OPERARIO DE ASEO') || clave === 'ASEO' || clave === 'ASEADORA') return 'Operario (a) de aseo';
+            if (clave.includes('CONSERJE') || clave.includes('PORTERO')) return 'Conserje';
+            if (clave.includes('GUADANA') || clave.includes('GUADANADOR')) return 'Guadañador';
+            if (clave.includes('TODERO') || clave.includes('MANTENIMIENTO')) return 'Todero';
+            if (clave.includes('SUPERNUMERARIO')) return 'Supernumerario';
+            if (clave.includes('ADMINISTRATIV')) return 'Administrativo';
+            if (clave.includes('SUPERVISOR')) return 'Supervisor';
+            if (clave.includes('SALVAVIDA') || clave.includes('PISCINERO')) return 'Salvavidas';
+            if (clave.includes('JARDINER')) return 'Jardinero';
+            return limpio;
+        }
+
+        function normalizarTipoContratoERP(val) {
+            const c = normalizarTextoComparacion(val);
+            if (c.includes('INDEFINIDO')) return 'Indefinido';
+            if (c.includes('OBRA') || c.includes('LABOR')) return 'Obra o Labor';
+            if (c.includes('PRESTACION') || c.includes('SERVICIO')) return 'Prestación de Servicios';
+            return 'Fijo';
+        }
+
+        function normalizarTerminoERP(val) {
+            const raw = String(val || '').trim();
+            if (!raw) return '';
+            const c = normalizarTextoComparacion(raw);
+            const mapa = {
+                '15 DIAS': '15 Días', '20 DIAS': '20 Días',
+                '1 MES': '1 Mes', '2 MESES': '2 Meses', '3 MESES': '3 Meses',
+                '4 MESES': '4 Meses', '5 MESES': '5 Meses', '6 MESES': '6 Meses',
+                '11 MESES': '11 Meses', '12 MESES': '12 Meses', '1 ANO': '12 Meses'
+            };
+            return mapa[c] || raw;
+        }
+
+        function normalizarServicioClienteERP(val) {
+            const raw = String(val || '').trim();
+            if (!raw) return '';
+            const c = normalizarTextoComparacion(raw);
+            if (c === 'ASEO') return 'Aseo';
+            if (c === 'CONSERJERIA') return 'Conserjería';
+            if (c === 'JARDINERIA') return 'Jardinería';
+            if (c === 'ASEO Y MANTENIMIENTO') return 'Aseo y Mantenimiento';
+            if (c === 'FUMIGACION') return 'Fumigación';
+            if (c === 'OBRA CIVIL' || c === 'OBRAS CIVILES') return 'Obra Civil';
+            return raw.toUpperCase();
+        }
+
+        function esFilaEjemploDemo(textoPrincipal, identificador) {
+            const t = normalizarTextoComparacion(textoPrincipal);
+            const id = limpiarIdentificador(identificador);
+            return t.includes('[EJEMPLO') || t.includes('DEMO BORRAR') || id.startsWith('00000000');
+        }
+
+        window.abrirModalImportacion = async function(tipoInicial) {
+            await window.cargarClientesCache();
+            await window.cargarOperariosCache();
+            document.getElementById('inputArchivoMasivo').value = '';
+            document.getElementById('resumenImportacionMasiva').classList.add('d-none');
+            document.getElementById('contenedorPreviewMasivo').classList.add('d-none');
+            document.getElementById('progresoImportacionWrap').classList.add('d-none');
+            document.getElementById('btnEjecutarImportacionMasiva').disabled = true;
+            window.estadoMasivo.filasCrudas = [];
+            window.estadoMasivo.registrosProcesados = [];
+            window.cambiarTipoImportacion(tipoInicial || 'clientes');
+            new bootstrap.Modal(document.getElementById('modalImportacionMasiva')).show();
+        };
+
+        window.cambiarTipoImportacion = function(tipo) {
+            window.estadoMasivo.tipo = tipo;
+            const btnCli = document.getElementById('btnTabImpClientes');
+            const btnOp = document.getElementById('btnTabImpOperarios');
+            const infoBox = document.getElementById('infoColumnasMasivo');
+            const wrapAuto = document.getElementById('wrapAutoCrearCliente');
+
+            if (tipo === 'clientes') {
+                btnCli.className = 'btn btn-sm fw-bold btn-primary';
+                btnOp.className = 'btn btn-sm fw-bold btn-outline-primary';
+                wrapAuto.style.display = 'none';
+                infoBox.innerHTML = `<i class="bi bi-info-circle-fill me-1"></i> <strong>Módulo Clientes:</strong> Sube primero tus clientes/copropiedades. Columnas principales reconocidas: <code>Razón Social</code>, <code>NIT</code>, <code>Ciudad</code>, <code>Dirección</code>, <code>Celular Cliente</code>, <code>Correo Cliente</code>, <code>Nombre Admin</code>, <code>Celular Admin</code>, <code>Correo Admin</code> y opcionalmente <code>Servicio Contratado</code>, <code>Fecha Inicio Contrato</code> y <code>Fecha Fin Contrato</code>.`;
+            } else {
+                btnOp.className = 'btn btn-sm fw-bold btn-primary';
+                btnCli.className = 'btn btn-sm fw-bold btn-outline-primary';
+                wrapAuto.style.display = 'block';
+                infoBox.innerHTML = `<i class="bi bi-info-circle-fill me-1"></i> <strong>Módulo Empleados:</strong> Vincula automáticamente cada operario con su sede escribiendo el nombre del cliente en <code>Cliente Asignado</code>. Columnas principales: <code>Cédula</code>, <code>Nombres Completos</code>, <code>Ciudad Sede</code>, <code>Ciudad Expedición</code>, <code>Cliente Asignado</code>, <code>Cargo</code>, <code>Sueldo</code>, <code>Tipo Contrato</code>, <code>Término</code>, <code>Fecha Inicio</code>, <code>Fecha Fin</code>, <code>Celular</code>, <code>Correo</code>, <code>Dirección</code>, <code>Cumpleaños</code>, <code>EPS</code>, <code>ARL</code> y <code>RH</code>.`;
+            }
+
+            if (window.estadoMasivo.filasCrudas.length > 0) {
+                window.recalcularEstadoMasivo();
+            }
+        };
+
+        window.descargarPlantillaMasiva = function() {
+            if (!window.XLSX) return window.mostrarAlerta("Cargando librería Excel, intenta en un segundo.", true);
+            const wb = XLSX.utils.book_new();
+            if (window.estadoMasivo.tipo === 'clientes') {
+                const rows = [
+                    ["Razón Social / Sede *", "NIT / Cédula *", "Ciudad *", "Dirección *", "Celular Cliente", "Correo Cliente", "Nombre Admin Copropiedad *", "Celular Admin *", "Correo Admin *", "Estado Cliente", "Servicio Contratado (Opcional)", "Fecha Inicio Contrato (AAAA-MM-DD)", "Fecha Fin Contrato (AAAA-MM-DD)"],
+                    ["[EJEMPLO - BORRAR] CONJUNTO RESIDENCIAL DEMO", "000000001-1", "MANIZALES", "CALLE 53C # 27-85", "3108543787", "recepcion@ejemplo.com", "MARIA PEREZ", "3148763886", "admin@ejemplo.com", "Activo", "Aseo y Mantenimiento", "2026-01-15", "2027-01-14"]
+                ];
+                const ws = XLSX.utils.aoa_to_sheet(rows);
+                XLSX.utils.book_append_sheet(wb, ws, "Carga_Clientes");
+                XLSX.writeFile(wb, "Plantilla_Clientes_SADAFA.xlsx");
+            } else {
+                const rows = [
+                    ["Cédula *", "Nombres Completos *", "Ciudad Sede *", "Ciudad de Expedición *", "Cliente Asignado (Razón Social)", "Cargo *", "Sueldo Básico Mensual *", "Tipo Contrato *", "Término de Contrato", "Fecha Inicio (AAAA-MM-DD)", "Fecha Fin (AAAA-MM-DD)", "Celular *", "Correo Electrónico", "Dirección Residencia", "Cumpleaños (DD/MM)", "EPS *", "ARL *", "RH *", "Contacto Emergencia", "Cel. Emergencia", "Observaciones", "Anotaciones", "Estado Empleado"],
+                    ["0000000001", "[EJEMPLO - BORRAR] JUAN CARLOS GOMEZ", "Manizales", "MANIZALES", "", "Operario (a) de aseo y mantenimiento", "1750905", "Fijo", "6 Meses", "2026-02-01", "2026-08-01", "3100000000", "empleado@ejemplo.com", "BARRIO LA ARBOLEDA", "15/08", "NUEVA EPS", "SURA", "O+", "ANA GOMEZ", "3110000000", "", "", "Activo"]
+                ];
+                const ws = XLSX.utils.aoa_to_sheet(rows);
+                XLSX.utils.book_append_sheet(wb, ws, "Carga_Empleados");
+                XLSX.writeFile(wb, "Plantilla_Empleados_SADAFA.xlsx");
+            }
+        };
+
+        function extraerValorFila(objNorm, posiblesClaves) {
+            for (const k of posiblesClaves) {
+                if (objNorm[k] !== undefined && objNorm[k] !== null && String(objNorm[k]).trim() !== '') {
+                    return objNorm[k];
+                }
+            }
+            return '';
+        }
+
+        window.procesarVistaPreviaMasiva = async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!window.XLSX) return window.mostrarAlerta("No se pudo cargar el lector de Excel.", true);
+
+            try {
+                await window.cargarClientesCache();
+                await window.cargarOperariosCache();
+
+                const buffer = await file.arrayBuffer();
+                const wb = XLSX.read(buffer, { type: 'array', cellDates: false });
+
+                let targetSheetName = wb.SheetNames[0];
+                const preferidas = window.estadoMasivo.tipo === 'clientes'
+                    ? ['cargaclientes', 'clientes', 'sedes', 'datos']
+                    : ['cargaempleados', 'empleados', 'operarios', 'personal', 'contratos', 'datos'];
+
+                for (const sn of wb.SheetNames) {
+                    const snNorm = normalizarClaveColumna(sn);
+                    if (preferidas.some(p => snNorm.includes(p))) {
+                        targetSheetName = sn;
+                        break;
+                    }
+                }
+                if (wb.SheetNames.length > 1 && ['resumen', 'instrucciones', 'catalogo'].some(x => normalizarClaveColumna(targetSheetName).includes(x))) {
+                    const alt = wb.SheetNames.find(sn => !['resumen', 'instrucciones', 'catalogo'].some(x => normalizarClaveColumna(sn).includes(x)));
+                    if (alt) targetSheetName = alt;
+                }
+
+                const ws = wb.Sheets[targetSheetName];
+                const matriz = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+                if (!matriz || matriz.length < 2) {
+                    return window.mostrarAlerta("El archivo seleccionado está vacío o no tiene filas de datos.", true);
+                }
+
+                // Detectar automáticamente la fila de encabezados en las primeras 10 filas
+                let filaHeaderIdx = 0;
+                const palabrasClaveHeader = ['razonsocial', 'nit', 'cedula', 'documento', 'nombres', 'nombrecompleto', 'ciudad', 'cargo'];
+                for (let r = 0; r < Math.min(10, matriz.length); r++) {
+                    const coincidencias = (matriz[r] || []).filter(celda => palabrasClaveHeader.some(pk => normalizarClaveColumna(celda).includes(pk))).length;
+                    if (coincidencias >= 2) {
+                        filaHeaderIdx = r;
+                        break;
+                    }
+                }
+
+                const headers = (matriz[filaHeaderIdx] || []).map(h => normalizarClaveColumna(h));
+                const filasObjetos = [];
+                for (let r = filaHeaderIdx + 1; r < matriz.length; r++) {
+                    const rowArr = matriz[r] || [];
+                    const tieneAlgo = rowArr.some(v => String(v ?? '').trim() !== '');
+                    if (!tieneAlgo) continue;
+                    const objNorm = {};
+                    headers.forEach((hKey, cIdx) => {
+                        if (hKey && objNorm[hKey] === undefined) {
+                            objNorm[hKey] = rowArr[cIdx];
+                        }
+                    });
+                    filasObjetos.push({ numFilaExcel: r + 1, raw: objNorm });
+                }
+
+                window.estadoMasivo.filasCrudas = filasObjetos;
+                window.recalcularEstadoMasivo();
+            } catch (err) {
+                console.error("Error leyendo archivo:", err);
+                window.mostrarAlerta("No se pudo leer el archivo. Verifica que sea un Excel (.xlsx) o CSV válido.", true);
+            }
+        };
+
+        window.recalcularEstadoMasivo = function() {
+            const filas = window.estadoMasivo.filasCrudas || [];
+            if (!filas.length) return;
+
+            const tipo = window.estadoMasivo.tipo;
+            const modo = document.getElementById('modoDuplicadosImport').value;
+            const autoCrearCli = document.getElementById('chkAutoCrearClienteImport')?.checked;
+
+            const resumenDiv = document.getElementById('resumenImportacionMasiva');
+            const badgesDiv = document.getElementById('badgesResumenMasivo');
+            const alertasDiv = document.getElementById('alertasImportacionMasiva');
+            const previewWrap = document.getElementById('contenedorPreviewMasivo');
+            const thead = document.getElementById('theadPreviewMasivo');
+            const tbody = document.getElementById('tbodyPreviewMasivo');
+            const btnSubir = document.getElementById('btnEjecutarImportacionMasiva');
+
+            const cliPorNit = {};
+            const cliPorNombre = {};
+            window.cacheClientesPDF.forEach(c => {
+                const n = limpiarIdentificador(c.nit_cedula);
+                const rs = normalizarTextoComparacion(c.razon_social);
+                if (n) cliPorNit[n] = c;
+                if (rs) cliPorNombre[rs] = c;
+            });
+
+            const opPorCedula = {};
+            window.cacheOperariosPDF.forEach(o => {
+                const ced = limpiarSoloDigitosCedula(o.cedula);
+                if (ced) opPorCedula[ced] = o;
+            });
+
+            const procesados = [];
+            let nuevos = 0, actualizaciones = 0, omitidosExistentes = 0, invalidos = 0, demosOmitidos = 0, clientesNuevosAuto = new Set(), sinClienteMatch = 0;
+
+            if (tipo === 'clientes') {
+                const vistosEnArchivo = new Set();
+                filas.forEach(item => {
+                    const r = item.raw;
+                    const rsRaw = String(extraerValorFila(r, ['razonsocialsede', 'razonsocial', 'cliente', 'nombrecliente', 'sede', 'copropiedad', 'conjunto', 'empresa', 'nombre'])).trim().toUpperCase();
+                    const nitRaw = String(extraerValorFila(r, ['nitcedula', 'nit', 'documento', 'identificacion', 'rut'])).trim().toUpperCase();
+
+                    if (esFilaEjemploDemo(rsRaw, nitRaw)) {
+                        demosOmitidos++;
+                        return;
+                    }
+                    if (!rsRaw && !nitRaw) return;
+                    if (!rsRaw || !nitRaw) {
+                        invalidos++;
+                        procesados.push({ valido: false, numFila: item.numFilaExcel, motivo: 'Falta Razón Social o NIT', rs: rsRaw, nit: nitRaw });
+                        return;
+                    }
+
+                    const claveNit = limpiarIdentificador(nitRaw);
+                    if (vistosEnArchivo.has(claveNit)) {
+                        invalidos++;
+                        procesados.push({ valido: false, numFila: item.numFilaExcel, motivo: 'NIT repetido dentro del mismo archivo', rs: rsRaw, nit: nitRaw });
+                        return;
+                    }
+                    vistosEnArchivo.add(claveNit);
+
+                    const ciudad = String(extraerValorFila(r, ['ciudad', 'ciudadsede', 'municipio']) || 'MANIZALES').trim().toUpperCase();
+                    const direccion = String(extraerValorFila(r, ['direccion', 'dir', 'ubicacion']) || 'PENDIENTE').trim().toUpperCase();
+                    const celCli = String(extraerValorFila(r, ['celularcliente', 'celcliente', 'telefonocliente', 'telcliente', 'celular', 'telefono']) || '').trim();
+                    const corCli = String(extraerValorFila(r, ['correocliente', 'emailcliente', 'mailcliente', 'correo', 'email']) || '').trim().toLowerCase();
+                    const nomAdm = String(extraerValorFila(r, ['nombreadmincopropiedad', 'nombreadmin', 'nombrecontactoadmin', 'administrador', 'admin', 'contacto']) || 'POR ASIGNAR').trim().toUpperCase();
+                    const celAdm = String(extraerValorFila(r, ['celularadmin', 'celadmin', 'telefonoadmin', 'teladmin']) || celCli || '0000000000').trim();
+                    const corAdm = String(extraerValorFila(r, ['correoadmin', 'emailadmin', 'mailadmin']) || corCli || 'pendiente@sadafa.com.co').trim().toLowerCase();
+                    const estRaw = normalizarTextoComparacion(extraerValorFila(r, ['estadocliente', 'estado']));
+                    const estado_cliente = estRaw.includes('INACTIVO') ? 'Inactivo' : 'Activo';
+
+                    const servicio = normalizarServicioClienteERP(extraerValorFila(r, ['serviciocontratadoopcional', 'serviciocontratado', 'servicio', 'servicios', 'tiposervicio']));
+                    const srvInicio = formatearFechaISO(extraerValorFila(r, ['fechainiciocontratoaaaammdd', 'fechainiciocontrato', 'iniciocontrato', 'fechainicio', 'inicio']));
+                    const srvFin = formatearFechaISO(extraerValorFila(r, ['fechafincontratoaaaammdd', 'fechafincontrato', 'fincontrato', 'fechafin', 'vencimiento', 'fin']));
+
+                    const existente = cliPorNit[claveNit] || cliPorNombre[normalizarTextoComparacion(rsRaw)];
+                    let accion = 'crear';
+                    if (existente) {
+                        if (modo === 'omitir') {
+                            accion = 'omitir';
+                            omitidosExistentes++;
+                        } else {
+                            accion = 'actualizar';
+                            actualizaciones++;
+                        }
+                    } else {
+                        nuevos++;
+                    }
+
+                    procesados.push({
+                        valido: true,
+                        accion,
+                        existingId: existente ? existente.id : null,
+                        numFila: item.numFilaExcel,
+                        data: {
+                            razon_social: rsRaw,
+                            nit_cedula: nitRaw,
+                            ciudad,
+                            direccion,
+                            celular_cliente: celCli,
+                            correo_cliente: corCli,
+                            nombre_contacto_admin: nomAdm,
+                            celular_admin: celAdm,
+                            correo_admin: corAdm,
+                            estado_cliente
+                        },
+                        contratoOpcional: (servicio && srvInicio && srvFin) ? { servicio, fecha_inicio: srvInicio, fecha_fin: srvFin } : null
+                    });
+                });
+
+                thead.innerHTML = `<tr><th class="ps-3">Fila</th><th>Acción</th><th>Razón Social</th><th>NIT</th><th>Ciudad</th><th>Administrador</th><th>Contrato Inicial</th></tr>`;
+                tbody.innerHTML = procesados.slice(0, 150).map(p => {
+                    if (!p.valido) {
+                        return `<tr class="table-danger"><td class="ps-3">${p.numFila}</td><td><span class="badge bg-danger">Error</span></td><td>${window.sanitizar(p.rs)}</td><td>${window.sanitizar(p.nit)}</td><td colspan="3" class="text-danger fw-semibold">${window.sanitizar(p.motivo)}</td></tr>`;
+                    }
+                    const badge = p.accion === 'crear'
+                        ? '<span class="badge bg-success">Nuevo</span>'
+                        : (p.accion === 'actualizar' ? '<span class="badge bg-primary">Actualizar</span>' : '<span class="badge bg-secondary">Omitir</span>');
+                    const txtSrv = p.contratoOpcional ? `${window.sanitizar(p.contratoOpcional.servicio)} (${p.contratoOpcional.fecha_fin})` : '<span class="text-muted">-</span>';
+                    return `<tr><td class="ps-3">${p.numFila}</td><td>${badge}</td><td class="fw-bold">${window.sanitizar(p.data.razon_social)}</td><td>${window.sanitizar(p.data.nit_cedula)}</td><td>${window.sanitizar(p.data.ciudad)}</td><td>${window.sanitizar(p.data.nombre_contacto_admin)}</td><td>${txtSrv}</td></tr>`;
+                }).join('');
+            } else {
+                const vistosCedula = new Set();
+                filas.forEach(item => {
+                    const r = item.raw;
+                    const cedulaRaw = limpiarSoloDigitosCedula(extraerValorFila(r, ['cedula', 'documento', 'identificacion', 'nrodocumento', 'cc', 'numerodocumento']));
+                    const nombresRaw = String(extraerValorFila(r, ['nombrescompletos', 'nombrecompleto', 'nombres', 'empleado', 'operario', 'trabajador', 'nombre']) || '').trim().toUpperCase();
+
+                    if (esFilaEjemploDemo(nombresRaw, cedulaRaw)) {
+                        demosOmitidos++;
+                        return;
+                    }
+                    if (!cedulaRaw && !nombresRaw) return;
+                    if (!cedulaRaw || !nombresRaw) {
+                        invalidos++;
+                        procesados.push({ valido: false, numFila: item.numFilaExcel, motivo: 'Falta Cédula o Nombres Completos', cedula: cedulaRaw, nombres: nombresRaw });
+                        return;
+                    }
+                    if (vistosCedula.has(cedulaRaw)) {
+                        invalidos++;
+                        procesados.push({ valido: false, numFila: item.numFilaExcel, motivo: 'Cédula repetida dentro del mismo archivo', cedula: cedulaRaw, nombres: nombresRaw });
+                        return;
+                    }
+                    vistosCedula.add(cedulaRaw);
+
+                    const ciudadRaw = normalizarTextoComparacion(extraerValorFila(r, ['ciudadsede', 'ciudad', 'municipio']));
+                    const ciudad = ciudadRaw.includes('PEREIRA') || ciudadRaw.includes('DOSQUEBRADAS') ? 'Pereira' : 'Manizales';
+                    const ciudad_expedicion = String(extraerValorFila(r, ['ciudaddeexpedicion', 'ciudadexpedicion', 'expedicion', 'lugarexpedicion']) || ciudad.toUpperCase()).trim().toUpperCase();
+
+                    const clienteTxt = String(extraerValorFila(r, ['clienteasignadorazonsocial', 'clienteasignado', 'cliente', 'sede', 'sedeasignada', 'copropiedad', 'conjunto']) || '').trim();
+                    const nitCliTxt = limpiarIdentificador(extraerValorFila(r, ['nitcliente', 'nitclienteasignado', 'nitsede']));
+                    const claveCli = normalizarTextoComparacion(clienteTxt);
+
+                    let clienteMatch = null;
+                    if (nitCliTxt && cliPorNit[nitCliTxt]) clienteMatch = cliPorNit[nitCliTxt];
+                    else if (claveCli && !['SINCLIENTE', 'NOASIGNADO', 'NA', 'NINGUNO', '-'].includes(claveCli.replace(/\s+/g, ''))) {
+                        clienteMatch = cliPorNombre[claveCli] || null;
+                    }
+
+                    let crearClienteNombre = '';
+                    if (!clienteMatch && claveCli && !['SINCLIENTE', 'NOASIGNADO', 'NA', 'NINGUNO', '-'].includes(claveCli.replace(/\s+/g, ''))) {
+                        if (autoCrearCli) {
+                            crearClienteNombre = clienteTxt.toUpperCase();
+                            clientesNuevosAuto.add(claveCli);
+                        } else {
+                            sinClienteMatch++;
+                        }
+                    }
+
+                    const especialidad = normalizarCargoERP(extraerValorFila(r, ['cargo', 'especialidad', 'puesto', 'ocupacion']));
+                    const sueldo = limpiarSueldoCOP(extraerValorFila(r, ['sueldobasicomensual', 'sueldobasico', 'sueldo', 'salario', 'salariomensual']));
+                    const tipo_contrato = normalizarTipoContratoERP(extraerValorFila(r, ['tipocontrato', 'tipodecontrato', 'contrato', 'modalidad']));
+                    const termino_contrato = normalizarTerminoERP(extraerValorFila(r, ['terminodecontrato', 'terminocontrato', 'termino', 'duracion', 'plazo']));
+                    const fecha_inicio = formatearFechaISO(extraerValorFila(r, ['fechainicioaaaammdd', 'fechainicio', 'fechadeinicio', 'fechaingreso', 'ingreso', 'inicio']));
+                    const fecha_fin = formatearFechaISO(extraerValorFila(r, ['fechafinaaaammdd', 'fechafin', 'fechadefin', 'vencimiento', 'fecharetiro', 'fin']));
+                    const celular = String(extraerValorFila(r, ['celular', 'telefono', 'movil', 'cel', 'tel']) || '').trim();
+                    const correo_electronico = String(extraerValorFila(r, ['correoelectronico', 'correo', 'email', 'mail']) || '').trim().toLowerCase();
+                    const direccion_residencia = String(extraerValorFila(r, ['direccionresidencia', 'direccion', 'residencia', 'domicilio']) || '').trim().toUpperCase();
+                    const cumpleanos = formatearCumpleanos(extraerValorFila(r, ['cumpleanosddmm', 'cumpleanos', 'cumple', 'fechanacimiento', 'nacimiento']));
+                    const eps = String(extraerValorFila(r, ['eps', 'entidadsalud', 'salud']) || 'POR DEFINIR').trim().toUpperCase();
+                    const arl = String(extraerValorFila(r, ['arl', 'riesgoslaborales']) || 'SURA').trim().toUpperCase();
+                    const rh = String(extraerValorFila(r, ['rh', 'gruposanguineo', 'tiposangre', 'sangre']) || 'O+').trim().toUpperCase();
+                    const contacto_emergencia = String(extraerValorFila(r, ['contactoemergencia', 'nombreemergencia', 'acudiente']) || '').trim().toUpperCase();
+                    const numero_emergencia = String(extraerValorFila(r, ['celemergencia', 'numeroemergencia', 'celularemergencia', 'telefonoemergencia']) || '').trim();
+                    const observaciones = String(extraerValorFila(r, ['observaciones', 'observacion', 'obs']) || '').trim().toUpperCase();
+                    const anotaciones = String(extraerValorFila(r, ['anotaciones', 'anotacion', 'notas']) || '').trim().toUpperCase();
+                    const estOpRaw = normalizarTextoComparacion(extraerValorFila(r, ['estadoempleado', 'estadooperario', 'estado']));
+                    const estado_operario = (estOpRaw.includes('INACTIVO') || estOpRaw.includes('RETIRADO')) ? 'Inactivo' : 'Activo';
+
+                    const existente = opPorCedula[cedulaRaw];
+                    let accion = 'crear';
+                    if (existente) {
+                        if (modo === 'omitir') {
+                            accion = 'omitir';
+                            omitidosExistentes++;
+                        } else {
+                            accion = 'actualizar';
+                            actualizaciones++;
+                        }
+                    } else {
+                        nuevos++;
+                    }
+
+                    procesados.push({
+                        valido: true,
+                        accion,
+                        existingId: existente ? existente.id : null,
+                        existingDoc: existente || null,
+                        numFila: item.numFilaExcel,
+                        clienteIdResuelto: clienteMatch ? clienteMatch.id : '',
+                        clienteNombreMostrar: clienteMatch ? clienteMatch.razon_social : (crearClienteNombre ? `${crearClienteNombre} (Se creará)` : 'Sin Cliente'),
+                        crearClienteAuto: crearClienteNombre ? { clave: claveCli, razon_social: crearClienteNombre, ciudad: ciudad.toUpperCase(), nit_cedula: nitCliTxt || 'PENDIENTE' } : null,
+                        data: {
+                            cedula: cedulaRaw,
+                            nombres_completos: nombresRaw,
+                            ciudad,
+                            ciudad_expedicion,
+                            eps,
+                            arl,
+                            rh,
+                            celular,
+                            especialidad,
+                            id_cliente_asignado: clienteMatch ? clienteMatch.id : '',
+                            tipo_contrato,
+                            termino_contrato,
+                            fecha_inicio,
+                            fecha_fin,
+                            sueldo,
+                            correo_electronico,
+                            direccion_residencia,
+                            cumpleanos,
+                            contacto_emergencia,
+                            numero_emergencia,
+                            observaciones,
+                            anotaciones,
+                            estado_operario
+                        }
+                    });
+                });
+
+                thead.innerHTML = `<tr><th class="ps-3">Fila</th><th>Acción</th><th>Cédula</th><th>Nombres Completos</th><th>Cargo</th><th>Sede / Cliente</th><th>Inicio</th><th>Sueldo</th></tr>`;
+                tbody.innerHTML = procesados.slice(0, 150).map(p => {
+                    if (!p.valido) {
+                        return `<tr class="table-danger"><td class="ps-3">${p.numFila}</td><td><span class="badge bg-danger">Error</span></td><td>${window.sanitizar(p.cedula)}</td><td>${window.sanitizar(p.nombres)}</td><td colspan="4" class="text-danger fw-semibold">${window.sanitizar(p.motivo)}</td></tr>`;
+                    }
+                    const badge = p.accion === 'crear'
+                        ? '<span class="badge bg-success">Nuevo</span>'
+                        : (p.accion === 'actualizar' ? '<span class="badge bg-primary">Actualizar</span>' : '<span class="badge bg-secondary">Omitir</span>');
+                    const sueldoFmt = p.data.sueldo ? ('$' + new Intl.NumberFormat('es-CO').format(Number(p.data.sueldo))) : '-';
+                    return `<tr><td class="ps-3">${p.numFila}</td><td>${badge}</td><td>${window.sanitizar(p.data.cedula)}</td><td class="fw-bold">${window.sanitizar(p.data.nombres_completos)}</td><td>${window.sanitizar(p.data.especialidad)}</td><td>${window.sanitizar(p.clienteNombreMostrar)}</td><td>${p.data.fecha_inicio || '-'}</td><td>${sueldoFmt}</td></tr>`;
+                }).join('');
+            }
+
+            window.estadoMasivo.registrosProcesados = procesados;
+            const totalEjecutables = nuevos + actualizaciones;
+
+            badgesDiv.innerHTML = `
+                <span class="badge bg-success fs-6">${nuevos} Nuevos a crear</span>
+                <span class="badge bg-primary fs-6">${actualizaciones} Existentes a actualizar</span>
+                ${omitidosExistentes > 0 ? `<span class="badge bg-secondary fs-6">${omitidosExistentes} Omitidos (ya existen)</span>` : ''}
+                ${clientesNuevosAuto.size > 0 ? `<span class="badge bg-info text-dark fs-6">${clientesNuevosAuto.size} Sede(s) nueva(s) se crearán automáticamente</span>` : ''}
+                ${invalidos > 0 ? `<span class="badge bg-danger fs-6">${invalidos} Fila(s) con datos incompletos</span>` : ''}
+                ${demosOmitidos > 0 ? `<span class="badge bg-warning text-dark fs-6">${demosOmitidos} Fila(s) de ejemplo ignoradas</span>` : ''}
+            `;
+
+            let msgAlerta = '';
+            if (sinClienteMatch > 0) {
+                msgAlerta += `<div class="text-warning-emphasis fw-semibold mt-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> ${sinClienteMatch} empleado(s) tienen un cliente escrito que aún no existe en Gestión de Clientes y quedarán "Sin Cliente" (puedes activar la casilla de arriba para crear esas sedes automáticamente o subir primero Clientes).</div>`;
+            }
+            alertasDiv.innerHTML = msgAlerta;
+
+            document.getElementById('notaLimitePreview').innerText = procesados.length > 150
+                ? `Mostrando primeras 150 de ${procesados.length} filas`
+                : `${procesados.length} fila(s) analizadas`;
+
+            resumenDiv.classList.remove('d-none');
+            previewWrap.classList.remove('d-none');
+            btnSubir.disabled = (totalEjecutables === 0);
+        };
+
+        window.ejecutarSubidaMasivaFirebase = async function() {
+            const registros = (window.estadoMasivo.registrosProcesados || []).filter(r => r.valido && (r.accion === 'crear' || r.accion === 'actualizar'));
+            if (!registros.length) return window.mostrarAlerta("No hay registros pendientes por subir.", true);
+
+            const btnSubir = document.getElementById('btnEjecutarImportacionMasiva');
+            const btnCancelar = document.getElementById('btnCancelarMasivo');
+            const btnCerrarX = document.getElementById('btnCerrarModalMasivo');
+            const wrapProg = document.getElementById('progresoImportacionWrap');
+            const barra = document.getElementById('barraProgresoImportacion');
+            const txtProg = document.getElementById('textoProgresoImportacion');
+            const pctProg = document.getElementById('porcentajeProgresoImportacion');
+
+            btnSubir.disabled = true;
+            btnCancelar.disabled = true;
+            btnCerrarX.disabled = true;
+            wrapProg.classList.remove('d-none');
+            barra.style.width = '5%';
+            pctProg.innerText = '5%';
+
+            try {
+                actualizarTiempo();
+                const operaciones = [];
+                const tipo = window.estadoMasivo.tipo;
+
+                if (tipo === 'clientes') {
+                    const snapSrv = await getDocs(collection(db, "contratos_clientes"));
+                    const contratosExistentes = new Set();
+                    snapSrv.forEach(d => {
+                        const s = d.data();
+                        contratosExistentes.add(`${s.id_cliente}__${normalizarTextoComparacion(s.servicio)}`);
+                    });
+
+                    registros.forEach(item => {
+                        let clientRef;
+                        if (item.accion === 'actualizar' && item.existingId) {
+                            clientRef = doc(db, "clientes", item.existingId);
+                            operaciones.push({ ref: clientRef, data: item.data, merge: true });
+                        } else {
+                            clientRef = doc(collection(db, "clientes"));
+                            operaciones.push({ ref: clientRef, data: item.data, merge: false });
+                        }
+
+                        if (item.contratoOpcional) {
+                            const claveContrato = `${clientRef.id}__${normalizarTextoComparacion(item.contratoOpcional.servicio)}`;
+                            if (!contratosExistentes.has(claveContrato)) {
+                                contratosExistentes.add(claveContrato);
+                                const srvRef = doc(collection(db, "contratos_clientes"));
+                                operaciones.push({
+                                    ref: srvRef,
+                                    data: {
+                                        id_cliente: clientRef.id,
+                                        servicio: item.contratoOpcional.servicio,
+                                        fecha_inicio: item.contratoOpcional.fecha_inicio,
+                                        fecha_fin: item.contratoOpcional.fecha_fin
+                                    },
+                                    merge: false
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    const mapaClientesAutoIds = {};
+                    registros.forEach(item => {
+                        if (item.crearClienteAuto && !mapaClientesAutoIds[item.crearClienteAuto.clave]) {
+                            const nuevoCliRef = doc(collection(db, "clientes"));
+                            mapaClientesAutoIds[item.crearClienteAuto.clave] = nuevoCliRef.id;
+                            operaciones.push({
+                                ref: nuevoCliRef,
+                                data: {
+                                    razon_social: item.crearClienteAuto.razon_social,
+                                    nit_cedula: item.crearClienteAuto.nit_cedula,
+                                    ciudad: item.crearClienteAuto.ciudad,
+                                    direccion: 'PENDIENTE',
+                                    celular_cliente: '',
+                                    correo_cliente: '',
+                                    nombre_contacto_admin: 'POR ASIGNAR',
+                                    celular_admin: '',
+                                    correo_admin: '',
+                                    estado_cliente: 'Activo'
+                                },
+                                merge: false
+                            });
+                        }
+                    });
+
+                    registros.forEach(item => {
+                        const payload = { ...item.data };
+                        if (!payload.id_cliente_asignado && item.crearClienteAuto) {
+                            payload.id_cliente_asignado = mapaClientesAutoIds[item.crearClienteAuto.clave] || '';
+                        }
+
+                        if (item.accion === 'actualizar' && item.existingId) {
+                            // Si una celda opcional viene vacía en el Excel, conservamos el valor previo en Firebase
+                            if (item.existingDoc) {
+                                Object.keys(payload).forEach(k => {
+                                    if ((payload[k] === '' || payload[k] === null) && item.existingDoc[k]) {
+                                        payload[k] = item.existingDoc[k];
+                                    }
+                                });
+                            }
+                            operaciones.push({ ref: doc(db, "operarios", item.existingId), data: payload, merge: true });
+                        } else {
+                            operaciones.push({ ref: doc(collection(db, "operarios")), data: payload, merge: false });
+                        }
+                    });
+                }
+
+                const TAMANO_LOTE = 400;
+                const totalLotes = Math.ceil(operaciones.length / TAMANO_LOTE);
+
+                for (let i = 0; i < operaciones.length; i += TAMANO_LOTE) {
+                    actualizarTiempo();
+                    const loteActual = Math.floor(i / TAMANO_LOTE) + 1;
+                    txtProg.innerText = `Subiendo lote ${loteActual} de ${totalLotes} (${operaciones.length} operaciones)...`;
+
+                    const batch = writeBatch(db);
+                    const slice = operaciones.slice(i, i + TAMANO_LOTE);
+                    slice.forEach(op => {
+                        if (op.merge) batch.set(op.ref, op.data, { merge: true });
+                        else batch.set(op.ref, op.data);
+                    });
+                    await batch.commit();
+
+                    const avance = Math.round(((i + slice.length) / operaciones.length) * 100);
+                    barra.style.width = `${avance}%`;
+                    pctProg.innerText = `${avance}%`;
+                }
+
+                txtProg.innerText = `¡Carga completada con éxito! Actualizando tablas...`;
+                await window.cargarDashboardResumen();
+                if (tipo === 'clientes') await window.cargarClientesTabla();
+                else await window.cargarOperarioTabla();
+
+                window.mostrarAlerta(`Se procesaron ${registros.length} registro(s) correctamente en Firebase.`);
+                setTimeout(() => {
+                    btnCancelar.disabled = false;
+                    btnCerrarX.disabled = false;
+                    window.cerrarModalJS('modalImportacionMasiva');
+                }, 900);
+            } catch (err) {
+                console.error("Error en subida masiva Firebase:", err);
+                window.mostrarAlerta("Error al subir a Firebase: " + (err.message || "Verifica tu conexión y permisos."), true);
+                btnSubir.disabled = false;
+                btnCancelar.disabled = false;
+                btnCerrarX.disabled = false;
+            }
+        };
+
         // ==========================================
         // CERRADO DE SESIÓN POR INACTIVIDAD - 10 MIN
         // ==========================================
@@ -1928,4 +2777,4 @@
         });
     </script>
 </body>
-</html>    
+</html>
