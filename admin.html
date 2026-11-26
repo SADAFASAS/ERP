@@ -14,6 +14,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script>
+        (function() {
+            var t = localStorage.getItem('sadafa_theme') || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
     <style>
         /* === PALETA OFICIAL DE MARCA SADAFA (UNIFICADA CON SADAFA.COM.CO) === */
         :root {
@@ -47,7 +53,7 @@
             --sadafa-accent: #34d399;
             --bg-principal: #111827;
             --bg-sidebar: #1e293b;
-            --bg-topbar: rgba(30, 41, 59, 0.95);
+            --bg-topbar: rgba(17, 24, 39, 0.97);
             --texto-principal: #f8fafc;
             --texto-muted: #cbd5e1;
             --borde-tarjeta: #334155;
@@ -229,37 +235,63 @@
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
         }
 
-        .theme-toggle-container {
-            padding: 5px 11px;
-            border-radius: 50px;
-            background-color: var(--pill-bg);
-            border: 1px solid var(--pill-border);
-            transition: all 0.25s ease;
-            display: flex;
+        /* === INTERRUPTOR TEMA IDÉNTICO A SADAFA.COM.CO (.sadafa-theme-pill) === */
+        .sadafa-theme-pill {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .theme-toggle-container:hover { border-color: #059669; }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.25s ease; opacity: 1; }
-        .theme-icon-moon { color: #64748b; transition: all 0.25s ease; opacity: 0.45; }
-        [data-bs-theme="dark"] .theme-icon-sun { color: #64748b; opacity: 0.4; }
-        [data-bs-theme="dark"] .theme-icon-moon { color: #34d399; opacity: 1; }
-        .theme-switch-input {
-            width: 42px !important;
-            height: 22px !important;
-            margin-left: 0 !important;
-            margin-top: 0 !important;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 50px;
+            background-color: #e2e8f0;
+            border: 1px solid #cbd5e1;
             cursor: pointer;
-            background-color: #94a3b8;
-            border: none;
+            user-select: none;
             transition: all 0.25s ease;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            box-sizing: border-box;
         }
-        .theme-switch-input:focus { box-shadow: none !important; }
-        .theme-switch-input:checked {
-            background-color: #059669 !important;
-            border-color: #059669 !important;
+        [data-bs-theme="dark"] .sadafa-theme-pill {
+            background-color: #1e293b;
+            border-color: #475569;
         }
+        .sadafa-theme-pill:hover {
+            border-color: #059669;
+        }
+        .sadafa-theme-pill .icon-sun {
+            font-size: 13px;
+            line-height: 1;
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+        .sadafa-theme-pill .icon-moon {
+            font-size: 13px;
+            line-height: 1;
+            opacity: 0.35;
+            transition: opacity 0.25s ease;
+        }
+        .sadafa-switch-track {
+            width: 32px;
+            height: 17px;
+            background-color: #94a3b8;
+            border-radius: 20px;
+            position: relative;
+            transition: background-color 0.25s ease;
+            flex-shrink: 0;
+        }
+        .sadafa-switch-thumb {
+            width: 13px;
+            height: 13px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.25s ease;
+        }
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-sun { opacity: 0.35; }
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-moon { opacity: 1; }
+        [data-bs-theme="dark"] .sadafa-switch-track { background-color: #059669; }
+        [data-bs-theme="dark"] .sadafa-switch-thumb { transform: translateX(15px); }
 
         .btn-toggle-sidebar {
             position: absolute;
@@ -412,9 +444,6 @@
             .sidebar.collapsed a i { margin-right: 12px !important; font-size: 1.2rem !important; }
 
             .header-top-bar { padding-left: 48px !important; }
-            .theme-toggle-container { padding: 4px 8px !important; }
-            .theme-switch-input { width: 35px !important; height: 18px !important; }
-            .theme-icon-sun, .theme-icon-moon { font-size: 1rem !important; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -458,12 +487,10 @@
         <main class="main-content">
             
             <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 header-top-bar">
-                <div class="theme-toggle-container gap-2" title="Cambiar Tema">
-                    <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
-                    <div class="theme-switch-wrapper form-check form-switch m-0 p-0 d-flex align-items-center justify-content-center">
-                        <input class="form-check-input m-0 theme-switch-input" type="checkbox" id="modoOscuroSwitch" role="switch">
-                    </div>
-                    <i class="bi bi-moon-stars-fill fs-5 theme-icon-moon" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
+                <div id="sadafaHdrThemeToggle" class="sadafa-theme-pill" role="button" tabindex="0" title="Cambiar entre Modo Día y Modo Oscuro" aria-label="Cambiar entre Modo Día y Modo Oscuro">
+                    <span class="icon-sun">☀️</span>
+                    <div class="sadafa-switch-track"><div class="sadafa-switch-thumb"></div></div>
+                    <span class="icon-moon">🌙</span>
                 </div>
                 
                 <span class="badge sadafa-user-pill fs-6 py-2 px-3 text-capitalize">
@@ -1875,25 +1902,34 @@
         
         const tema = localStorage.getItem('sadafa_theme') || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
         document.documentElement.setAttribute('data-bs-theme', tema);
-        const switchEl = document.getElementById('modoOscuroSwitch');
-        if(switchEl) { switchEl.checked = (tema === 'dark'); }
-        switchEl.addEventListener('change', () => {
-            const nuevoTema = switchEl.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-bs-theme', nuevoTema);
-            localStorage.setItem('sadafa_theme', nuevoTema);
-            const cTexto = nuevoTema === 'dark' ? '#cbd5e1' : '#475569';
-            const cGrilla = nuevoTema === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)';
-            if (window.miGraficoOps) {
-                window.miGraficoOps.options.plugins.legend.labels.color = cTexto;
-                window.miGraficoOps.update();
-            }
-            if (window.miGraficoCli) {
-                window.miGraficoCli.options.scales.x.ticks.color = cTexto;
-                window.miGraficoCli.options.scales.y.ticks.color = cTexto;
-                window.miGraficoCli.options.scales.y.grid.color = cGrilla;
-                window.miGraficoCli.update();
-            }
-        });
+        const togglePill = document.getElementById('sadafaHdrThemeToggle');
+        if (togglePill) {
+            const alternarTemaAdmin = () => {
+                const actual = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'dark' : 'light';
+                const nuevoTema = actual === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-bs-theme', nuevoTema);
+                localStorage.setItem('sadafa_theme', nuevoTema);
+                const cTexto = nuevoTema === 'dark' ? '#cbd5e1' : '#475569';
+                const cGrilla = nuevoTema === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)';
+                if (window.miGraficoOps) {
+                    window.miGraficoOps.options.plugins.legend.labels.color = cTexto;
+                    window.miGraficoOps.update();
+                }
+                if (window.miGraficoCli) {
+                    window.miGraficoCli.options.scales.x.ticks.color = cTexto;
+                    window.miGraficoCli.options.scales.y.ticks.color = cTexto;
+                    window.miGraficoCli.options.scales.y.grid.color = cGrilla;
+                    window.miGraficoCli.update();
+                }
+            };
+            togglePill.addEventListener('click', alternarTemaAdmin);
+            togglePill.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    alternarTemaAdmin();
+                }
+            });
+        }
 
         document.addEventListener('input', function (e) {
             if (e.target.matches('input[type="text"], textarea')) {
