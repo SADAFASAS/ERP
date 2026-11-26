@@ -8,206 +8,350 @@
     <link rel="apple-touch-icon" href="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg">
     <meta name="apple-mobile-web-app-title" content="SADAFA ERP">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        /* === PALETA OFICIAL DE MARCA SADAFA (UNIFICADA CON SADAFA.COM.CO) === */
         :root {
-            --sadafa-dark: #0b3c36;
-            --sadafa-accent: #2dd4bf;
-            --bg-dark: #0f172a;
-            --card-dark: #1e293b;
-            --bg-principal: #f4f6f9;
-            --texto-principal: #222533;
-            --texto-muted: #6c757d;
+            --sadafa-primary: #059669;
+            --sadafa-primary-hover: #047857;
+            --sadafa-primary-dark: #065f46;
+            --sadafa-secondary: #0284c7;
+            --sadafa-secondary-hover: #0369a1;
+            --sadafa-amber: #f59e0b;
+            --sadafa-gold: #fbbf24;
+
+            /* Modo Día (Idéntico a sadafa.com.co) */
+            --sadafa-hdr-bg: rgba(255, 255, 255, 0.96);
+            --sadafa-hdr-border: #d1fae5;
+            --sadafa-hdr-shadow: 0 6px 24px rgba(2, 132, 199, 0.08);
+            --sadafa-pill-bg: #e2e8f0;
+            --sadafa-pill-border: #cbd5e1;
+
+            --bg-principal: #f8fafc;
+            --texto-principal: #0f172a;
+            --texto-muted: #475569;
             --bg-tarjeta: #ffffff;
-            --borde-tarjeta: #e2e8f0;
-            --titulo-servicios: #0b3c36;
-            --icon-bg: rgba(11, 60, 54, 0.1);
-            --icon-color: #0b3c36;
-            /* Variables Portada (Modo Día) */
-            --hero-bg: linear-gradient(135deg, #e6f2f0 0%, #f8fafc 100%);
-            --hero-title: #0b3c36;
-            --hero-subtitle: #1e293b;
-            --hero-text: #475569;
-            --hero-border: #d8dde6;
+            --borde-tarjeta: #d1fae5;
+            --sombra-tarjeta: 0 10px 25px rgba(5, 150, 105, 0.08);
+            --sombra-tarjeta-hover: 0 18px 34px rgba(5, 150, 105, 0.15);
+            --titulo-servicios: #0f172a;
+
+            /* Portada Hero (Degradado Esmeralda a Azul de sadafa.com.co) */
+            --hero-bg: linear-gradient(125deg, #059669 0%, #0284c7 100%);
+            --hero-title: #ffffff;
+            --hero-subtitle: #fde047;
+            --hero-text: #ecfdf5;
+            --hero-border: #d1fae5;
+
+            /* Modal Login (Modo Día) */
+            --modal-bg: #ffffff;
+            --modal-border: #d1fae5;
+            --modal-top-accent: #059669;
+            --modal-title: #059669;
+            --modal-input-bg: #f8fafc;
+            --modal-input-border: #cbd5e1;
+            --link-accent: #0284c7;
+            --link-accent-hover: #059669;
         }
+
         [data-bs-theme="dark"] {
-            --bg-principal: #0f172a;
+            /* Modo Oscuro (Idéntico a sadafa.com.co) */
+            --sadafa-hdr-bg: rgba(17, 24, 39, 0.97);
+            --sadafa-hdr-border: #334155;
+            --sadafa-hdr-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+            --sadafa-pill-bg: #1e293b;
+            --sadafa-pill-border: #475569;
+
+            --bg-principal: #111827;
             --texto-principal: #f8fafc;
             --texto-muted: #cbd5e1;
             --bg-tarjeta: #1e293b;
             --borde-tarjeta: #334155;
-            --titulo-servicios: #2dd4bf;
-            --icon-bg: rgba(45, 212, 191, 0.15);
-            --icon-color: #2dd4bf;
-            /* Variables Portada (Modo Noche) */
-            --hero-bg: linear-gradient(135deg, #0f172a 0%, #0b3c36 100%);
+            --sombra-tarjeta: 0 10px 25px rgba(0, 0, 0, 0.28);
+            --sombra-tarjeta-hover: 0 18px 34px rgba(5, 150, 105, 0.22);
+            --titulo-servicios: #f8fafc;
+
+            /* Portada Hero (Modo Oscuro Corporativo) */
+            --hero-bg: linear-gradient(125deg, #064e3b 0%, #0c4a6e 100%);
             --hero-title: #ffffff;
-            --hero-subtitle: #2dd4bf;
-            --hero-text: #cbd5e1;
+            --hero-subtitle: #34d399;
+            --hero-text: #e2e8f0;
             --hero-border: #334155;
+
+            /* Modal Login (Modo Oscuro) */
+            --modal-bg: #1e293b;
+            --modal-border: #334155;
+            --modal-top-accent: #34d399;
+            --modal-title: #34d399;
+            --modal-input-bg: #111827;
+            --modal-input-border: #334155;
+            --link-accent: #34d399;
+            --link-accent-hover: #38bdf8;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
             background-color: var(--bg-principal);
             color: var(--texto-principal);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        h1, h2, h3, h4, h5, h6, .btn, .navbar-sadafa {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
         .text-muted {
             color: var(--texto-muted) !important;
         }
+
+        /* === CABECERA FIJA CON ESTILO SADAFA.COM.CO === */
         .navbar-sadafa {
-            background-color: var(--bg-dark);
-            border-bottom: 2px solid var(--sadafa-accent);
+            background: var(--sadafa-hdr-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--sadafa-hdr-border);
+            box-shadow: var(--sadafa-hdr-shadow);
+            min-height: 70px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
+
         .brand-logo-nav {
             width: 44px;
             height: 44px;
             object-fit: cover;
             border-radius: 50%;
-            border: 2px solid var(--sadafa-accent);
+            border: 2px solid var(--sadafa-primary);
         }
+
         .brand-logo-footer {
-            width: 52px;
-            height: 52px;
+            width: 56px;
+            height: 56px;
             object-fit: cover;
             border-radius: 50%;
-            border: 2px solid var(--sadafa-accent);
+            border: 2px solid #a7f3d0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
             flex-shrink: 0;
             display: block;
         }
-        /* === BOTÓN TEMA (DÍA/NOCHE) IDÉNTICO AL ADMIN === */
+
+        /* === INTERRUPTOR TEMA (PÍLDORA DÍA / OSCURO DE LA WEB) === */
         .theme-toggle-container {
-            padding: 5px 10px;
+            padding: 5px 11px;
             border-radius: 50px;
-            background-color: #e2e8f0;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            display: flex;
+            background-color: var(--sadafa-pill-bg);
+            border: 1px solid var(--sadafa-pill-border);
+            transition: all 0.25s ease;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        [data-bs-theme="dark"] .theme-toggle-container {
-            background-color: #1e293b;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
-            border: 1px solid #334155;
+        .theme-toggle-container:hover {
+            border-color: var(--sadafa-primary);
         }
-        .theme-icon-sun { color: #f59e0b; transition: all 0.3s ease; opacity: 1; }
-        .theme-icon-moon { color: #94a3b8; transition: all 0.3s ease; opacity: 0.4; }
-        [data-bs-theme="dark"] .theme-icon-sun { color: #475569; opacity: 0.4; }
-        [data-bs-theme="dark"] .theme-icon-moon { color: #38bdf8; opacity: 1; }
+        .theme-icon-sun { color: #f59e0b; transition: all 0.25s ease; opacity: 1; }
+        .theme-icon-moon { color: #64748b; transition: all 0.25s ease; opacity: 0.45; }
+        [data-bs-theme="dark"] .theme-icon-sun { color: #64748b; opacity: 0.4; }
+        [data-bs-theme="dark"] .theme-icon-moon { color: #34d399; opacity: 1; }
+
         .theme-switch-input {
-            width: 42px !important;
-            height: 22px !important;
+            width: 40px !important;
+            height: 20px !important;
             margin-left: 0 !important;
             margin-top: 0 !important;
             cursor: pointer;
-            background-color: #cbd5e1;
+            background-color: #94a3b8;
             border: none;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .theme-switch-input:focus { box-shadow: none !important; }
-        .theme-switch-input:checked { background-color: #334155; border-color: #334155; }
+        .theme-switch-input:checked {
+            background-color: #059669 !important;
+            border-color: #059669 !important;
+        }
 
-        /* === PORTADA ADAPTABLE AL TEMA === */
+        /* === PORTADA / HERO CON GRADIENTE SADAFA === */
         .hero-section {
             background: var(--hero-bg);
             color: var(--hero-title);
             border-bottom: 1px solid var(--hero-border);
-            padding: 75px 0 65px 0;
+            padding: 80px 0 70px 0;
             transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         .hero-section h1 {
             color: var(--hero-title);
-            transition: color 0.3s ease;
+            font-weight: 800;
+            letter-spacing: -0.3px;
         }
         .hero-section h5 {
             color: var(--hero-subtitle);
-            transition: color 0.3s ease;
+            font-weight: 700;
         }
         .hero-section p {
             color: var(--hero-text);
-            transition: color 0.3s ease;
+            line-height: 1.7;
         }
 
-        /* === TARJETAS DE SERVICIOS CENTRADAS === */
+        /* === TARJETAS DE SERVICIOS (IGUALES A .sadafa-fresh-card DE LA WEB) === */
         .service-card {
             border: 1px solid var(--borde-tarjeta);
-            border-radius: 12px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+            border-top: 4px solid var(--sadafa-primary);
+            border-radius: 18px;
             background: var(--bg-tarjeta);
             color: var(--texto-principal);
             text-align: center;
             align-items: center;
+            box-shadow: var(--sombra-tarjeta);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
         }
         .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(11, 60, 54, 0.15);
-            border-color: var(--sadafa-accent);
+            transform: translateY(-6px);
+            box-shadow: var(--sombra-tarjeta-hover);
         }
+
+        /* Variantes de acento superior idénticas a las tarjetas de sadafa.com.co */
+        .service-card.card-sky { border-top-color: #0284c7; }
+        .service-card.card-amber { border-top-color: #d97706; }
+        [data-bs-theme="dark"] .service-card { border-top-color: #34d399; }
+        [data-bs-theme="dark"] .service-card.card-sky { border-top-color: #38bdf8; }
+        [data-bs-theme="dark"] .service-card.card-amber { border-top-color: #fbbf24; }
+
         .service-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            background-color: var(--icon-bg);
-            color: var(--icon-color);
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background-color: #d1fae5;
+            color: #059669;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             margin: 0 auto 1rem auto;
+            transition: all 0.25s ease;
         }
-        .btn-sadafa {
-            background-color: var(--sadafa-dark);
+        .service-card.card-sky .service-icon {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+        .service-card.card-amber .service-icon {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        .service-card:hover .service-icon {
+            background-color: #059669;
             color: #ffffff;
+        }
+        .service-card.card-sky:hover .service-icon {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+        .service-card.card-amber:hover .service-icon {
+            background-color: #d97706;
+            color: #ffffff;
+        }
+
+        [data-bs-theme="dark"] .service-icon {
+            background-color: rgba(5, 150, 105, 0.2);
+            color: #34d399;
+        }
+        [data-bs-theme="dark"] .service-card.card-sky .service-icon {
+            background-color: rgba(2, 132, 199, 0.2);
+            color: #38bdf8;
+        }
+        [data-bs-theme="dark"] .service-card.card-amber .service-icon {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        /* === BOTONES CORPORATIVOS === */
+        .btn-sadafa {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff !important;
             border: none;
-            font-weight: 600;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
         }
         .btn-sadafa:hover {
-            background-color: #115e59;
-            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(5, 150, 105, 0.38);
+            color: #ffffff !important;
         }
+
         .btn-erp {
-            background-color: var(--sadafa-accent);
-            color: #0b3c36;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff !important;
             font-weight: 700;
             border: none;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .btn-erp:hover {
-            background-color: #14b8a6;
-            color: #ffffff;
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+            box-shadow: 0 8px 18px rgba(5, 150, 105, 0.38);
+            color: #ffffff !important;
         }
+
+        /* === MODAL DE ACCESO ADAPTABLE A MODO DÍA Y OSCURO === */
         .modal-login-content {
-            background-color: var(--card-dark);
-            color: #f8fafc;
-            border: 1px solid #334155;
-            border-radius: 14px;
+            background-color: var(--modal-bg);
+            color: var(--texto-principal);
+            border: 1px solid var(--modal-border);
+            border-top: 4px solid var(--modal-top-accent);
+            border-radius: 18px;
+        }
+        .modal-login-title {
+            color: var(--modal-title);
         }
         .modal-login-content .form-control {
-            background-color: var(--bg-dark);
-            border: 1px solid #334155;
-            color: #f8fafc;
+            background-color: var(--modal-input-bg);
+            border: 1px solid var(--modal-input-border);
+            color: var(--texto-principal);
         }
         .modal-login-content .form-control:focus {
-            border-color: var(--sadafa-accent);
-            box-shadow: 0 0 0 0.2rem rgba(45, 212, 191, 0.25);
+            border-color: var(--sadafa-primary);
+            box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.2);
+        }
+        .modal-login-content .btn-ver-pass {
+            border-color: var(--modal-input-border);
+            color: var(--texto-muted);
+        }
+        .modal-login-content .btn-ver-pass:hover {
+            background-color: rgba(5, 150, 105, 0.1);
+            color: var(--sadafa-primary);
         }
         .link-olvide {
-            color: #2dd4bf;
+            color: var(--link-accent);
             text-decoration: none;
             font-size: 0.85rem;
-            transition: opacity 0.2s ease;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
         .link-olvide:hover {
-            color: #5eead4;
+            color: var(--link-accent-hover);
             text-decoration: underline;
         }
-        footer {
-            background-color: var(--bg-dark);
-            color: #94a3b8;
+
+        /* === PIE DE PÁGINA IDÉNTICO A SADAFA.COM.CO === */
+        footer#contacto {
+            background: linear-gradient(135deg, #064e3b 0%, #0c4a6e 100%) !important;
+            border-top: 4px solid #fbbf24;
+            color: #e2e8f0;
         }
+        footer#contacto .footer-nit {
+            color: #fde047;
+            font-weight: 700;
+        }
+        footer#contacto .footer-mail-icon {
+            color: #a7f3d0;
+        }
+
         @media (max-width: 576px) {
             .theme-toggle-container { padding: 4px 8px; }
             .theme-switch-input { width: 34px !important; height: 18px !important; }
@@ -218,7 +362,7 @@
 <body>
 
     <!-- BARRA DE NAVEGACIÓN -->
-    <nav class="navbar navbar-dark navbar-sadafa sticky-top shadow-sm py-2">
+    <nav class="navbar navbar-sadafa sticky-top py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="theme-toggle-container gap-2" title="Cambiar Tema">
                 <i class="bi bi-sun-fill fs-5 theme-icon-sun" onclick="document.getElementById('modoOscuroSwitch').click()" style="cursor: pointer;"></i>
@@ -254,42 +398,42 @@
 
             <div class="row g-4">
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card h-100 p-4">
                         <div class="service-icon"><i class="bi bi-stars"></i></div>
                         <h5 class="fw-bold">Aseo y Cafetería</h5>
                         <p class="text-muted small mb-0">Limpieza profunda y rutinaria de zonas comunes, oficinas y conjuntos residenciales con personal de planta o por turnos.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card card-sky h-100 p-4">
                         <div class="service-icon"><i class="bi bi-person-badge"></i></div>
                         <h5 class="fw-bold">Conserjería</h5>
                         <p class="text-muted small mb-0">Atención en portería, control de correspondencia, apoyo a residentes y acompañamiento operativo en edificios y conjuntos.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card card-amber h-100 p-4">
                         <div class="service-icon"><i class="bi bi-tree"></i></div>
                         <h5 class="fw-bold">Jardinería y Guadaña</h5>
                         <p class="text-muted small mb-0">Mantenimiento de zonas verdes, poda de césped, corte con guadaña y cuidado estético de jardines.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card card-sky h-100 p-4">
                         <div class="service-icon"><i class="bi bi-tools"></i></div>
                         <h5 class="fw-bold">Aseo y Mantenimiento (Todero)</h5>
                         <p class="text-muted small mb-0">Reparaciones locativas menores, plomería básica, electricidad preventiva y conservación general de infraestructura.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card h-100 p-4">
                         <div class="service-icon"><i class="bi bi-shield-check"></i></div>
                         <h5 class="fw-bold">Fumigación y Control de Plagas</h5>
                         <p class="text-muted small mb-0">Desinfección y control preventivo de plagas en áreas comunes, cuartos de basura y espacios cerrados.</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4 shadow-sm">
+                    <div class="card service-card card-amber h-100 p-4">
                         <div class="service-icon"><i class="bi bi-building-gear"></i></div>
                         <h5 class="fw-bold">Obra Civil y Salvavidas</h5>
                         <p class="text-muted small mb-0">Adecuaciones locativas, pintura, mantenimiento de piscinas y personal certificado para zonas húmedas.</p>
@@ -306,9 +450,9 @@
                 <img src="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg" alt="SADAFA" class="brand-logo-footer" onerror="this.style.display='none'">
             </a>
             <div>
-                <p class="small mb-1">NIT 901.262.796-6 &bull; Calle 53c #27-85, La Arboleda, Manizales</p>
+                <p class="small mb-1"><span class="footer-nit">NIT 901.262.796-6</span> &bull; Calle 53c #27-85, La Arboleda, Manizales</p>
                 <p class="small mb-0">
-                    <i class="bi bi-envelope me-1" style="color: #2dd4bf;"></i> info@sadafa.com.co - talentohumano@sadafa.com.co
+                    <i class="bi bi-envelope-fill me-1 footer-mail-icon"></i> info@sadafa.com.co - talentohumano@sadafa.com.co
                 </p>
             </div>
         </div>
@@ -320,10 +464,10 @@
             <div class="modal-content modal-login-content p-4 shadow-lg">
                 <div class="modal-header border-0 pb-0">
                     <div class="w-100 text-center">
-                        <h4 class="fw-bold mb-1" style="color: #2dd4bf;">SADAFA <i class="bi bi-shield-lock ms-1"></i></h4>
-                        <p class="small text-secondary mb-0">Acceso Administrativo y Supervisores</p>
+                        <h4 class="fw-bold mb-1 modal-login-title">SADAFA <i class="bi bi-shield-lock ms-1"></i></h4>
+                        <p class="small text-muted mb-0">Acceso Administrativo y Supervisores</p>
                     </div>
-                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body pt-4">
                     <div id="errorAlert" class="alert alert-danger d-none small py-2" role="alert"></div>
@@ -331,15 +475,15 @@
 
                     <form id="loginForm" autocomplete="on">
                         <div class="mb-3">
-                            <label for="usuarioInput" class="form-label text-secondary small fw-bold">Documento o Correo</label>
+                            <label for="usuarioInput" class="form-label text-muted small fw-bold">Documento o Correo</label>
                             <input type="text" id="usuarioInput" class="form-control" placeholder="Número de cédula o correo" required>
                         </div>
 
                         <div class="mb-4">
-                            <label for="password" class="form-label text-secondary small fw-bold">Contraseña</label>
+                            <label for="password" class="form-label text-muted small fw-bold">Contraseña</label>
                             <div class="input-group">
                                 <input type="password" id="password" class="form-control" placeholder="••••••••" required>
-                                <button class="btn btn-outline-secondary" type="button" id="btnVerPass" title="Mostrar/Ocultar contraseña" style="border-color: #334155;">
+                                <button class="btn btn-outline-secondary btn-ver-pass" type="button" id="btnVerPass" title="Mostrar/Ocultar contraseña">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
@@ -376,7 +520,7 @@
         const db = getFirestore(app);
 
         // === SINCRONIZACIÓN DE TEMA (DÍA/NOCHE) ===
-        const temaGuardado = localStorage.getItem('sadafa_theme') || 'dark';
+        const temaGuardado = localStorage.getItem('sadafa_theme') || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
         document.documentElement.setAttribute('data-bs-theme', temaGuardado);
         const switchEl = document.getElementById('modoOscuroSwitch');
         if (switchEl) {
