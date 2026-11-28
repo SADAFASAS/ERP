@@ -104,6 +104,9 @@
             background-color: var(--bg-principal);
             color: var(--texto-principal);
             transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         h1, h2, h3, h4, h5, h6, .btn, .navbar-sadafa {
@@ -133,16 +136,6 @@
             border: 2px solid var(--sadafa-primary);
         }
 
-        .brand-logo-footer {
-            width: 56px;
-            height: 56px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #a7f3d0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
-            flex-shrink: 0;
-            display: block;
-        }
 
         /* === INTERRUPTOR TEMA IDÉNTICO A SADAFA.COM.CO (.sadafa-theme-pill) === */
         .sadafa-theme-pill {
@@ -366,18 +359,118 @@
             text-decoration: underline;
         }
 
-        /* === PIE DE PÁGINA IDÉNTICO A SADAFA.COM.CO === */
-        footer#contacto {
+        /* === PIE DE PÁGINA GLOBAL SADAFA (ESTÁNDAR CON SADAFA.COM.CO) === */
+        .sadafa-pure-footer {
+            width: 100%;
+            margin-top: auto;
             background: linear-gradient(135deg, #064e3b 0%, #0c4a6e 100%) !important;
             border-top: 4px solid #fbbf24;
+            padding: 42px 24px 24px;
+            box-sizing: border-box;
+            font-family: 'Open Sans', 'Segoe UI', sans-serif;
             color: #e2e8f0;
         }
-        footer#contacto .footer-nit {
-            color: #fde047;
-            font-weight: 700;
+        .sadafa-pure-footer-row {
+            max-width: 1320px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
         }
-        footer#contacto .footer-mail-icon {
-            color: #a7f3d0;
+        .sadafa-footer-logos {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: transparent !important;
+            padding: 0;
+        }
+        .sadafa-footer-logos img {
+            height: 100px;
+            width: 100px;
+            object-fit: contain;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.3));
+            display: block;
+            transition: transform 0.2s ease;
+        }
+        .sadafa-footer-logos img:hover {
+            transform: translateY(-3px);
+        }
+        .sadafa-pure-footer-inner {
+            flex: 1 1 auto;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        .sadafa-ft-item {
+            background: transparent;
+            padding: 6px 8px;
+        }
+        .sadafa-ft-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sadafa-ft-icon svg {
+            width: 23px;
+            height: 23px;
+            fill: #a7f3d0;
+        }
+        .sadafa-ft-title {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff !important;
+            margin: 0 0 6px;
+        }
+        .sadafa-ft-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2e8f0 !important;
+            margin: 0;
+        }
+        .sadafa-pure-footer-divider {
+            max-width: 1320px;
+            margin: 26px auto 16px;
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+            opacity: 1;
+        }
+        .sadafa-pure-footer-copy {
+            text-align: center;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 13px;
+            color: #e2e8f0 !important;
+            margin: 0;
+        }
+
+        @media (max-width: 1080px) {
+            .sadafa-pure-footer-row {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .sadafa-footer-logos img {
+                height: 86px;
+                width: 86px;
+            }
+        }
+        @media (max-width: 767px) {
+            .sadafa-pure-footer-inner {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
         }
 
 
@@ -411,7 +504,7 @@
     </section>
 
     <!-- SECCIÓN DE SERVICIOS -->
-    <section id="servicios" class="py-5">
+    <section id="servicios" class="py-5 mb-4">
         <div class="container py-3">
             <div class="text-center mb-5">
                 <h2 class="fw-bold" style="color: var(--titulo-servicios);">Nuestros Servicios</h2>
@@ -465,19 +558,42 @@
         </div>
     </section>
 
-    <!-- CONTACTO / PIE DE PÁGINA -->
-    <footer id="contacto" class="py-4 mt-5">
-        <div class="container d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 text-center text-sm-start">
-            <a href="#" class="d-inline-flex align-items-center text-decoration-none flex-shrink-0">
-                <img src="Gemini_Generated_Image_o9yz3yo9yz3yo9yz.jpg" alt="SADAFA" class="brand-logo-footer" onerror="this.style.display='none'">
-            </a>
-            <div>
-                <p class="small mb-1"><span class="footer-nit">NIT 901.262.796-6</span> &bull; Calle 53c #27-85, La Arboleda, Manizales</p>
-                <p class="small mb-0">
-                    <i class="bi bi-envelope-fill me-1 footer-mail-icon"></i> info@sadafa.com.co - talentohumano@sadafa.com.co
-                </p>
+    <!-- PIE DE PÁGINA CORPORATIVO ESTÁNDAR SADAFA (IDÉNTICO A SADAFA.COM.CO) -->
+    <footer id="sadafaGlobalFooter" class="sadafa-pure-footer">
+        <div class="sadafa-pure-footer-row">
+            <div class="sadafa-footer-logos">
+                <img src="1-logo-sadafa-sello-sin-fondo.png" alt="SADAFA Servicios Integrales S.A.S." onerror="this.style.display='none'">
+                <img src="2-logo-fenalportec-sin-fondo.png" alt="FENALPORTEC" onerror="this.style.display='none'">
+                <img src="3-sello-eco-amigable-sin-fondo.png" alt="Sello Eco Amigable" onerror="this.style.display='none'">
+            </div>
+
+            <div class="sadafa-pure-footer-inner">
+                <div class="sadafa-ft-item">
+                    <div class="sadafa-ft-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                    </div>
+                    <h4 class="sadafa-ft-title">Sede Principal</h4>
+                    <p class="sadafa-ft-desc">Calle 53c #27- 85, La Arboleda, Manizales.</p>
+                </div>
+                <div class="sadafa-ft-item">
+                    <div class="sadafa-ft-icon">
+                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/></svg>
+                    </div>
+                    <h4 class="sadafa-ft-title">Líneas Comerciales</h4>
+                    <p class="sadafa-ft-desc">310 854 3787 &bull; 314 876 3886</p>
+                </div>
+                <div class="sadafa-ft-item">
+                    <div class="sadafa-ft-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <h4 class="sadafa-ft-title">Correos Corporativos</h4>
+                    <p class="sadafa-ft-desc">comercial1@sadafa.com.co &nbsp; gerencia@sadafa.com.co</p>
+                </div>
             </div>
         </div>
+
+        <hr class="sadafa-pure-footer-divider">
+        <p class="sadafa-pure-footer-copy">Todos los derechos reservados <strong style="color: #fde047;">SADAFA S.A.S.</strong> &copy; 2026</p>
     </footer>
 
     <!-- MODAL DE INICIO DE SESIÓN ERP -->
