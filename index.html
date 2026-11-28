@@ -31,7 +31,7 @@
             --sadafa-gold: #fbbf24;
 
             /* Modo Día (Idéntico a sadafa.com.co) */
-            --sadafa-hdr-bg: rgba(255, 255, 255, 0.96);
+            --sadafa-hdr-bg: #ffffff;
             --sadafa-hdr-border: #d1fae5;
             --sadafa-hdr-shadow: 0 6px 24px rgba(2, 132, 199, 0.08);
             --sadafa-pill-bg: #e2e8f0;
@@ -66,7 +66,7 @@
 
         [data-bs-theme="dark"] {
             /* Modo Oscuro (Idéntico a sadafa.com.co) */
-            --sadafa-hdr-bg: rgba(17, 24, 39, 0.97);
+            --sadafa-hdr-bg: #111827;
             --sadafa-hdr-border: #334155;
             --sadafa-hdr-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
             --sadafa-pill-bg: #1e293b;
@@ -120,8 +120,8 @@
         /* === CABECERA FIJA CON ESTILO SADAFA.COM.CO === */
         .navbar-sadafa {
             background: var(--sadafa-hdr-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             border-bottom: 2px solid var(--sadafa-hdr-border);
             box-shadow: var(--sadafa-hdr-shadow);
             min-height: 70px;
@@ -137,12 +137,12 @@
         }
 
 
-        /* === INTERRUPTOR TEMA IDÉNTICO A SADAFA.COM.CO (.sadafa-theme-pill) === */
+        /* === INTERRUPTOR TEMA ACTUALIZADO (SOL RADIANTE + LUNA AZUL NOCHE) === */
         .sadafa-theme-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 50px;
             background-color: #e2e8f0;
             border: 1px solid #cbd5e1;
@@ -159,18 +159,52 @@
         .sadafa-theme-pill:hover {
             border-color: #059669;
         }
+        .sadafa-theme-pill .icon-sun,
+        .sadafa-theme-pill .icon-moon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .sadafa-theme-pill .icon-sun svg,
+        .sadafa-theme-pill .icon-moon svg {
+            width: 15px !important;
+            height: 15px !important;
+            display: block !important;
+        }
+        .sadafa-theme-pill .icon-sun svg circle {
+            fill: #f59e0b !important;
+            stroke: currentColor !important;
+        }
+        .sadafa-theme-pill .icon-sun svg path {
+            fill: none !important;
+            stroke: currentColor !important;
+        }
+        .sadafa-theme-pill .icon-moon svg path {
+            fill: currentColor !important;
+            stroke: none !important;
+        }
+
+        /* Estado Modo Día */
         .sadafa-theme-pill .icon-sun {
-            font-size: 13px;
-            line-height: 1;
+            background-color: #fef3c7;
+            color: #d97706;
             opacity: 1;
-            transition: opacity 0.25s ease;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.28);
+            transform: rotate(0deg) scale(1);
         }
         .sadafa-theme-pill .icon-moon {
-            font-size: 13px;
-            line-height: 1;
-            opacity: 0.35;
-            transition: opacity 0.25s ease;
+            background-color: transparent;
+            color: #1e3a8a;
+            opacity: 0.68;
+            transform: scale(0.92);
         }
+
+        /* Riel y círculo deslizante */
         .sadafa-switch-track {
             width: 32px;
             height: 17px;
@@ -188,12 +222,31 @@
             position: absolute;
             top: 2px;
             left: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
             transition: transform 0.25s ease;
         }
-        [data-bs-theme="dark"] .sadafa-theme-pill .icon-sun { opacity: 0.35; }
-        [data-bs-theme="dark"] .sadafa-theme-pill .icon-moon { opacity: 1; }
-        [data-bs-theme="dark"] .sadafa-switch-track { background-color: #059669; }
-        [data-bs-theme="dark"] .sadafa-switch-thumb { transform: translateX(15px); }
+
+        /* Estado Modo Oscuro */
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-sun {
+            background-color: transparent;
+            color: #fbbf24;
+            opacity: 0.45;
+            box-shadow: none;
+            transform: rotate(-30deg) scale(0.9);
+        }
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-moon {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+            opacity: 1;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.45);
+            transform: scale(1);
+        }
+        [data-bs-theme="dark"] .sadafa-switch-track {
+            background-color: #1e3a8a;
+        }
+        [data-bs-theme="dark"] .sadafa-switch-thumb {
+            transform: translateX(15px);
+        }
 
         /* === PORTADA / HERO CON GRADIENTE SADAFA === */
         .hero-section {
@@ -217,29 +270,87 @@
             line-height: 1.7;
         }
 
-        /* === TARJETAS DE SERVICIOS (IGUALES A .sadafa-fresh-card DE LA WEB) === */
-        .service-card {
+        /* === TARJETAS DE SERVICIOS GIRATORIAS 3D AL CLIC (FRENTE TEXTO / REVERSO FOTO) === */
+        .service-click-note {
+            color: #059669;
+            font-weight: 600;
+        }
+        [data-bs-theme="dark"] .service-click-note {
+            color: #34d399;
+        }
+
+        .service-flip-scene {
+            perspective: 1200px;
+            -webkit-perspective: 1200px;
+            height: 100%;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .service-flip-inner {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            min-height: 290px;
+            position: relative;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .service-flip-scene:hover .service-flip-inner {
+            transform: translateY(-6px) rotateY(0deg);
+        }
+        .service-flip-scene.is-flipped .service-flip-inner {
+            transform: rotateY(180deg);
+        }
+        .service-flip-scene.is-flipped:hover .service-flip-inner {
+            transform: translateY(-6px) rotateY(180deg);
+        }
+        .service-flip-scene:focus-visible .service-face {
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.45), var(--sombra-tarjeta-hover);
+        }
+
+        .service-face {
+            grid-area: 1 / 1;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
             border: 1px solid var(--borde-tarjeta);
             border-top: 4px solid var(--sadafa-primary);
             border-radius: 18px;
-            background: var(--bg-tarjeta);
-            color: var(--texto-principal);
-            text-align: center;
-            align-items: center;
+            overflow: hidden;
             box-shadow: var(--sombra-tarjeta);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+            transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
         }
-        .service-card:hover {
-            transform: translateY(-6px);
+        .service-flip-scene:hover .service-face {
             box-shadow: var(--sombra-tarjeta-hover);
         }
 
-        /* Variantes de acento superior idénticas a las tarjetas de sadafa.com.co */
-        .service-card.card-sky { border-top-color: #0284c7; }
-        .service-card.card-amber { border-top-color: #d97706; }
-        [data-bs-theme="dark"] .service-card { border-top-color: #34d399; }
-        [data-bs-theme="dark"] .service-card.card-sky { border-top-color: #38bdf8; }
-        [data-bs-theme="dark"] .service-card.card-amber { border-top-color: #fbbf24; }
+        /* Variantes de acento superior (Esmeralda, Azul Cielo, Ámbar) */
+        .service-flip-scene.card-sky .service-face { border-top-color: #0284c7; }
+        .service-flip-scene.card-amber .service-face { border-top-color: #d97706; }
+        [data-bs-theme="dark"] .service-face { border-top-color: #34d399; }
+        [data-bs-theme="dark"] .service-flip-scene.card-sky .service-face { border-top-color: #38bdf8; }
+        [data-bs-theme="dark"] .service-flip-scene.card-amber .service-face { border-top-color: #fbbf24; }
+
+        /* Cara Frontal (Información del servicio) */
+        .service-face-front {
+            background: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            padding: 1.65rem 1.5rem 1.35rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transform: rotateY(0deg);
+            -webkit-transform: rotateY(0deg);
+            pointer-events: auto;
+        }
+        .service-flip-scene.is-flipped .service-face-front {
+            pointer-events: none;
+        }
 
         .service-icon {
             width: 58px;
@@ -253,24 +364,25 @@
             font-size: 1.55rem;
             margin: 0 auto 1rem auto;
             transition: all 0.25s ease;
+            flex-shrink: 0;
         }
-        .service-card.card-sky .service-icon {
+        .service-flip-scene.card-sky .service-icon {
             background-color: #e0f2fe;
             color: #0284c7;
         }
-        .service-card.card-amber .service-icon {
+        .service-flip-scene.card-amber .service-icon {
             background-color: #fef3c7;
             color: #d97706;
         }
-        .service-card:hover .service-icon {
+        .service-flip-scene:hover .service-icon {
             background-color: #059669;
             color: #ffffff;
         }
-        .service-card.card-sky:hover .service-icon {
+        .service-flip-scene.card-sky:hover .service-icon {
             background-color: #0284c7;
             color: #ffffff;
         }
-        .service-card.card-amber:hover .service-icon {
+        .service-flip-scene.card-amber:hover .service-icon {
             background-color: #d97706;
             color: #ffffff;
         }
@@ -279,13 +391,145 @@
             background-color: rgba(5, 150, 105, 0.2);
             color: #34d399;
         }
-        [data-bs-theme="dark"] .service-card.card-sky .service-icon {
+        [data-bs-theme="dark"] .service-flip-scene.card-sky .service-icon {
             background-color: rgba(2, 132, 199, 0.2);
             color: #38bdf8;
         }
-        [data-bs-theme="dark"] .service-card.card-amber .service-icon {
+        [data-bs-theme="dark"] .service-flip-scene.card-amber .service-icon {
             background-color: rgba(245, 158, 11, 0.2);
             color: #fbbf24;
+        }
+
+        .flip-badge-front {
+            margin-top: auto;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background-color: rgba(5, 150, 105, 0.1);
+            color: #059669;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.25s ease;
+        }
+        .service-flip-scene.card-sky .flip-badge-front {
+            background-color: rgba(2, 132, 199, 0.1);
+            color: #0284c7;
+        }
+        .service-flip-scene.card-amber .flip-badge-front {
+            background-color: rgba(217, 119, 6, 0.12);
+            color: #b45309;
+        }
+        [data-bs-theme="dark"] .flip-badge-front {
+            background-color: rgba(52, 211, 153, 0.16);
+            color: #34d399;
+        }
+        [data-bs-theme="dark"] .service-flip-scene.card-sky .flip-badge-front {
+            background-color: rgba(56, 189, 248, 0.16);
+            color: #38bdf8;
+        }
+        [data-bs-theme="dark"] .service-flip-scene.card-amber .flip-badge-front {
+            background-color: rgba(251, 191, 36, 0.16);
+            color: #fbbf24;
+        }
+
+        /* Cara Posterior (Fotografía del servicio a pantalla completa de tarjeta) */
+        .service-face-back {
+            position: relative;
+            background: linear-gradient(135deg, #064e3b 0%, #0c4a6e 100%);
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            pointer-events: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: stretch;
+        }
+        .service-flip-scene.is-flipped .service-face-back {
+            pointer-events: auto;
+        }
+
+        .service-back-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.45s ease;
+        }
+        .service-flip-scene.is-flipped:hover .service-back-img {
+            transform: scale(1.04);
+        }
+
+        /* Respaldo elegante mientras se sube alguna de las fotos */
+        .service-back-fallback {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            color: #e2e8f0;
+            background: linear-gradient(135deg, #064e3b 0%, #0c4a6e 100%);
+        }
+        .service-face-back.img-missing .service-back-img {
+            display: none;
+        }
+        .service-face-back.img-missing .service-back-fallback {
+            display: flex;
+        }
+        .service-back-fallback i {
+            font-size: 2.5rem;
+            color: #a7f3d0;
+            margin-bottom: 0.6rem;
+        }
+        .service-back-fallback code {
+            background: rgba(15, 23, 42, 0.55);
+            color: #fde047;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        /* Franja inferior con título sobre la foto */
+        .service-back-overlay {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 28px 16px 14px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.42) 60%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .service-back-title {
+            color: #ffffff;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 0.96rem;
+            font-weight: 700;
+            margin: 0;
+            text-align: left;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+        }
+        .flip-back-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.35);
         }
 
         /* === BOTONES CORPORATIVOS === */
@@ -482,9 +726,19 @@
     <nav class="navbar navbar-sadafa sticky-top py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <div id="sadafaHdrThemeToggle" class="sadafa-theme-pill" role="button" tabindex="0" title="Cambiar entre Modo Día y Modo Oscuro" aria-label="Cambiar entre Modo Día y Modo Oscuro">
-                <span class="icon-sun">☀️</span>
+                <span class="icon-sun" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4.5" fill="#f59e0b" stroke="currentColor"/>
+                        <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M2 12h2.2M19.8 12H22M6.49 17.51l-1.56 1.56M19.07 4.93l-1.56 1.56"/>
+                    </svg>
+                </span>
                 <div class="sadafa-switch-track"><div class="sadafa-switch-thumb"></div></div>
-                <span class="icon-moon">🌙</span>
+                <span class="icon-moon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"/>
+                        <path d="M18 3.3l.55 1.65L20.2 5.5l-1.65.55L18 7.7l-.55-1.65L15.8 5.5l1.65-.55L18 3.3z"/>
+                    </svg>
+                </span>
             </div>
             <button type="button" id="btnAbrirERP" class="btn btn-erp btn-sm px-3 py-2 rounded-pill shadow-sm">
                 <i class="bi bi-shield-lock-fill me-1"></i> Iniciar Sesión
@@ -503,55 +757,171 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE SERVICIOS -->
+    <!-- SECCIÓN DE SERVICIOS (TARJETAS GIRATORIAS 3D AL HACER CLIC) -->
     <section id="servicios" class="py-5 mb-4">
         <div class="container py-3">
             <div class="text-center mb-5">
                 <h2 class="fw-bold" style="color: var(--titulo-servicios);">Nuestros Servicios</h2>
-                <p class="text-muted">Cobertura operativa adaptada a las necesidades de cada cliente.</p>
+                <p class="text-muted mb-0">
+                    Cobertura operativa adaptada a las necesidades de cada cliente.
+                    <span class="d-inline-block ms-1 service-click-note"><i class="bi bi-hand-index-thumb me-1"></i>Haz clic en cada tarjeta para ver el servicio.</span>
+                </p>
             </div>
 
             <div class="row g-4">
+                <!-- 1. Aseo y Cafetería -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-stars"></i></div>
-                        <h5 class="fw-bold">Aseo y Cafetería</h5>
-                        <p class="text-muted small mb-0">Limpieza profunda y rutinaria de zonas comunes, oficinas y conjuntos residenciales con personal de planta o por turnos.</p>
+                    <div class="service-flip-scene" role="button" tabindex="0" aria-pressed="false" aria-label="Aseo y Cafetería - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-stars"></i></div>
+                                <h5 class="fw-bold">Aseo y Cafetería</h5>
+                                <p class="text-muted small mb-3">Limpieza profunda y rutinaria de zonas comunes, oficinas y conjuntos residenciales con personal de planta o por turnos.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-aseo.jpg" data-service-key="aseo" alt="Servicio de Aseo y Cafetería SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-stars"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-aseo.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Aseo y Cafetería</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 2. Conserjería -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card card-sky h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-person-badge"></i></div>
-                        <h5 class="fw-bold">Conserjería</h5>
-                        <p class="text-muted small mb-0">Atención en portería, control de correspondencia, apoyo a residentes y acompañamiento operativo en edificios y conjuntos.</p>
+                    <div class="service-flip-scene card-sky" role="button" tabindex="0" aria-pressed="false" aria-label="Conserjería - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-person-badge"></i></div>
+                                <h5 class="fw-bold">Conserjería</h5>
+                                <p class="text-muted small mb-3">Atención en portería, control de correspondencia, apoyo a residentes y acompañamiento operativo en edificios y conjuntos.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-conserjeria.jpg" data-service-key="conserjeria" alt="Servicio de Conserjería SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-person-badge"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-conserjeria.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Conserjería</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 3. Jardinería y Guadaña -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card card-amber h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-tree"></i></div>
-                        <h5 class="fw-bold">Jardinería y Guadaña</h5>
-                        <p class="text-muted small mb-0">Mantenimiento de zonas verdes, poda de césped, corte con guadaña y cuidado estético de jardines.</p>
+                    <div class="service-flip-scene card-amber" role="button" tabindex="0" aria-pressed="false" aria-label="Jardinería y Guadaña - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-tree"></i></div>
+                                <h5 class="fw-bold">Jardinería y Guadaña</h5>
+                                <p class="text-muted small mb-3">Mantenimiento de zonas verdes, poda de césped, corte con guadaña y cuidado estético de jardines.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-jardineria.jpg" data-service-key="jardineria" alt="Servicio de Jardinería y Guadaña SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-tree"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-jardineria.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Jardinería y Guadaña</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 4. Aseo y Mantenimiento (Todero) -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card card-sky h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-tools"></i></div>
-                        <h5 class="fw-bold">Aseo y Mantenimiento (Todero)</h5>
-                        <p class="text-muted small mb-0">Reparaciones locativas menores, plomería básica, electricidad preventiva y conservación general de infraestructura.</p>
+                    <div class="service-flip-scene card-sky" role="button" tabindex="0" aria-pressed="false" aria-label="Aseo y Mantenimiento (Todero) - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-tools"></i></div>
+                                <h5 class="fw-bold">Aseo y Mantenimiento (Todero)</h5>
+                                <p class="text-muted small mb-3">Reparaciones locativas menores, plomería básica, electricidad preventiva y conservación general de infraestructura.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-todero.jpg" data-service-key="todero" alt="Servicio de Aseo y Mantenimiento Todero SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-tools"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-todero.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Aseo y Mantenimiento (Todero)</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 5. Fumigación y Control de Plagas -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-shield-check"></i></div>
-                        <h5 class="fw-bold">Fumigación y Control de Plagas</h5>
-                        <p class="text-muted small mb-0">Desinfección y control preventivo de plagas en áreas comunes, cuartos de basura y espacios cerrados.</p>
+                    <div class="service-flip-scene" role="button" tabindex="0" aria-pressed="false" aria-label="Fumigación y Control de Plagas - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-shield-check"></i></div>
+                                <h5 class="fw-bold">Fumigación y Control de Plagas</h5>
+                                <p class="text-muted small mb-3">Desinfección y control preventivo de plagas en áreas comunes, cuartos de basura y espacios cerrados.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-fumigacion.jpg" data-service-key="fumigacion" alt="Servicio de Fumigación y Control de Plagas SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-shield-check"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-fumigacion.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Fumigación y Control de Plagas</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 6. Obra Civil y Salvavidas -->
                 <div class="col-md-6 col-lg-4">
-                    <div class="card service-card card-amber h-100 p-4">
-                        <div class="service-icon"><i class="bi bi-building-gear"></i></div>
-                        <h5 class="fw-bold">Obra Civil y Salvavidas</h5>
-                        <p class="text-muted small mb-0">Adecuaciones locativas, pintura, mantenimiento de piscinas y personal certificado para zonas húmedas.</p>
+                    <div class="service-flip-scene card-amber" role="button" tabindex="0" aria-pressed="false" aria-label="Obra Civil y Salvavidas - Haz clic para girar y ver foto">
+                        <div class="service-flip-inner">
+                            <div class="service-face service-face-front">
+                                <div class="service-icon"><i class="bi bi-building-gear"></i></div>
+                                <h5 class="fw-bold">Obra Civil y Salvavidas</h5>
+                                <p class="text-muted small mb-3">Adecuaciones locativas, pintura, mantenimiento de piscinas y personal certificado para zonas húmedas.</p>
+                                <span class="flip-badge-front"><i class="bi bi-camera-fill"></i> Ver imagen</span>
+                            </div>
+                            <div class="service-face service-face-back">
+                                <img src="servicio-obra-civil.jpg" data-service-key="obra-civil" alt="Servicio de Obra Civil y Salvavidas SADAFA" class="service-back-img" loading="lazy">
+                                <div class="service-back-fallback">
+                                    <i class="bi bi-building-gear"></i>
+                                    <span class="small mb-1">Sube la foto como:</span>
+                                    <code>servicio-obra-civil.jpg</code>
+                                </div>
+                                <div class="service-back-overlay">
+                                    <h6 class="service-back-title">Obra Civil y Salvavidas</h6>
+                                    <span class="flip-back-btn" title="Volver al texto"><i class="bi bi-arrow-repeat"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -573,7 +943,7 @@
                         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
                     </div>
                     <h4 class="sadafa-ft-title">Sede Principal</h4>
-                    <p class="sadafa-ft-desc">Calle 53c #27 - 85, La Arboleda, Manizales.</p>
+                    <p class="sadafa-ft-desc">Calle 53c #27- 85, La Arboleda, Manizales.</p>
                 </div>
                 <div class="sadafa-ft-item">
                     <div class="sadafa-ft-icon">
@@ -676,6 +1046,61 @@
                 }
             });
         }
+
+        // === GIRO 3D DE TARJETAS DE SERVICIOS E IMÁGENES INTELIGENTES ===
+        // Si prefieres usar otros nombres de archivo o URLs externas, puedes cambiarlos aquí:
+        const FOTOS_SERVICIOS = {
+            "aseo": "servicio-aseo.jpg",
+            "conserjeria": "servicio-conserjeria.jpg",
+            "jardineria": "servicio-jardineria.jpg",
+            "todero": "servicio-todero.jpg",
+            "fumigacion": "servicio-fumigacion.jpg",
+            "obra-civil": "servicio-obra-civil.jpg"
+        };
+
+        document.querySelectorAll('.service-back-img').forEach((imgEl) => {
+            const key = imgEl.getAttribute('data-service-key');
+            const rutaConfig = (key && FOTOS_SERVICIOS[key]) ? FOTOS_SERVICIOS[key] : imgEl.getAttribute('src');
+            const esUrlExterna = /^https?:\/\//i.test(rutaConfig);
+            const baseSinExt = rutaConfig.replace(/\.[a-zA-Z0-9]+$/, '');
+            const candidatos = esUrlExterna
+                ? [rutaConfig]
+                : [rutaConfig, `${baseSinExt}.jpeg`, `${baseSinExt}.png`, `${baseSinExt}.webp`, `${baseSinExt}.JPG`, `${baseSinExt}.PNG`];
+            const listaUnica = [...new Set(candidatos)];
+            let intento = 0;
+
+            imgEl.addEventListener('load', () => {
+                imgEl.closest('.service-face-back')?.classList.remove('img-missing');
+            });
+            imgEl.addEventListener('error', () => {
+                intento++;
+                if (intento < listaUnica.length) {
+                    imgEl.src = listaUnica[intento];
+                } else {
+                    imgEl.closest('.service-face-back')?.classList.add('img-missing');
+                }
+            });
+
+            if (imgEl.getAttribute('src') !== listaUnica[0]) {
+                imgEl.src = listaUnica[0];
+            } else if (imgEl.complete && imgEl.naturalWidth === 0) {
+                imgEl.dispatchEvent(new Event('error'));
+            }
+        });
+
+        document.querySelectorAll('.service-flip-scene').forEach((card) => {
+            const alternarGiro = () => {
+                const girada = card.classList.toggle('is-flipped');
+                card.setAttribute('aria-pressed', girada ? 'true' : 'false');
+            };
+            card.addEventListener('click', alternarGiro);
+            card.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    alternarGiro();
+                }
+            });
+        });
 
         const TIEMPO_LIMITE_INACTIVIDAD = 10 * 60 * 1000; // 10 Minutos
         const modalLogin = new bootstrap.Modal(document.getElementById('modalLoginERP'));
