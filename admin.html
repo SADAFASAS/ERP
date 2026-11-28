@@ -34,7 +34,7 @@
             --sadafa-accent: #059669;
             --bg-principal: #f8fafc;
             --bg-sidebar: #ffffff;
-            --bg-topbar: rgba(255, 255, 255, 0.96);
+            --bg-topbar: #ffffff;
             --texto-principal: #0f172a;
             --texto-muted: #475569;
             --borde-tarjeta: #d1fae5;
@@ -53,7 +53,7 @@
             --sadafa-accent: #34d399;
             --bg-principal: #111827;
             --bg-sidebar: #1e293b;
-            --bg-topbar: rgba(17, 24, 39, 0.97);
+            --bg-topbar: #111827;
             --texto-principal: #f8fafc;
             --texto-muted: #cbd5e1;
             --borde-tarjeta: #334155;
@@ -214,8 +214,8 @@
         /* === BARRA SUPERIOR E INTERRUPTOR TEMA (ESTILO SADAFA.COM.CO) === */
         .header-top-bar {
             background: var(--bg-topbar);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             border: 1px solid var(--borde-tarjeta) !important;
             border-bottom: 2px solid var(--borde-tarjeta) !important;
             border-radius: 14px;
@@ -235,12 +235,12 @@
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
         }
 
-        /* === INTERRUPTOR TEMA IDÉNTICO A SADAFA.COM.CO (.sadafa-theme-pill) === */
+        /* === INTERRUPTOR TEMA ACTUALIZADO (SOL RADIANTE + LUNA AZUL NOCHE) === */
         .sadafa-theme-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 50px;
             background-color: #e2e8f0;
             border: 1px solid #cbd5e1;
@@ -257,18 +257,52 @@
         .sadafa-theme-pill:hover {
             border-color: #059669;
         }
+        .sadafa-theme-pill .icon-sun,
+        .sadafa-theme-pill .icon-moon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .sadafa-theme-pill .icon-sun svg,
+        .sadafa-theme-pill .icon-moon svg {
+            width: 15px !important;
+            height: 15px !important;
+            display: block !important;
+        }
+        .sadafa-theme-pill .icon-sun svg circle {
+            fill: #f59e0b !important;
+            stroke: currentColor !important;
+        }
+        .sadafa-theme-pill .icon-sun svg path {
+            fill: none !important;
+            stroke: currentColor !important;
+        }
+        .sadafa-theme-pill .icon-moon svg path {
+            fill: currentColor !important;
+            stroke: none !important;
+        }
+
+        /* Estado Modo Día */
         .sadafa-theme-pill .icon-sun {
-            font-size: 13px;
-            line-height: 1;
+            background-color: #fef3c7;
+            color: #d97706;
             opacity: 1;
-            transition: opacity 0.25s ease;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.28);
+            transform: rotate(0deg) scale(1);
         }
         .sadafa-theme-pill .icon-moon {
-            font-size: 13px;
-            line-height: 1;
-            opacity: 0.35;
-            transition: opacity 0.25s ease;
+            background-color: transparent;
+            color: #1e3a8a;
+            opacity: 0.68;
+            transform: scale(0.92);
         }
+
+        /* Riel y círculo deslizante */
         .sadafa-switch-track {
             width: 32px;
             height: 17px;
@@ -286,12 +320,31 @@
             position: absolute;
             top: 2px;
             left: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
             transition: transform 0.25s ease;
         }
-        [data-bs-theme="dark"] .sadafa-theme-pill .icon-sun { opacity: 0.35; }
-        [data-bs-theme="dark"] .sadafa-theme-pill .icon-moon { opacity: 1; }
-        [data-bs-theme="dark"] .sadafa-switch-track { background-color: #059669; }
-        [data-bs-theme="dark"] .sadafa-switch-thumb { transform: translateX(15px); }
+
+        /* Estado Modo Oscuro */
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-sun {
+            background-color: transparent;
+            color: #fbbf24;
+            opacity: 0.45;
+            box-shadow: none;
+            transform: rotate(-30deg) scale(0.9);
+        }
+        [data-bs-theme="dark"] .sadafa-theme-pill .icon-moon {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+            opacity: 1;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.45);
+            transform: scale(1);
+        }
+        [data-bs-theme="dark"] .sadafa-switch-track {
+            background-color: #1e3a8a;
+        }
+        [data-bs-theme="dark"] .sadafa-switch-thumb {
+            transform: translateX(15px);
+        }
 
         .btn-toggle-sidebar {
             position: absolute;
@@ -488,9 +541,19 @@
             
             <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 header-top-bar">
                 <div id="sadafaHdrThemeToggle" class="sadafa-theme-pill" role="button" tabindex="0" title="Cambiar entre Modo Día y Modo Oscuro" aria-label="Cambiar entre Modo Día y Modo Oscuro">
-                    <span class="icon-sun">☀️</span>
+                    <span class="icon-sun" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4.5" fill="#f59e0b" stroke="currentColor"/>
+                            <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M2 12h2.2M19.8 12H22M6.49 17.51l-1.56 1.56M19.07 4.93l-1.56 1.56"/>
+                        </svg>
+                    </span>
                     <div class="sadafa-switch-track"><div class="sadafa-switch-thumb"></div></div>
-                    <span class="icon-moon">🌙</span>
+                    <span class="icon-moon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"/>
+                            <path d="M18 3.3l.55 1.65L20.2 5.5l-1.65.55L18 7.7l-.55-1.65L15.8 5.5l1.65-.55L18 3.3z"/>
+                        </svg>
+                    </span>
                 </div>
                 
                 <span class="badge sadafa-user-pill fs-6 py-2 px-3 text-capitalize">
